@@ -1,0 +1,80 @@
+﻿sdkmanager.bat : WARNING: The SDK Manager CLI tool (sdkmanager) is deprecated. Use Android CLI instead.
+At line:2 char:1
++ & "C:\Users\Mayank\AppData\Local\Android\Sdk\cmdline-tools\latest\bin ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: The SD...id CLI instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+The 'android' binary can also be found in the cmdline-tools directory, and 'android sdk' is the replacement for 'sdkmanager'.
+To learn more about the Android CLI and how to use it, see the documentation (https://d.android.com/tools/agents/android-cli)
+
+Loading package information...                                                  
+Loading local repository...                                                     
+[                                       ] 3% Loading local repository...        
+[                                       ] 3% Fetch remote repository...         
+[=                                      ] 3% Fetch remote repository...         
+[=                                      ] 4% Fetch remote repository...         
+[=                                      ] 5% Fetch remote repository...         
+[==                                     ] 5% Fetch remote repository...         
+[==                                     ] 6% Fetch remote repository...         
+[==                                     ] 7% Fetch remote repository...         
+[==                                     ] 7% Computing updates...               
+[===                                    ] 8% Computing updates...               
+[===                                    ] 10% Computing updates...              
+[===                                    ] 10% Installing NDK (Side by side) 27.1
+[===                                    ] 10% Downloading android-ndk-r27b-windo
+[====                                   ] 10% Downloading android-ndk-r27b-windo
+[====                                   ] 11% Downloading android-ndk-r27b-windo
+[====                                   ] 12% Downloading android-ndk-r27b-windo
+[=====                                  ] 13% Downloading android-ndk-r27b-windo
+[=====                                  ] 14% Downloading android-ndk-r27b-windo
+[=====                                  ] 15% Downloading android-ndk-r27b-windo
+[======                                 ] 15% Downloading android-ndk-r27b-windo
+[======                                 ] 16% Downloading android-ndk-r27b-windo
+[======                                 ] 17% Downloading android-ndk-r27b-windo
+[=======                                ] 18% Downloading android-ndk-r27b-windo
+[=======                                ] 19% Downloading android-ndk-r27b-windo
+[=======                                ] 20% Downloading android-ndk-r27b-windo
+[========                               ] 20% Downloading android-ndk-r27b-windo
+[========                               ] 21% Downloading android-ndk-r27b-windo
+[========                               ] 22% Downloading android-ndk-r27b-windo
+[=========                              ] 23% Downloading android-ndk-r27b-windo
+[=========                              ] 24% Downloading android-ndk-r27b-windo
+[=========                              ] 25% Downloading android-ndk-r27b-windo
+[==========                             ] 25% Downloading android-ndk-r27b-windo
+[==========                             ] 26% Downloading android-ndk-r27b-windo
+[==========                             ] 27% Downloading android-ndk-r27b-windo
+[===========                            ] 28% Downloading android-ndk-r27b-windo
+[===========                            ] 29% Downloading android-ndk-r27b-windo
+[===========                            ] 30% Downloading android-ndk-r27b-windo
+[============                           ] 30% Downloading android-ndk-r27b-windo
+[============                           ] 31% Downloading android-ndk-r27b-windo
+[============                           ] 32% Downloading android-ndk-r27b-windo
+[============                           ] 33% Downloading android-ndk-r27b-windo
+[============                           ] 33% Unzipping...                      
+[============                           ] 33% Unzipping... android-ndk-r27b/    
+[============                           ] 33% Unzipping... android-ndk-r27b/buil
+[============                           ] 33% Unzipping... android-ndk-r27b/meta
+[============                           ] 33% Unzipping... android-ndk-r27b/preb
+[============                           ] 33% Unzipping... android-ndk-r27b/pyth
+[============                           ] 33% Unzipping... android-ndk-r27b/shad
+[============                           ] 33% Unzipping... android-ndk-r27b/simp
+[============                           ] 33% Unzipping... android-ndk-r27b/sour
+[============                           ] 33% Unzipping... android-ndk-r27b/tool
+[============                           ] 33% Unzipping... android-ndk-r27b/wrap
+[============                           ] 33% Unzipping... android-ndk-r27b/CHAN
+[=============                          ] 33% Unzipping... android-ndk-r27b/CHAN
+[=============                          ] 33% Unzipping... android-ndk-r27b/ndk-
+[=============                          ] 33% Unzipping... android-ndk-r27b/NOTI
+[=============                          ] 33% Unzipping... android-ndk-r27b/READ
+[=============                          ] 33% Unzipping... android-ndk-r27b/sour
+[=============                          ] 33% Unzipping... android-ndk-r27b/buil
+[=============                          ] 33% Unzipping... android-ndk-r27b/meta
+[=============                          ] 33% Unzipping... android-ndk-r27b/preb
+[=============                          ] 33% Unzipping... android-ndk-r27b/pyth
+[=============                          ] 33% Unzipping... android-ndk-r27b/shad
+[=============                          ] 33% Unzipping... android-ndk-r27b/simp
+[=============                          ] 33% Unzipping... android-ndk-r27b/sour
+[=============                          ] 34% Unzipping... android-ndk-r27b/sour
+[=============                          ] 34% Unzipping... android-ndk-r27b/tool
+[=============                          ] 35% Unzipping... android-ndk-r27b/tool
