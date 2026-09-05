@@ -81,6 +81,11 @@ export function CategoryProductsScreen() {
       if (concernId) {
         const byConcern = await ProductRepository.getByConcern(concernId);
         result = applyClientSort(applyClientFilters(byConcern, filters), sort);
+      } else if (!categoryId) {
+        // No category and no concern = browse everything. This is what Home's
+        // "See All" opens; the repository already serves the API product list
+        // when a catalog is present.
+        result = await ProductRepository.getAll(filters, sort);
       } else {
         result = await ProductRepository.getByCategory(categoryId, filters, sort);
       }

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
+import { Ionicons } from '@expo/vector-icons';
 import { Category } from '../types';
 import { radius, shadow, spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
@@ -11,7 +12,15 @@ export function CategoryCard({ category, onPress }: { category: Category; onPres
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.pressed]} accessibilityRole="button">
       <View style={styles.imageWrap}>
-        <Image source={{ uri: category.image }} style={styles.image} contentFit="cover" transition={150} />
+        {/* API categories carry no image, so fall back to the category's icon
+            inside the same circle rather than rendering an empty image. */}
+        {category.image ? (
+          <Image source={{ uri: category.image }} style={styles.image} contentFit="cover" transition={150} />
+        ) : (
+          <View style={styles.iconFallback}>
+            <Ionicons name={category.icon as any} size={28} color={colors.primary} />
+          </View>
+        )}
       </View>
       <Text style={styles.name} numberOfLines={2}>
         {category.name}
@@ -40,6 +49,7 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
     marginBottom: spacing.xs,
   },
   image: { width: '100%', height: '100%' },
+  iconFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
   name: { ...typography.captionMedium, color: colors.textPrimary, textAlign: 'center' },
   count: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
 });

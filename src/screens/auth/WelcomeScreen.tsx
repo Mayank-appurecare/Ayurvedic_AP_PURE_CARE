@@ -1,14 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
-import { spacing, typography } from '../../theme';
+import { radius, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useAuth } from '../../context/AuthContext';
+import { authService } from '../../services/auth';
 
 export function WelcomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -17,6 +18,22 @@ export function WelcomeScreen() {
   const styles = useMemo(() => createStyles(colors), [colors]);
   const { continueAsGuest } = useAuth();
   const [guestLoading, setGuestLoading] = useState(false);
+  const [apiUnreachable, setApiUnreachable] = useState(false);
+
+  // Ask the auth API whether it is up as soon as the app lands here, so a dead
+  // backend is visible before the user types a number on the next screen.
+  // `checkReachable` sends NO OTP and never rejects; a healthy backend renders
+  // nothing at all, leaving this screen exactly as designed.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const reachable = await authService.checkReachable();
+      if (!cancelled) setApiUnreachable(!reachable);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleGuest = async () => {
     setGuestLoading(true);
@@ -44,6 +61,15 @@ export function WelcomeScreen() {
       <View style={styles.content}>
         <Text style={styles.brand}>Ojas Ayurveda</Text>
         <Text style={styles.subtitle}>Pure, natural wellness — delivered with care.</Text>
+
+        {apiUnreachable && (
+          <View style={styles.apiNotice}>
+            <Ionicons name="cloud-offline-outline" size={16} color={colors.warning} />
+            <Text style={styles.apiNoticeText}>
+              Can&apos;t reach the server right now. Login may not work — you can still browse as a guest.
+            </Text>
+          </View>
+        )}
 
         <View style={styles.actions}>
           <PrimaryButton label="Login" onPress={() => navigation.navigate('Login')} />
@@ -80,6 +106,19 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
   content: { paddingHorizontal: spacing.xl, alignItems: 'center' },
   brand: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.md },
   subtitle: { ...typography.body, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xs, marginBottom: spacing.xl },
+  // Only rendered when the auth API cannot be reached; invisible otherwise.
+  apiNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    width: '100%',
+    backgroundColor: colors.warningSurface,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  apiNoticeText: { ...typography.caption, color: colors.textSecondary, flex: 1 },
   actions: { width: '100%', gap: spacing.sm },
   guestBtn: { alignItems: 'center', paddingVertical: spacing.sm },
   guestText: { ...typography.bodyMedium, color: colors.primary },

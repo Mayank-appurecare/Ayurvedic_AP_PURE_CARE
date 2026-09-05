@@ -33,7 +33,15 @@ export function ProductCard({ product, onPress, style }: Props) {
       accessibilityLabel={product.name}
     >
       <View style={styles.imageWrap}>
-        <Image source={{ uri: product.images[0] }} style={styles.image} contentFit="cover" transition={150} />
+        {/* API products carry no image URL. Fall back to a neutral placeholder
+            rather than requesting an invented one. */}
+        {product.images[0] ? (
+          <Image source={{ uri: product.images[0] }} style={styles.image} contentFit="cover" transition={150} />
+        ) : (
+          <View style={styles.imageFallback}>
+            <Ionicons name="leaf-outline" size={32} color={colors.primaryLight} />
+          </View>
+        )}
         <Pressable
           hitSlop={8}
           onPress={(e) => {
@@ -66,7 +74,9 @@ export function ProductCard({ product, onPress, style }: Props) {
       <Pressable
         onPress={(e) => {
           e.stopPropagation();
-          addToCart(product.id, product.variants[0].id);
+          // Guard the index: a product with no variants would otherwise throw.
+          const variantId = product.variants[0]?.id;
+          if (variantId) addToCart(product.id, variantId);
         }}
         disabled={outOfStock}
         style={[styles.addBtn, outOfStock && styles.addBtnDisabled, inCart && styles.addBtnActive]}
@@ -96,6 +106,7 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
   pressed: { opacity: 0.92 },
   imageWrap: { width: '100%', aspectRatio: 1, backgroundColor: colors.surfaceMuted },
   image: { width: '100%', height: '100%' },
+  imageFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
   wishlistBtn: {
     position: 'absolute',
     top: spacing.xs,

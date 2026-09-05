@@ -10,6 +10,23 @@ export const ReviewRepository = {
     return delay(reviewsStore.filter((r) => r.productId === productId).sort((a, b) => (a.date < b.date ? 1 : -1)));
   },
 
+  /**
+   * Highly-rated recent reviews, not tied to any particular product.
+   *
+   * The Home testimonials strip uses this. It previously derived its reviews
+   * from the best-seller list, which no longer exists now that Home shows the
+   * API product list — and the API carries no review data at all, so these stay
+   * local demo content.
+   */
+  async getRecent(limit = 3): Promise<Review[]> {
+    return delay(
+      reviewsStore
+        .filter((r) => r.rating >= 4)
+        .sort((a, b) => (a.date < b.date ? 1 : -1))
+        .slice(0, limit)
+    );
+  },
+
   async getSummary(productId: string) {
     const list = reviewsStore.filter((r) => r.productId === productId);
     const total = list.length;

@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { OtpChallenge } from '../services/auth/types';
 
 export type MainTabParamList = {
   HomeTab: undefined;
@@ -14,7 +15,17 @@ export type RootStackParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
-  OTPVerification: { mode: 'login' | 'register'; mobile: string };
+  OTPVerification: {
+    mode: 'login' | 'register';
+    /** Bare 10-digit Indian national number. */
+    mobile: string;
+    /**
+     * Challenge created by the caller that already requested the code (the
+     * login screen). Omitted when the caller has not requested one yet — the
+     * OTP screen then requests it itself on mount.
+     */
+    challenge?: OtpChallenge;
+  };
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
 
   CategoryProducts: { categoryId: string; categoryName?: string; concernId?: string };

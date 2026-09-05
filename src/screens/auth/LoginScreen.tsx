@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,39 +16,63 @@ import { radius, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { SecondaryButton } from '../../components/SecondaryButton';
-import { ConfirmationDialog } from '../../components/ConfirmationDialog';
 import { useAuth } from '../../context/AuthContext';
+import { isAuthError } from '../../services/auth';
+import {
+  COUNTRY_DIAL_CODE,
+  formatIndianMobile,
+  sanitizeMobileInput,
+  validateIndianMobile,
+} from '../../utils/phone';
+import { webOnly } from '../../utils/webStyle';
 
 export function LoginScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
-  const { login } = useAuth();
+  const { requestOtp } = useAuth();
 
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ identifier?: string; password?: string; form?: string }>({});
+  // Stored as a bare 10-digit national number; the `+91` prefix is fixed UI.
+  const [mobile, setMobile] = useState('');
+  const [focused, setFocused] = useState(false);
+  const [errors, setErrors] = useState<{ mobile?: string; form?: string }>({});
   const [loading, setLoading] = useState(false);
-  const [showForgotDialog, setShowForgotDialog] = useState(false);
 
-  const validate = () => {
-    const nextErrors: typeof errors = {};
-    if (!identifier.trim()) nextErrors.identifier = 'Enter your mobile number or email.';
-    if (!password) nextErrors.password = 'Enter your password.';
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+  // Single gate for everything that reaches the field — typing, pasting, OS
+  // autofill and speech input all arrive here. `sanitizeMobileInput` keeps only
+  // 0-9 (dropping letters, spaces, +, -, ., commas and every other symbol) and
+  // caps the result at 10 digits, so non-numeric characters can never be stored.
+  const handleChangeMobile = (text: string) => {
+    setMobile(sanitizeMobileInput(text));
+    if (errors.mobile || errors.form) setErrors({});
   };
 
-  const handleLogin = async () => {
-    if (!validate()) return;
+  // Validate on blur so the user is told what is wrong before they submit —
+  // but never scold them for leaving an untouched field.
+  const handleBlur = () => {
+    setFocused(false);
+    if (!mobile) return;
+    const validationError = validateIndianMobile(mobile);
+    if (validationError) setErrors((prev) => ({ ...prev, mobile: validationError }));
+  };
+
+  const handleSendOtp = async () => {
+    const validationError = validateIndianMobile(mobile);
+    if (validationError) {
+      setErrors({ mobile: validationError });
+      return;
+    }
+
     setLoading(true);
-    setErrors((prev) => ({ ...prev, form: undefined }));
+    setErrors({});
     try {
-      await login(identifier.trim(), password);
-      navigation.replace('Main');
+      const challenge = await requestOtp(mobile);
+      navigation.navigate('OTPVerification', { mode: 'login', mobile, challenge });
     } catch (error) {
-      setErrors((prev) => ({ ...prev, form: error instanceof Error ? error.message : 'Unable to login. Please try again.' }));
+      const message = isAuthError(error)
+        ? error.message
+        : 'Could not start verification. Please check your connection and try again.';
+      setErrors({ form: message });
     } finally {
       setLoading(false);
     }
@@ -57,134 +80,156 @@ export function LoginScreen() {
 
   return (
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Login to continue your wellness journey.</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>
+            Enter your mobile number to continue your wellness journey.
+          </Text>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>Mobile Number or Email</Text>
-          <TextInput
-            value={identifier}
-            onChangeText={(text) => {
-              setIdentifier(text);
-              if (errors.identifier) setErrors((prev) => ({ ...prev, identifier: undefined }));
-            }}
-            placeholder="e.g. 98765 43210 or you@example.com"
-            placeholderTextColor={colors.textMuted}
-            style={[styles.input, errors.identifier && styles.inputError]}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-          {!!errors.identifier && <Text style={styles.errorText}>{errors.identifier}</Text>}
-        </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>Password</Text>
-          <View style={[styles.passwordRow, errors.password && styles.inputError]}>
-            <TextInput
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
-              }}
-              placeholder="Enter your password"
-              placeholderTextColor={colors.textMuted}
-              style={styles.passwordInput}
-              secureTextEntry={!showPassword}
-            />
-            <Pressable
-              onPress={() => setShowPassword((prev) => !prev)}
-              hitSlop={10}
-              accessibilityRole="button"
-              accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+          <View style={styles.field}>
+            <Text style={styles.label}>Mobile Number</Text>
+            <View
+              style={[
+                styles.inputRow,
+                focused && styles.inputRowFocused,
+                !!errors.mobile && styles.inputRowError,
+              ]}
             >
-              <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color={colors.textMuted} />
-            </Pressable>
+              <View style={styles.dialCodeWrap}>
+                <Text style={styles.dialCode}>{COUNTRY_DIAL_CODE}</Text>
+              </View>
+              <View style={styles.dialDivider} />
+              <TextInput
+                value={formatIndianMobile(mobile)}
+                onChangeText={handleChangeMobile}
+                onFocus={() => setFocused(true)}
+                onBlur={handleBlur}
+                onSubmitEditing={handleSendOtp}
+                placeholder="98765 43210"
+                placeholderTextColor={colors.textMuted}
+                style={styles.input}
+                // number-pad / numeric show a digits-only keypad. "phone-pad"
+                // and inputMode "tel" would also offer + * # , . ; keys.
+                keyboardType="number-pad"
+                inputMode="numeric"
+                autoComplete="tel"
+                textContentType="telephoneNumber"
+                returnKeyType="done"
+                // Deliberately no maxLength: it counts RAW characters, so it
+                // truncated a paste like "+91 98765 43210" before the digit
+                // filter ran and produced the wrong number. The 10-digit cap is
+                // enforced in handleChangeMobile instead.
+                accessibilityLabel="Mobile number"
+                editable={!loading}
+              />
+            </View>
+            {!!errors.mobile ? (
+              <Text style={styles.errorText}>{errors.mobile}</Text>
+            ) : (
+              <Text style={styles.helperText}>We&apos;ll send a 6-digit verification code to this number.</Text>
+            )}
           </View>
-          {!!errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-        </View>
 
-        <Pressable
-          onPress={() => setShowForgotDialog(true)}
-          style={styles.forgotBtn}
-          accessibilityRole="button"
-          accessibilityLabel="Forgot password"
-        >
-          <Text style={styles.forgotText}>Forgot password?</Text>
-        </Pressable>
+          {!!errors.form && (
+            <View style={styles.formErrorBox}>
+              <Ionicons name="alert-circle-outline" size={16} color={colors.danger} />
+              <Text style={styles.formErrorText}>{errors.form}</Text>
+            </View>
+          )}
 
-        {!!errors.form && <Text style={[styles.errorText, styles.formError]}>{errors.form}</Text>}
+          {/* Intentionally not disabled while the number is invalid: a dead
+              button tells the user nothing. Pressing it surfaces the exact
+              validation message instead. */}
+          <PrimaryButton label="Send OTP" onPress={handleSendOtp} loading={loading} style={styles.submitBtn} />
 
-        <PrimaryButton label="Login" onPress={handleLogin} loading={loading} style={styles.loginBtn} />
+          <Text style={styles.legalText}>
+            By continuing you agree to our Terms of Service and Privacy Policy.
+          </Text>
 
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or continue with</Text>
-          <View style={styles.dividerLine} />
-        </View>
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or continue with</Text>
+            <View style={styles.dividerLine} />
+          </View>
 
-        <View style={styles.socialRow}>
-          <SecondaryButton
-            label="Google"
-            icon={<Ionicons name="logo-google" size={16} color={colors.primary} />}
-            onPress={() => setErrors((prev) => ({ ...prev, form: 'Social login is a mock UI for this demo.' }))}
-            style={styles.socialBtn}
-          />
-          <SecondaryButton
-            label="Apple"
-            icon={<Ionicons name="logo-apple" size={16} color={colors.primary} />}
-            onPress={() => setErrors((prev) => ({ ...prev, form: 'Social login is a mock UI for this demo.' }))}
-            style={styles.socialBtn}
-          />
+          <View style={styles.socialRow}>
+            <SecondaryButton
+              label="Google"
+              icon={<Ionicons name="logo-google" size={16} color={colors.primary} />}
+              onPress={() => setErrors({ form: 'Social login is a mock UI for this demo.' })}
+              style={styles.socialBtn}
+            />
+            <SecondaryButton
+              label="Apple"
+              icon={<Ionicons name="logo-apple" size={16} color={colors.primary} />}
+              onPress={() => setErrors({ form: 'Social login is a mock UI for this demo.' })}
+              style={styles.socialBtn}
+            />
+          </View>
         </View>
       </ScrollView>
-
-      <ConfirmationDialog
-        visible={showForgotDialog}
-        title="Forgot Password"
-        description="This is a demo app with mock authentication. In a production app, a reset link would be sent to your registered email or mobile number."
-        confirmLabel="Got it"
-        cancelLabel="Close"
-        onConfirm={() => setShowForgotDialog(false)}
-        onCancel={() => setShowForgotDialog(false)}
-      />
     </KeyboardAvoidingView>
   );
 }
 
 const createStyles = (colors: AppColors) => StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.background },
-  container: { padding: spacing.lg, paddingTop: spacing.xxxl, flexGrow: 1 },
+  scrollContent: { flexGrow: 1, padding: spacing.lg, paddingTop: spacing.xxxl },
+  // Caps the line length on tablets and in a desktop browser window.
+  container: { width: '100%', maxWidth: 480, alignSelf: 'center' },
   title: { ...typography.h1, color: colors.textPrimary },
   subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xxs, marginBottom: spacing.xl },
-  field: { marginBottom: spacing.md },
+  field: { marginBottom: spacing.lg },
   label: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
-  input: {
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.surface,
-    color: colors.textPrimary,
-    ...typography.body,
-  },
-  inputError: { borderColor: colors.danger },
-  passwordRow: {
+  inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
     borderColor: colors.border,
     borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
     backgroundColor: colors.surface,
+    paddingHorizontal: spacing.sm,
   },
-  passwordInput: { flex: 1, paddingVertical: spacing.sm, color: colors.textPrimary, ...typography.body },
+  inputRowFocused: { borderColor: colors.primary },
+  inputRowError: { borderColor: colors.danger },
+  dialCodeWrap: { paddingVertical: spacing.sm },
+  dialCode: { ...typography.bodyMedium, color: colors.textPrimary },
+  dialDivider: {
+    width: 1,
+    alignSelf: 'stretch',
+    marginVertical: spacing.xs,
+    marginHorizontal: spacing.sm,
+    backgroundColor: colors.divider,
+  },
+  input: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    color: colors.textPrimary,
+    ...typography.bodyLg,
+    letterSpacing: 0.5,
+    // Removes the focus ring react-native-web adds on top of our own styling.
+    ...webOnly({ outlineStyle: 'none' }),
+  },
+  helperText: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xxs },
   errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
-  formError: { textAlign: 'center', marginBottom: spacing.sm },
-  forgotBtn: { alignSelf: 'flex-end', marginBottom: spacing.lg },
-  forgotText: { ...typography.captionMedium, color: colors.primary },
-  loginBtn: { marginBottom: spacing.lg },
+  formErrorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: colors.dangerSurface,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  formErrorText: { ...typography.caption, color: colors.danger, flex: 1 },
+  submitBtn: { marginBottom: spacing.sm },
+  legalText: { ...typography.caption, color: colors.textMuted, textAlign: 'center', marginBottom: spacing.xl },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
   dividerLine: { flex: 1, height: 1, backgroundColor: colors.divider },
   dividerText: { ...typography.caption, color: colors.textMuted },

@@ -19,6 +19,7 @@ import { ArticleCard } from '../../components/ArticleCard';
 import { ReviewCard } from '../../components/ReviewCard';
 import { LoadingState } from '../../components/LoadingState';
 import { ErrorState } from '../../components/ErrorState';
+import { EmptyState } from '../../components/EmptyState';
 import { AddressSelectorSheet } from '../../components/AddressSelectorSheet';
 
 import { useCart } from '../../context/CartContext';
@@ -26,10 +27,9 @@ import { useCheckout } from '../../context/CheckoutContext';
 import { CategoryRepository } from '../../repositories/CategoryRepository';
 import { ProductRepository } from '../../repositories/ProductRepository';
 import { ArticleRepository } from '../../repositories/ArticleRepository';
-import { OfferRepository } from '../../repositories/OfferRepository';
 import { ReviewRepository } from '../../repositories/ReviewRepository';
 import { UserRepository } from '../../repositories/UserRepository';
-import { Category, Concern, Product, Offer, Article, Review } from '../../types';
+import { Category, Concern, Product, Article, Review } from '../../types';
 import { banners, trustBadges } from '../../data/banners';
 
 // Mock unread-notifications indicator for the header bell — there is no
@@ -42,6 +42,16 @@ const MOCK_UNREAD_NOTIFICATIONS = 2;
 const BANNER_CARD_WIDTH = Math.min(getWindowWidth() - spacing.md * 2 - 28, 360);
 const BANNER_CARD_HEIGHT = Math.round(BANNER_CARD_WIDTH * 0.52);
 
+// Home shows a short preview rail; the full list lives behind "See All". This
+// caps only what the preview renders — the underlying data is always the whole
+// API productList.
+const HOME_PRODUCT_PREVIEW_COUNT = 6;
+
+// CategoryProducts with neither a categoryId nor a concernId means "everything".
+// That screen already provides the vertical grid, filter, sort and empty/error
+// states, so it is reused rather than duplicated.
+const ALL_PRODUCTS_PARAMS = { categoryId: '', categoryName: 'Products' } as const;
+
 type HomeNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainTabParamList, 'HomeTab'>,
   NativeStackNavigationProp<RootStackParamList>
@@ -50,10 +60,8 @@ type HomeNavigationProp = CompositeNavigationProp<
 interface HomeData {
   categories: Category[];
   concerns: Concern[];
-  bestSellers: Product[];
-  featured: Product[];
-  newArrivals: Product[];
-  offers: Offer[];
+  /** The REAL API productList. Never mock — see ProductRepository.getApiProducts. */
+  products: Product[];
   articles: Article[];
   reviewHighlights: Review[];
 }
@@ -84,24 +92,19 @@ export function HomeScreen() {
     setLoading(true);
     setError(false);
     try {
-      const [categories, concerns, bestSellers, featured, newArrivals, offers, articles] = await Promise.all([
+      const [categories, concerns, products, articles] = await Promise.all([
         CategoryRepository.getAll(),
         CategoryRepository.getConcerns(),
-        ProductRepository.getBestSellers(),
-        ProductRepository.getFeatured(),
-        ProductRepository.getNewArrivals(),
-        OfferRepository.getOffers(),
+        // API-only: returns [] rather than mock data when no catalog exists.
+        ProductRepository.getApiProducts(),
         ArticleRepository.getAll(),
       ]);
 
-      const highlightProductIds = bestSellers.slice(0, 2).map((p) => p.id);
-      const reviewLists = await Promise.all(highlightProductIds.map((id) => ReviewRepository.getForProduct(id)));
-      const reviewHighlights = reviewLists
-        .flat()
-        .filter((r) => r.rating >= 4)
-        .slice(0, 3);
+      // Testimonials are still local demo content and are deliberately not tied
+      // to the API product list, which carries no reviews.
+      const reviewHighlights = await ReviewRepository.getRecent(3);
 
-      setData({ categories, concerns, bestSellers, featured, newArrivals, offers, articles: articles.slice(0, 4), reviewHighlights });
+      setData({ categories, concerns, products, articles: articles.slice(0, 4), reviewHighlights });
     } catch {
       setError(true);
     } finally {
@@ -284,59 +287,17 @@ export function HomeScreen() {
           />
         </Section>
 
-        {/* Best Sellers */}
+        {/* Products — a compact preview of the real API productList. The former
+            "Best Sellers", "Featured Products" and "New Arrivals" rails were all
+            driven by mock-only flags (isBestSeller / isFeatured / isNewArrival)
+            that the API does not send, so they are gone rather than hidden.
+            "See All" opens the full vertical grid. */}
         <ProductRail
-          title="Best Sellers"
-          products={data.bestSellers}
-          onSeeAll={() => navigation.navigate('Search')}
+          title="Products"
+          products={data.products.slice(0, HOME_PRODUCT_PREVIEW_COUNT)}
+          onSeeAll={() => navigation.navigate('CategoryProducts', ALL_PRODUCTS_PARAMS)}
           onPressProduct={(id) => navigation.navigate('ProductDetail', { productId: id })}
         />
-
-        {/* Featured Products */}
-        <ProductRail
-          title="Featured Products"
-          products={data.featured}
-          onSeeAll={() => navigation.navigate('Search')}
-          onPressProduct={(id) => navigation.navigate('ProductDetail', { productId: id })}
-        />
-
-        {/* New Arrivals */}
-        <ProductRail
-          title="New Arrivals"
-          products={data.newArrivals}
-          onSeeAll={() => navigation.navigate('Search')}
-          onPressProduct={(id) => navigation.navigate('ProductDetail', { productId: id })}
-        />
-
-        {/* Offers */}
-        <Section title="Offers For You" onSeeAll={() => navigation.navigate('Offers')}>
-          <FlatList
-            data={data.offers}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.railPadding}
-            renderItem={({ item }) => (
-              <Pressable style={styles.offerCard} onPress={() => navigation.navigate('Offers')} accessibilityRole="button">
-                <Image source={{ uri: item.image }} style={styles.offerImage} contentFit="cover" />
-                <View style={styles.offerContent}>
-                  {!!item.badge && (
-                    <View style={styles.offerBadge}>
-                      <Text style={styles.offerBadgeText}>{item.badge}</Text>
-                    </View>
-                  )}
-                  <Text style={styles.offerTitle} numberOfLines={1}>
-                    {item.title}
-                  </Text>
-                  <Text style={styles.offerSubtitle} numberOfLines={2}>
-                    {item.subtitle}
-                  </Text>
-                </View>
-              </Pressable>
-            )}
-            ItemSeparatorComponent={() => <View style={{ width: spacing.sm }} />}
-          />
-        </Section>
 
         {/* Customer Reviews */}
         {data.reviewHighlights.length > 0 && (
@@ -420,7 +381,21 @@ function ProductRail({
 }) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
-  if (!products.length) return null;
+
+  // An empty list must stay visible: silently hiding the section would look
+  // identical to "no products exist", and mock data must never stand in.
+  if (!products.length) {
+    return (
+      <Section title={title}>
+        <EmptyState
+          icon="cube-outline"
+          title="No products available right now."
+          description="Product data will appear here once it is available from the server."
+        />
+      </Section>
+    );
+  }
+
   return (
     <Section title={title} onSeeAll={onSeeAll}>
       <FlatList
@@ -518,26 +493,6 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
     borderColor: colors.border,
   },
   concernLabel: { ...typography.captionMedium, color: colors.textPrimary },
-  offerCard: {
-    width: 240,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    backgroundColor: colors.surface,
-    ...shadow.sm,
-  },
-  offerImage: { width: '100%', height: 110, backgroundColor: colors.surfaceMuted },
-  offerContent: { padding: spacing.sm, gap: 2 },
-  offerBadge: {
-    backgroundColor: colors.primarySurface,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: radius.sm,
-    marginBottom: 2,
-  },
-  offerBadgeText: { ...typography.tiny, color: colors.primary, fontWeight: '700' },
-  offerTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  offerSubtitle: { ...typography.caption, color: colors.textSecondary },
   reviewsWrap: { paddingHorizontal: spacing.md, backgroundColor: colors.surface, marginHorizontal: spacing.md, borderRadius: radius.lg, ...shadow.sm },
   articleCardWrap: { width: 220 },
   trustSection: {

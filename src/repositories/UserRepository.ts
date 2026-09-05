@@ -40,6 +40,11 @@ export const UserRepository = {
     return delay({ id: 'guest', name: 'Guest', email: '', phone: '', isGuest: true }, 200);
   },
 
+  // DEPRECATED — superseded by `src/services/auth` (see `OtpAuthService`), which
+  // is what the customer login flow now uses. These two are no longer called by
+  // any routed screen; they are kept only so the unrouted RegisterScreen and any
+  // future admin flow keep compiling. Do not build new code against them: the
+  // fixed MOCK_OTP above is exactly what the new service avoids.
   async sendOtp(_mobile: string): Promise<{ sent: boolean }> {
     return delay({ sent: true }, 400);
   },
