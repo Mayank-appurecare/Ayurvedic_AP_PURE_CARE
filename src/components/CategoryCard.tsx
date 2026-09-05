@@ -5,17 +5,26 @@ import { Ionicons } from '@expo/vector-icons';
 import { Category } from '../types';
 import { radius, shadow, spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
+import { categoryImageFor } from '../services/catalog/categoryImages';
 
 export function CategoryCard({ category, onPress }: { category: Category; onPress: () => void }) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  // A remote image from the API wins; otherwise fall back to the bundled
+  // artwork for this category id/name.
+  const imageSource = useMemo(
+    () => (category.image ? { uri: category.image } : categoryImageFor(category.id, category.name)),
+    [category.image, category.id, category.name]
+  );
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.pressed]} accessibilityRole="button">
       <View style={styles.imageWrap}>
-        {/* API categories carry no image, so fall back to the category's icon
-            inside the same circle rather than rendering an empty image. */}
-        {category.image ? (
-          <Image source={{ uri: category.image }} style={styles.image} contentFit="cover" transition={150} />
+        {/* Priority: a real image from the API, then the bundled AP Pure Care
+            artwork for this category, then the category's icon. The wrapper is
+            already a circle with overflow hidden, so `cover` crops cleanly
+            without stretching whatever source wins. */}
+        {imageSource ? (
+          <Image source={imageSource} style={styles.image} contentFit="cover" transition={150} />
         ) : (
           <View style={styles.iconFallback}>
             <Ionicons name={category.icon as any} size={28} color={colors.primary} />
@@ -35,7 +44,11 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
     flex: 1,
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
-    padding: spacing.sm,
+    // Narrower side padding than top/bottom: at three-across phone widths the
+    // card is ~91px, and 12px each side left too little room for a long single
+    // word like "Management", which was being ellipsised.
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.xs,
     alignItems: 'center',
     ...shadow.sm,
   },

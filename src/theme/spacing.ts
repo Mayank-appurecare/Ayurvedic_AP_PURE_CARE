@@ -81,6 +81,25 @@ export function gridColumns() {
   return 2;
 }
 
+/**
+ * Columns for the CATEGORY grid.
+ *
+ * Takes the width as an argument rather than reading `Dimensions` itself, so
+ * the caller can drive it from `useWindowDimensions()` and actually re-render
+ * when the window resizes — `Dimensions.get()` is a one-shot read and leaves a
+ * desktop column count stuck in place after a resize down to phone width.
+ *
+ * Phones get exactly 3 across; wider screens add columns so cards stay a
+ * readable size instead of stretching.
+ */
+export function categoryGridColumns(width: number) {
+  if (width >= 1280) return 7;
+  if (width >= 1024) return 6;
+  if (width >= 768) return 5;
+  if (width >= 600) return 4;
+  return 3;
+}
+
 export const breakpoints = {
   xs: 320,
   sm: 360,

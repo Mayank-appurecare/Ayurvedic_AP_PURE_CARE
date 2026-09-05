@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MainTabParamList, RootStackParamList } from '../../navigation/types';
-import { gridColumns, spacing, typography } from '../../theme';
+import { categoryGridColumns, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { AppHeader } from '../../components/AppHeader';
 import { CategoryCard } from '../../components/CategoryCard';
@@ -51,7 +51,13 @@ export function CategoriesScreen() {
     load();
   }, [load]);
 
-  const numColumns = gridColumns();
+  // useWindowDimensions re-renders on resize/rotation, so the grid reflows
+  // instead of keeping whatever column count the first render happened to see.
+  const { width } = useWindowDimensions();
+  const numColumns = categoryGridColumns(width);
+  // Narrow phones get slightly tighter page padding so three cards still have
+  // room for a full category name.
+  const listPadding = width < 380 ? spacing.sm : spacing.md;
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safe}>
@@ -63,10 +69,12 @@ export function CategoriesScreen() {
       ) : (
         <FlatList
           data={categories}
+          // Remounting on column change is required: FlatList cannot switch
+          // numColumns in place.
           key={numColumns}
           numColumns={numColumns}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingHorizontal: listPadding }]}
           columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
           ListHeaderComponent={
             <View style={styles.concernSection}>
@@ -113,9 +121,12 @@ export function CategoriesScreen() {
 
 const createStyles = (colors: AppColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
+  // paddingHorizontal is applied inline so it can tighten on narrow phones.
+  listContent: { paddingVertical: spacing.md, paddingBottom: spacing.xxl },
+  // Column spacing comes from `gap` alone; per-card horizontal margins used to
+  // stack on top of it and stole ~24px of usable width at phone sizes.
   row: { gap: spacing.sm },
-  cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
+  cardWrap: { flex: 1, marginBottom: spacing.sm },
   concernSection: { marginBottom: spacing.sm },
   sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
   concernChip: {

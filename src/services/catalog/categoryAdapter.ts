@@ -10,6 +10,24 @@ import { ApiCategory, AuthCatalog } from '../auth/types';
 import { Category, Concern } from '../../types';
 
 /**
+ * Categories the customer app never shows.
+ *
+ * The backend carries seed/demo rows next to the real ones (e.g. "Digestive
+ * Care Demo"). They are dropped here — the single place API categories become
+ * UI categories — so every screen that reads through the repository is covered
+ * at once, and no screen needs a name check of its own.
+ *
+ * The word boundary keeps this from ever catching a real name: only a
+ * standalone "demo" matches, so "Digestive Care" itself is untouched.
+ */
+const HIDDEN_CATEGORY_PATTERN = /\bdemo\b/i;
+
+/** `false` for seed/demo categories that must not reach the customer UI. */
+export function isCustomerFacingCategory(category: ApiCategory): boolean {
+  return !HIDDEN_CATEGORY_PATTERN.test(category.name);
+}
+
+/**
  * Keyword → Ionicons glyph. The API sends no icon, so one is derived from the
  * name for display only.
  *
@@ -82,7 +100,7 @@ function buildCountIndex(catalog: AuthCatalog): Map<number, number> {
  */
 export function toUiCategories(catalog: AuthCatalog): Category[] {
   const counts = buildCountIndex(catalog);
-  return catalog.categories.map((category) => ({
+  return catalog.categories.filter(isCustomerFacingCategory).map((category) => ({
     id: String(category.id),
     name: category.name,
     icon: iconForName(category.name),
@@ -99,7 +117,9 @@ export function toUiCategories(catalog: AuthCatalog): Category[] {
 export function toUiConcerns(catalog: AuthCatalog): Concern[] {
   const concerns: Concern[] = [];
   const seen = new Set<number>();
-  for (const category of catalog.categories) {
+  // Demo categories are skipped here too, so their sub-services never surface
+  // as "Shop by Concern" chips.
+  for (const category of catalog.categories.filter(isCustomerFacingCategory)) {
     for (const child of category.subService ?? []) {
       if (seen.has(child.id)) continue;
       seen.add(child.id);
