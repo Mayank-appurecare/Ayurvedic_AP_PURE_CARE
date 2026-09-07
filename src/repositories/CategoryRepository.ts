@@ -1,4 +1,4 @@
-import { categories as mockCategories, concerns } from '../data/categories';
+import { categories as mockCategories } from '../data/categories';
 import { Category, Concern } from '../types';
 import { getCatalog } from '../services/catalog/catalogStore';
 import { toUiCategories, toUiConcerns } from '../services/catalog/categoryAdapter';
@@ -9,25 +9,20 @@ const delay = <T,>(value: T, ms = 200): Promise<T> => new Promise((r) => setTime
 // operations persist for the session without a real backend.
 let categories: Category[] = [...mockCategories];
 
-// The backend returns the real catalog alongside the auth token, so once a user
-// has verified an OTP these read from that stored payload instead of the mock
-// list — no extra network request. A guest (or a signed-out app) has no catalog
-// and keeps the mock data, which is what preserves guest browsing.
+// Customer reads go through the catalog store, which serves the API payload
+// once a user has verified an OTP and the bundled copy otherwise. Both are the
+// same shape, so a guest sees exactly the same categories and concerns as a
+// signed-in user — one code path, no branch that can drift.
 export const CategoryRepository = {
   async getAll(): Promise<Category[]> {
-    const catalog = await getCatalog();
-    if (catalog?.categories.length) return toUiCategories(catalog);
-    return delay(categories);
+    return toUiCategories(await getCatalog());
   },
   async getById(id: string): Promise<Category | undefined> {
     const all = await this.getAll();
     return all.find((c) => c.id === id);
   },
   async getConcerns(): Promise<Concern[]> {
-    const catalog = await getCatalog();
-    const apiConcerns = catalog ? toUiConcerns(catalog) : [];
-    if (apiConcerns.length) return apiConcerns;
-    return delay(concerns);
+    return toUiConcerns(await getCatalog());
   },
 
   // --- Admin CRUD ---------------------------------------------------

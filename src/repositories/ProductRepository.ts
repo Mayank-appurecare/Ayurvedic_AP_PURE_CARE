@@ -17,20 +17,14 @@ function delay<T>(value: T, ms = MOCK_DELAY): Promise<T> {
 let products: Product[] = [...mockProducts];
 
 /**
- * The API's `productList`, mapped to the UI model — or `null` when there is no
- * catalog (guest, or before the first successful OTP verification).
+ * The catalog's `productList`, mapped to the UI model.
  *
- * The catalog arrives with the auth token, so reading it costs no request.
+ * The catalog store serves the API payload once a user has verified an OTP and
+ * the bundled copy otherwise, so a guest browses the same product list as a
+ * signed-in user. Reading it costs no request either way.
  */
-async function apiProducts(): Promise<Product[] | null> {
-  const catalog = await getCatalog();
-  if (!catalog?.products.length) return null;
-  return toUiProducts(catalog);
-}
-
-/** API products when signed in, otherwise the bundled mock list. */
-async function activeProducts(): Promise<Product[]> {
-  return (await apiProducts()) ?? products;
+async function catalogProducts(): Promise<Product[]> {
+  return toUiProducts(await getCatalog());
 }
 
 function applyFilters(list: Product[], filters?: ProductFilters): Product[] {
@@ -81,47 +75,38 @@ function applySort(list: Product[], sort?: SortOption): Product[] {
 
 export const ProductRepository = {
   /**
-   * The REAL API product list, and nothing else — returns `[]` when no catalog
-   * is available instead of falling back to mock data.
+   * The catalog product list, and nothing else — never mock data.
    *
-   * The Home screen uses this so it can never display mock products: with no
-   * catalog it shows its empty state, making the absence of real data visible.
+   * The Home screen uses this so what it shows always comes from the catalog,
+   * and it renders its empty state if the catalog ever carries no products.
    */
   async getApiProducts(): Promise<Product[]> {
-    return (await apiProducts()) ?? [];
+    return catalogProducts();
   },
 
   async getAll(filters?: ProductFilters, sort?: SortOption): Promise<Product[]> {
-    const list = await activeProducts();
+    const list = await catalogProducts();
     return delay(applySort(applyFilters(list, filters), sort));
   },
 
   async getById(id: string): Promise<Product | undefined> {
-    const list = await activeProducts();
+    const list = await catalogProducts();
     return delay(list.find((p) => p.id === id));
   },
 
   async getByCategory(categoryId: string, filters?: ProductFilters, sort?: SortOption): Promise<Product[]> {
-    const fromApi = await apiProducts();
-    if (fromApi) {
-      // API products carry the most specific category id, so a top-level
-      // category matches its own id plus all of its sub-service ids.
-      const catalog = await getCatalog();
-      const ids = catalog ? categoryIdsFor(catalog, categoryId) : [categoryId];
-      const list = fromApi.filter((p) => ids.includes(p.categoryId));
-      return delay(applySort(applyFilters(list, filters), sort));
-    }
-    const list = products.filter((p) => p.categoryId === categoryId);
+    // Products carry the most specific category id, so a top-level category
+    // matches its own id plus all of its sub-service ids.
+    const catalog = await getCatalog();
+    const ids = categoryIdsFor(catalog, categoryId);
+    const list = toUiProducts(catalog).filter((p) => ids.includes(p.categoryId));
     return delay(applySort(applyFilters(list, filters), sort));
   },
 
   async getByConcern(concernId: string): Promise<Product[]> {
-    const fromApi = await apiProducts();
-    if (fromApi) {
-      // A concern IS an API sub-service, so products reference it directly.
-      return delay(fromApi.filter((p) => p.categoryId === concernId));
-    }
-    return delay(products.filter((p) => p.concernIds.includes(concernId)));
+    // A concern IS a sub-service, so products reference it directly.
+    const list = await catalogProducts();
+    return delay(list.filter((p) => p.categoryId === concernId));
   },
 
   async getBestSellers(): Promise<Product[]> {
@@ -137,14 +122,14 @@ export const ProductRepository = {
   },
 
   async getRelated(productId: string, limit = 8): Promise<Product[]> {
-    const list = await activeProducts();
+    const list = await catalogProducts();
     const product = list.find((p) => p.id === productId);
     if (!product) return delay([]);
     return delay(list.filter((p) => p.id !== productId && p.categoryId === product.categoryId).slice(0, limit));
   },
 
   async getFrequentlyBoughtTogether(productId: string, limit = 3): Promise<Product[]> {
-    const list = await activeProducts();
+    const list = await catalogProducts();
     const product = list.find((p) => p.id === productId);
     if (!product) return delay([]);
     return delay(list.filter((p) => p.id !== productId).slice(0, limit));
@@ -153,7 +138,7 @@ export const ProductRepository = {
   async search(query: string): Promise<Product[]> {
     const q = query.trim().toLowerCase();
     if (!q) return delay([]);
-    const list = await activeProducts();
+    const list = await catalogProducts();
     return delay(
       list.filter(
         (p) =>
@@ -166,9 +151,9 @@ export const ProductRepository = {
   },
 
   async getBrands(): Promise<string[]> {
-    const list = await activeProducts();
-    // API products carry no brand; drop empties so the filter sheet shows no
-    // blank option.
+    const list = await catalogProducts();
+    // Catalog products carry no brand; drop empties so the filter sheet shows
+    // no blank option.
     return delay(Array.from(new Set(list.map((p) => p.brand).filter(Boolean))));
   },
 

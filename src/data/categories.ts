@@ -1,80 +1,59 @@
 import { Category, Concern } from '../types';
+import { iconForName } from '../services/catalog/categoryAdapter';
+
+// OFFLINE / GUEST FALLBACK CATEGORIES
+//
+// The real catalog arrives with the auth token, so a guest — or anyone opening
+// the app before signing in — has no API categories at all. This list stands in
+// for them.
+//
+// It mirrors the backend's own 18 categories: same names, same ids, same order,
+// so the app looks identical before and after sign-in. Names are copied verbatim
+// from the API; the API stays the source of truth once a session exists.
+//
+// NOTE: no `image` field on purpose. `CategoryCard` prefers `category.image`
+// (a remote URL) over the bundled artwork, so setting one here would hide the
+// AP Pure Care artwork. Leaving it undefined lets `categoryImages.ts` supply
+// the picture, exactly as it does for API categories.
+//
+// `icon` is derived with the same `iconForName` the API adapter uses, so the two
+// paths can never drift apart.
+//
+// `productCount` counts the bundled sample products in `products.ts`. Categories
+// with no sample product show 0 — honest, rather than an invented number.
+
+const fallback = (id: string, name: string, productCount: number, description: string): Category => ({
+  id,
+  name,
+  icon: iconForName(name),
+  description,
+  productCount,
+});
 
 export const categories: Category[] = [
-  {
-    id: 'cat-immunity',
-    name: 'Immunity Booster',
-    icon: 'shield-checkmark',
-    image: 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400',
-    description: 'Build natural resistance with time-tested herbal formulations.',
-    productCount: 4,
-  },
-  {
-    id: 'cat-digestion',
-    name: 'Digestion & Gut Health',
-    icon: 'leaf',
-    image: 'https://images.unsplash.com/photo-1610725664285-7c57e6eeac3f?w=400',
-    description: 'Support healthy digestion with Ayurvedic remedies.',
-    productCount: 3,
-  },
-  {
-    id: 'cat-haircare',
-    name: 'Hair Care',
-    icon: 'cut',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400',
-    description: 'Nourish your hair the natural way.',
-    productCount: 3,
-  },
-  {
-    id: 'cat-skincare',
-    name: 'Skin Care',
-    icon: 'sparkles',
-    image: 'https://images.unsplash.com/photo-1781948237644-4bb872b37c79?w=400',
-    description: 'Radiant skin through herbal skincare rituals.',
-    productCount: 3,
-  },
-  {
-    id: 'cat-sleep',
-    name: 'Stress & Sleep',
-    icon: 'moon',
-    image: 'https://images.unsplash.com/photo-1541480601022-2308c0f02487?w=400',
-    description: 'Calm the mind and rest better, naturally.',
-    productCount: 2,
-  },
-  {
-    id: 'cat-joint',
-    name: 'Joint Care',
-    icon: 'body',
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
-    description: 'Ease joint discomfort with Ayurvedic oils and blends.',
-    productCount: 2,
-  },
-  {
-    id: 'cat-women',
-    name: "Women's Wellness",
-    icon: 'flower',
-    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',
-    description: 'Holistic wellness formulated for women.',
-    productCount: 2,
-  },
-  {
-    id: 'cat-men',
-    name: "Men's Wellness",
-    icon: 'fitness',
-    image: 'https://images.unsplash.com/photo-1517832606299-7ae9b720a186?w=400',
-    description: 'Vitality and stamina support for men.',
-    productCount: 2,
-  },
-  {
-    id: 'cat-general',
-    name: 'General Wellness',
-    icon: 'heart',
-    image: 'https://images.unsplash.com/photo-1600335895229-6e75511892c8?w=400',
-    description: 'Everyday wellness essentials for the whole family.',
-    productCount: 2,
-  },
+  fallback('62', 'Baby & Kids', 0, 'Gentle Ayurvedic care for babies and children.'),
+  fallback('11', 'Diabetes Care', 0, 'Support healthy blood sugar the natural way.'),
+  fallback('1', 'Digestive Care', 2, 'Happy gut, healthy you — naturally.'),
+  fallback('61', 'Ear Care', 0, 'Soothing herbal care for ear health.'),
+  fallback('59', 'Eye Care', 0, 'Herbal support for healthy vision.'),
+  fallback('31', 'Hair Care', 2, 'Nourish your hair the natural way.'),
+  fallback('27', 'Heart Health', 0, 'Ayurvedic support for a healthy heart.'),
+  fallback('7', 'Immunity & Wellness', 4, 'Build natural resistance with time-tested formulations.'),
+  fallback('14', 'Joint & Bone Care', 2, 'Ease joint discomfort and support strong bones.'),
+  fallback('56', 'Kidney & Urinary', 0, 'Natural support for kidneys and urinary tract.'),
+  fallback('42', "Men's Health", 1, 'Vitality and stamina support for men.'),
+  fallback('60', 'Oral Care', 0, 'Natural care for strong teeth and healthy gums.'),
+  fallback('66', 'Pain Relief', 0, 'Relieve pain naturally with Ayurvedic formulations.'),
+  fallback('18', 'Respiratory Care', 0, 'Ayurvedic care for free and healthy breath.'),
+  fallback('36', 'Skin Care', 4, 'Radiant skin through herbal skincare rituals.'),
+  fallback('23', 'Stress, Sleep & Mind', 2, 'Calm the mind and rest better, naturally.'),
+  fallback('52', 'Weight Management', 0, 'Support healthy weight and metabolism.'),
+  fallback('46', "Women's Health", 2, 'Holistic wellness formulated for women.'),
 ];
 
+// Concerns are unchanged: these ids are referenced by `products.ts`
+// (`concernIds`), so renaming them would break "Shop by Concern" for guests.
+// Once signed in, the API's own sub-services replace this list.
 export const concerns: Concern[] = [
   { id: 'concern-immunity', name: 'Immunity', icon: 'shield-checkmark-outline' },
   { id: 'concern-digestion', name: 'Digestion', icon: 'nutrition-outline' },
