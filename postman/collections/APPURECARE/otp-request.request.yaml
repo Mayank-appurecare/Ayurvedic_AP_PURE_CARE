@@ -1,0 +1,14 @@
+$kind: http-request
+name: otp/request
+description: ""
+url: https://bartender-sloppy-sandstone.ngrok-free.dev/api/auth/otp/request
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "phoneNumber": "+919999999991"
+    }
+order: 2351565427084993
