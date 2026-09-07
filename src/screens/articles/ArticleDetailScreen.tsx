@@ -55,7 +55,7 @@ export function ArticleDetailScreen() {
   const handleShare = async () => {
     if (!article) return;
     try {
-      await Share.share({ message: `${article.title} — Ojas Ayurveda` });
+      await Share.share({ message: `${article.title} — AP Pure Care` });
     } catch {
       // Ignore share cancellation errors.
     }

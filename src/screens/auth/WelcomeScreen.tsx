@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +11,8 @@ import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/auth';
+
+const LOGO = require('../../../assets/logo-mark.png');
 
 export function WelcomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -22,8 +25,7 @@ export function WelcomeScreen() {
 
   // Ask the auth API whether it is up as soon as the app lands here, so a dead
   // backend is visible before the user types a number on the next screen.
-  // `checkReachable` sends NO OTP and never rejects; a healthy backend renders
-  // nothing at all, leaving this screen exactly as designed.
+  // `checkReachable` sends NO OTP and never rejects.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -47,19 +49,16 @@ export function WelcomeScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom + spacing.lg }]}>
-      <View style={styles.hero}>
-        <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1611071536236-4be69f0e5f1c?w=800' }}
-          style={styles.heroImage}
-          resizeMode="cover"
-        />
-        <View style={styles.iconCircle}>
-          <Ionicons name="leaf" size={28} color={colors.textOnPrimary} />
-        </View>
+      {/* Blurred logo watermark. Sits behind everything and ignores touches so
+          it can never intercept a tap on the buttons above it. */}
+      <View style={styles.watermarkWrap} pointerEvents="none">
+        <Image source={LOGO} style={styles.watermark} contentFit="contain" blurRadius={5} />
       </View>
 
+      {/* Everything is vertically centred as one block. */}
       <View style={styles.content}>
-        <Text style={styles.brand}>Ojas Ayurveda</Text>
+        <Image source={LOGO} style={styles.logo} contentFit="contain" accessibilityLabel="AP Pure Care" />
+        <Text style={styles.brand}>AP Pure Care</Text>
         <Text style={styles.subtitle}>Pure, natural wellness — delivered with care.</Text>
 
         {apiUnreachable && (
@@ -89,23 +88,41 @@ export function WelcomeScreen() {
 }
 
 const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, justifyContent: 'space-between' },
-  hero: { alignItems: 'center', paddingHorizontal: spacing.xl },
-  heroImage: { width: '100%', height: 220, borderRadius: 24, backgroundColor: colors.surfaceMuted },
-  iconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.primary,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    // Centres the single content block instead of pushing a hero to the top
+    // and the buttons to the bottom.
+    justifyContent: 'center',
+    alignItems: 'center',
+    // The watermark below is deliberately wider than the screen; clipping here
+    // stops it widening the page. On mobile web an overflow like that also
+    // expands the layout viewport, which added a vertical scrollbar too.
+    overflow: 'hidden',
+  },
+  watermarkWrap: {
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -28,
-    borderWidth: 4,
-    borderColor: colors.background,
+    overflow: 'hidden',
   },
-  content: { paddingHorizontal: spacing.xl, alignItems: 'center' },
-  brand: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.md },
-  subtitle: { ...typography.body, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xs, marginBottom: spacing.xl },
+  // Oversized and soft, but still readable as the logo behind the content.
+  watermark: { width: '150%', height: '75%', opacity: 0.2 },
+  content: {
+    width: '100%',
+    maxWidth: 420,
+    paddingHorizontal: spacing.xl,
+    alignItems: 'center',
+  },
+  logo: { width: 128, height: 128, marginBottom: spacing.sm },
+  brand: { ...typography.h1, color: colors.textPrimary, textAlign: 'center' },
+  subtitle: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.xs,
+    marginBottom: spacing.xl,
+  },
   // Only rendered when the auth API cannot be reached; invisible otherwise.
   apiNotice: {
     flexDirection: 'row',

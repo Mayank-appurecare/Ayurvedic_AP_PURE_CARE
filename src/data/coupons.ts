@@ -3,7 +3,7 @@ import { Coupon, Offer } from '../types';
 export const coupons: Coupon[] = [
   {
     id: 'coupon-welcome',
-    code: 'OJASWELCOME',
+    code: 'APWELCOME',
     description: 'Flat ₹100 off on your first order',
     discountType: 'flat',
     discountValue: 100,
@@ -84,6 +84,6 @@ export const offers: Offer[] = [
     subtitle: 'Flat ₹100 off on your first order',
     image: 'https://picsum.photos/seed/offer-welcome/800/500',
     badge: 'NEW USER',
-    couponCode: 'OJASWELCOME',
+    couponCode: 'APWELCOME',
   },
 ];

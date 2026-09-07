@@ -1,4 +1,4 @@
-# Ojas Ayurveda — React Native E-Commerce App (Frontend Prototype)
+# AP Pure Care — React Native E-Commerce App (Frontend Prototype)
 
 A complete, **frontend-only** React Native (Expo + TypeScript) prototype of an Ayurvedic
 e-commerce app: a full customer shopping journey plus a separate admin dashboard, all running

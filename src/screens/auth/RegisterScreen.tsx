@@ -86,7 +86,7 @@ export function RegisterScreen() {
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join Ojas Ayurveda for personalised wellness.</Text>
+        <Text style={styles.subtitle}>Join AP Pure Care for personalised wellness.</Text>
 
         <Field
           label="Full Name"

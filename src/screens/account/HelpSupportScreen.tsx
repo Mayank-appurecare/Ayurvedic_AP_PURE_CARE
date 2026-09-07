@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     question: 'Are your products lab tested?',
-    answer: 'Yes, all Ojas Ayurveda products are lab tested and GMP certified for quality and safety.',
+    answer: 'Yes, all AP Pure Care products are lab tested and GMP certified for quality and safety.',
   },
   {
     question: 'How do I use Ayurvedic capsules or powders correctly?',
@@ -43,7 +43,7 @@ const FAQS = [
 const CONTACT_OPTIONS = [
   { icon: 'chatbubble-ellipses-outline' as const, label: 'Chat with us', action: 'chat' as const },
   { icon: 'call-outline' as const, label: 'Call Support: 1800-XXX-XXXX', action: 'tel:1800999999' },
-  { icon: 'mail-outline' as const, label: 'Email: support@ojasayurveda.example', action: 'mailto:support@ojasayurveda.example' },
+  { icon: 'mail-outline' as const, label: 'Email: support@appurecare.example', action: 'mailto:support@appurecare.example' },
 ];
 
 export function HelpSupportScreen() {

@@ -1,4 +1,4 @@
-// Ojas Ayurveda design tokens — natural, premium, minimal Ayurvedic palette.
+// AP Pure Care design tokens — natural, premium, minimal Ayurvedic palette.
 export const colors = {
   // Brand
   primary: '#2F5233', // deep natural green

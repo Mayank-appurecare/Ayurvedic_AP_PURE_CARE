@@ -55,7 +55,7 @@ export function OrderConfirmationScreen() {
           <Ionicons name="checkmark-circle" size={88} color={colors.success} />
         </View>
         <Text style={styles.title}>Order Confirmed!</Text>
-        <Text style={styles.subtitle}>Thank you for shopping with Ojas Ayurveda.</Text>
+        <Text style={styles.subtitle}>Thank you for shopping with AP Pure Care.</Text>
 
         <View style={styles.detailsCard}>
           <DetailRow label="Order ID" value={`#${order.orderNumber}`} />

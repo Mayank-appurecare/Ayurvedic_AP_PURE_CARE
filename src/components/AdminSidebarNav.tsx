@@ -81,7 +81,7 @@ export function AdminSidebarNav({ visible, onClose, navigation, activeRoute }: P
               <Ionicons name="leaf" size={20} color={colors.textOnPrimary} />
             </View>
             <View>
-              <Text style={styles.brand}>Ojas Ayurveda</Text>
+              <Text style={styles.brand}>AP Pure Care</Text>
               <Text style={styles.brandSub}>Admin Panel</Text>
             </View>
           </View>

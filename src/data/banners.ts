@@ -19,7 +19,7 @@ export const banners: Banner[] = [
     title: 'Immunity Season',
     subtitle: 'Up to 25% off on immunity boosters',
     ctaLabel: 'Explore Offers',
-    targetCategoryId: 'cat-immunity',
+    targetCategoryId: '7',
   },
   {
     id: 'banner-3',
@@ -27,7 +27,7 @@ export const banners: Banner[] = [
     title: 'New: Kumkumadi Glow Oil',
     subtitle: 'Ancient skincare secret, now in your routine',
     ctaLabel: 'Discover',
-    targetCategoryId: 'cat-skincare',
+    targetCategoryId: '36',
   },
 ];
 

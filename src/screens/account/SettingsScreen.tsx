@@ -20,7 +20,7 @@ export function SettingsScreen() {
   const showLegal = (title: string) => {
     Alert.alert(
       title,
-      'This is placeholder legal copy for the Ojas Ayurveda demo app. In a production build, this would contain the full text.'
+      'This is placeholder legal copy for the AP Pure Care demo app. In a production build, this would contain the full text.'
     );
   };
 

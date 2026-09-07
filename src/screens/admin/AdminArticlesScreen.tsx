@@ -24,7 +24,7 @@ const emptyForm = {
   image: '',
   excerpt: '',
   content: '',
-  author: 'Ojas Wellness Desk',
+  author: 'AP Pure Care Wellness Desk',
   date: new Date().toISOString().slice(0, 10),
   readTimeMinutes: '4',
 };
@@ -67,7 +67,7 @@ export function AdminArticlesScreen() {
         image: form.image.trim() || `https://picsum.photos/seed/${Date.now()}/800/500`,
         excerpt: form.excerpt.trim(),
         content: contentLines.length ? contentLines : [form.excerpt.trim()],
-        author: form.author.trim() || 'Ojas Wellness Desk',
+        author: form.author.trim() || 'AP Pure Care Wellness Desk',
         date: form.date.trim() || new Date().toISOString().slice(0, 10),
         readTimeMinutes: Math.max(1, Number(form.readTimeMinutes) || 4),
       });
@@ -139,7 +139,7 @@ export function AdminArticlesScreen() {
                 multiline
                 numberOfLines={5}
               />
-              <FormField label="Author" value={form.author} onChangeText={(v) => setForm({ ...form, author: v })} placeholder="Ojas Wellness Desk" />
+              <FormField label="Author" value={form.author} onChangeText={(v) => setForm({ ...form, author: v })} placeholder="AP Pure Care Wellness Desk" />
               <View style={styles.row}>
                 <View style={[styles.field, { flex: 1 }]}>
                   <Text style={styles.fieldLabel}>Date (YYYY-MM-DD)</Text>

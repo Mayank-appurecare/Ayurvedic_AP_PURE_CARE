@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
@@ -77,9 +77,14 @@ export function SplashScreen() {
     <View style={styles.container}>
       <Animated.View style={[styles.logoWrap, { opacity, transform: [{ scale }] }]}>
         <View style={styles.iconCircle}>
-          <Ionicons name="leaf" size={48} color={colors.textOnPrimary} />
+          <Image
+            source={require('../../../assets/logo-mark.png')}
+            style={styles.logoImage}
+            contentFit="contain"
+            accessibilityLabel="AP Pure Care"
+          />
         </View>
-        <Text style={styles.brand}>Ojas Ayurveda</Text>
+        <Text style={styles.brand}>AP Pure Care</Text>
         <Text style={styles.tagline}>Rooted in Nature. Trusted for Wellness.</Text>
       </Animated.View>
     </View>
@@ -95,14 +100,17 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
   },
   logoWrap: { alignItems: 'center', gap: spacing.xs },
   iconCircle: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    backgroundColor: colors.primaryLight,
+    width: 112,
+    height: 112,
+    borderRadius: 56,
+    // White badge rather than the old green one: the logo's own artwork is
+    // gold + dark green, which would sink into a green circle.
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
   },
+  logoImage: { width: 84, height: 84 },
   brand: { ...typography.h1, color: colors.textOnPrimary },
   tagline: { ...typography.body, color: colors.primarySurface, marginTop: spacing.xxs, textAlign: 'center' },
 });

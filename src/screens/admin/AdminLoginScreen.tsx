@@ -64,7 +64,7 @@ export function AdminLoginScreen() {
           <View style={styles.logoWrap}>
             <Ionicons name="leaf" size={32} color={colors.textOnPrimary} />
           </View>
-          <Text style={styles.title}>Ojas Ayurveda</Text>
+          <Text style={styles.title}>AP Pure Care</Text>
           <Text style={styles.subtitle}>Admin Panel</Text>
 
           <View style={styles.card}>

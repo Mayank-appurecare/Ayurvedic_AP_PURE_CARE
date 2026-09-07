@@ -23,7 +23,7 @@ interface NotificationItem {
 
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
   { id: 'n1', kind: 'order', icon: 'bicycle-outline', title: 'Your order #OJA10023841 is out for delivery', time: '2h ago', read: false },
-  { id: 'n2', kind: 'offer', icon: 'pricetag-outline', title: 'Flat ₹100 off — use OJASWELCOME on your next order', time: '5h ago', read: false },
+  { id: 'n2', kind: 'offer', icon: 'pricetag-outline', title: 'Flat ₹100 off — use APWELCOME on your next order', time: '5h ago', read: false },
   { id: 'n3', kind: 'wellness', icon: 'leaf-outline', title: 'New article: Understanding Ashwagandha', time: 'Yesterday', read: false },
   { id: 'n4', kind: 'order', icon: 'checkmark-circle-outline', title: 'Your order #OJA10022190 has been delivered', time: 'Yesterday', read: true },
   { id: 'n5', kind: 'offer', icon: 'gift-outline', title: 'Immunity Season Sale — up to 25% off is live now', time: '2 days ago', read: true },

@@ -119,7 +119,7 @@ export function HomeScreen() {
   if (loading && !data) {
     return (
       <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
-        <LoadingState label="Loading Ojas Ayurveda..." />
+        <LoadingState label="Loading AP Pure Care..." />
       </SafeAreaView>
     );
   }
@@ -137,8 +137,14 @@ export function HomeScreen() {
       <View style={styles.header}>
         <View style={styles.headerTopRow}>
           <View style={styles.brandRow}>
-            <Ionicons name="leaf" size={22} color={colors.primary} />
-            <Text style={styles.brand}>Ojas Ayurveda</Text>
+            {/* AP Pure Care emblem, replacing the generic leaf glyph. */}
+            <Image
+              source={require('../../../assets/logo-mark.png')}
+              style={styles.brandMark}
+              contentFit="contain"
+              accessibilityLabel="AP Pure Care"
+            />
+            <Text style={styles.brand}>AP Pure Care</Text>
           </View>
           <View style={styles.headerIcons}>
             <Pressable
@@ -420,6 +426,7 @@ const createStyles = (colors: AppColors) => StyleSheet.create({
   header: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs },
   headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
+  brandMark: { width: 28, height: 28 },
   brand: { ...typography.h4, color: colors.primary },
   headerIcons: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   cartBtn: { padding: spacing.xxs },

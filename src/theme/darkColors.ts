@@ -1,4 +1,4 @@
-// Dark-mode counterpart of colors.ts — same keys, same Ojas Ayurveda identity
+// Dark-mode counterpart of colors.ts — same keys, same AP Pure Care identity
 // (deep green + warm gold on a dark ground instead of green-on-cream), so any
 // component that switches from `colors` to the active theme's colors keeps
 // working without further changes.

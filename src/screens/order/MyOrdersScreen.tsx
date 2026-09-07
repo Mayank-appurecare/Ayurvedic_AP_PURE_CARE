@@ -36,7 +36,7 @@ function notify(message: string) {
   if (Platform.OS === 'android') {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   } else {
-    Alert.alert('Ojas Ayurveda', message);
+    Alert.alert('AP Pure Care', message);
   }
 }
 

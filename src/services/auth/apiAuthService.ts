@@ -266,7 +266,7 @@ function buildUser(data: unknown, phoneE164: string): User {
 
   return {
     id: pick('id') ?? pick('userId') ?? phoneE164,
-    name: pick('name') ?? pick('fullName') ?? 'Ojas Customer',
+    name: pick('name') ?? pick('fullName') ?? 'AP Pure Care Customer',
     email: pick('email') ?? '',
     phone: pick('phoneNumber') ?? pick('phone') ?? phoneE164,
     isGuest: false,

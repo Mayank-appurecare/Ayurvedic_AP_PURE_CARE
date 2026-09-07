@@ -54,7 +54,7 @@ interface FormState {
 
 const EMPTY_FORM: FormState = {
   name: '',
-  brand: 'Ojas Ayurveda',
+  brand: 'AP Pure Care',
   categoryId: '',
   price: '',
   mrp: '',
@@ -216,7 +216,7 @@ export function AdminAddEditProductScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <Field label="Product Name" value={form.name} onChangeText={(t) => updateField('name', t)} error={errors.name} placeholder="e.g. Ashwagandha Capsules" />
-          <Field label="Brand" value={form.brand} onChangeText={(t) => updateField('brand', t)} error={errors.brand} placeholder="e.g. Ojas Ayurveda" />
+          <Field label="Brand" value={form.brand} onChangeText={(t) => updateField('brand', t)} error={errors.brand} placeholder="e.g. AP Pure Care" />
 
           <View style={styles.field}>
             <Text style={styles.label}>Category</Text>

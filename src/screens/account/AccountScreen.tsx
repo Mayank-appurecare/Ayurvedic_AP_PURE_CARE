@@ -105,7 +105,7 @@ export function AccountScreen() {
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
 
-        <Text style={styles.versionText}>Ojas Ayurveda • v1.0.0</Text>
+        <Text style={styles.versionText}>AP Pure Care • v1.0.0</Text>
       </ScrollView>
 
       <ConfirmationDialog
