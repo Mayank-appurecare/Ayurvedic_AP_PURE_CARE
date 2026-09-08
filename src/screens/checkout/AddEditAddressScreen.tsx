@@ -250,6 +250,7 @@ function FormField({
         placeholderTextColor={colors.textMuted}
         keyboardType={keyboardType}
         maxLength={maxLength}
+        accessibilityLabel={label}
       />
       {!!error && <Text style={styles.errorText}>{error}</Text>}
     </View>

@@ -33,8 +33,9 @@ module.exports = {
       type: 'android.emulator',
       device: {
         // Must match an AVD listed by 'emulator -list-avds'. CI creates its own
-        // (see .github/workflows/e2e.yml), so this value is for local runs.
-        avdName: 'Pixel_8_API_36',
+        // (see .github/workflows/e2e.yml). Locally this differs per machine, so
+        // it's overridable via DETOX_AVD_NAME instead of being hardcoded here.
+        avdName: process.env.DETOX_AVD_NAME || 'Pixel_8_API_36',
       },
     },
   },
