@@ -30,7 +30,8 @@
       "expo-splash-screen",
       "expo-font",
       "@sentry/react-native",
-      "./plugins/withDetoxAndroid"
+      "./plugins/withDetoxAndroid",
+      "expo-asset"
     ]
   }
 }

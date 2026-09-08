@@ -11,6 +11,7 @@
     "@react-navigation/native-stack": "^7.18.10",
     "@sentry/react-native": "~7.11.0",
     "expo": "~57.0.19",
+    "expo-asset": "~57.0.16",
     "expo-blur": "~57.0.2",
     "expo-clipboard": "~57.0.1",
     "expo-font": "~57.0.3",
@@ -60,6 +61,9 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/e2e/"
