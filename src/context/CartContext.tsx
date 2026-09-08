@@ -46,7 +46,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       .map((item) => {
         const product = productsCache.find((p) => p.id === item.productId);
         if (!product) return null;
-        const variant = product.variants.find((v) => v.id === item.variantId) ?? product.variants[0];
+        const variant =
+          product.variants.find((v) => v.id === item.variantId) ?? product.variants[0];
         return {
           ...item,
           product,
@@ -73,7 +74,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart: CartContextValue['addToCart'] = (productId, variantId, quantity = 1) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.productId === productId && i.variantId === variantId && !i.savedForLater);
+      const existing = prev.find(
+        (i) => i.productId === productId && i.variantId === variantId && !i.savedForLater
+      );
       if (existing) {
         return prev.map((i) =>
           i === existing ? { ...i, quantity: i.quantity + quantity, savedForLater: false } : i
@@ -84,7 +87,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const removeFromCart: CartContextValue['removeFromCart'] = (productId, variantId) => {
-    setItems((prev) => prev.filter((i) => !(i.productId === productId && i.variantId === variantId)));
+    setItems((prev) =>
+      prev.filter((i) => !(i.productId === productId && i.variantId === variantId))
+    );
   };
 
   const updateQuantity: CartContextValue['updateQuantity'] = (productId, variantId, quantity) => {
@@ -93,25 +98,32 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setItems((prev) =>
-      prev.map((i) => (i.productId === productId && i.variantId === variantId ? { ...i, quantity } : i))
+      prev.map((i) =>
+        i.productId === productId && i.variantId === variantId ? { ...i, quantity } : i
+      )
     );
   };
 
   const saveForLater: CartContextValue['saveForLater'] = (productId, variantId) => {
     setItems((prev) =>
-      prev.map((i) => (i.productId === productId && i.variantId === variantId ? { ...i, savedForLater: true } : i))
+      prev.map((i) =>
+        i.productId === productId && i.variantId === variantId ? { ...i, savedForLater: true } : i
+      )
     );
   };
 
   const moveToCart: CartContextValue['moveToCart'] = (productId, variantId) => {
     setItems((prev) =>
-      prev.map((i) => (i.productId === productId && i.variantId === variantId ? { ...i, savedForLater: false } : i))
+      prev.map((i) =>
+        i.productId === productId && i.variantId === variantId ? { ...i, savedForLater: false } : i
+      )
     );
   };
 
   const clearCart = () => setItems([]);
 
-  const isInCart = (productId: string) => items.some((i) => i.productId === productId && !i.savedForLater);
+  const isInCart = (productId: string) =>
+    items.some((i) => i.productId === productId && !i.savedForLater);
 
   const value: CartContextValue = {
     items,

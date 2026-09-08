@@ -20,7 +20,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         setWishlistIds((prev) =>
           prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
         ),
-      removeFromWishlist: (productId) => setWishlistIds((prev) => prev.filter((id) => id !== productId)),
+      removeFromWishlist: (productId) =>
+        setWishlistIds((prev) => prev.filter((id) => id !== productId)),
     }),
     [wishlistIds]
   );

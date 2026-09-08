@@ -99,8 +99,9 @@ export function AddressesScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.md, paddingBottom: spacing.xxl },
-  addBtn: { marginTop: spacing.sm },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    list: { padding: spacing.md, paddingBottom: spacing.xxl },
+    addBtn: { marginTop: spacing.sm },
+  });

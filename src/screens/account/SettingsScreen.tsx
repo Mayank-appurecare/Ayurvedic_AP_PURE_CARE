@@ -35,8 +35,16 @@ export function SettingsScreen() {
             value={pushNotifications}
             onValueChange={setPushNotifications}
           />
-          <ToggleRow label="Order Updates via SMS" value={smsUpdates} onValueChange={setSmsUpdates} />
-          <ToggleRow label="Promotional Emails" value={promoEmails} onValueChange={setPromoEmails} />
+          <ToggleRow
+            label="Order Updates via SMS"
+            value={smsUpdates}
+            onValueChange={setSmsUpdates}
+          />
+          <ToggleRow
+            label="Promotional Emails"
+            value={promoEmails}
+            onValueChange={setPromoEmails}
+          />
           <ToggleRow
             label="Dark Mode"
             value={isDark}
@@ -49,7 +57,10 @@ export function SettingsScreen() {
         <Text style={styles.sectionTitle}>About</Text>
         <View style={styles.card}>
           <InfoRow label="App Version" value="1.0.0" />
-          <Pressable style={[styles.row, styles.rowDivider]} onPress={() => showLegal('Terms & Conditions')}>
+          <Pressable
+            style={[styles.row, styles.rowDivider]}
+            onPress={() => showLegal('Terms & Conditions')}
+          >
             <Text style={styles.rowLabel}>Terms & Conditions</Text>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </Pressable>
@@ -108,22 +119,34 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, paddingBottom: spacing.xxl },
-  sectionTitle: {
-    ...typography.captionMedium,
-    color: colors.textMuted,
-    textTransform: 'uppercase',
-    marginBottom: spacing.xs,
-    marginTop: spacing.md,
-    marginLeft: spacing.xxs,
-  },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, overflow: 'hidden', ...shadow.sm },
-  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: spacing.sm + 2, paddingHorizontal: spacing.md, gap: spacing.sm },
-  rowDivider: { borderBottomWidth: 1, borderBottomColor: colors.divider },
-  rowLabel: { ...typography.body, color: colors.textPrimary, flex: 1 },
-  rowLabelDisabled: { color: colors.textMuted },
-  rowCaption: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
-  rowValue: { ...typography.body, color: colors.textSecondary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, paddingBottom: spacing.xxl },
+    sectionTitle: {
+      ...typography.captionMedium,
+      color: colors.textMuted,
+      textTransform: 'uppercase',
+      marginBottom: spacing.xs,
+      marginTop: spacing.md,
+      marginLeft: spacing.xxs,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+      ...shadow.sm,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: spacing.sm + 2,
+      paddingHorizontal: spacing.md,
+      gap: spacing.sm,
+    },
+    rowDivider: { borderBottomWidth: 1, borderBottomColor: colors.divider },
+    rowLabel: { ...typography.body, color: colors.textPrimary, flex: 1 },
+    rowLabelDisabled: { color: colors.textMuted },
+    rowCaption: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
+    rowValue: { ...typography.body, color: colors.textSecondary },
+  });

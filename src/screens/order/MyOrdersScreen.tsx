@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -79,11 +88,19 @@ export function MyOrdersScreen() {
       <AppHeader title="My Orders" showBack onBackPress={() => navigation.goBack()} />
 
       <View style={styles.tabsWrap}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsRow}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabsRow}
+        >
           {TABS.map((tab) => {
             const active = activeTab === tab.key;
             return (
-              <Pressable key={tab.key} onPress={() => setActiveTab(tab.key)} style={[styles.tab, active && styles.tabActive]}>
+              <Pressable
+                key={tab.key}
+                onPress={() => setActiveTab(tab.key)}
+                style={[styles.tab, active && styles.tabActive]}
+              >
                 <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>{tab.label}</Text>
               </Pressable>
             );
@@ -125,13 +142,19 @@ export function MyOrdersScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  tabsWrap: { borderBottomWidth: 1, borderBottomColor: colors.divider },
-  tabsRow: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: spacing.sm },
-  tab: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs, borderRadius: radius.pill, backgroundColor: colors.surfaceMuted },
-  tabActive: { backgroundColor: colors.primary },
-  tabLabel: { ...typography.captionMedium, color: colors.textSecondary },
-  tabLabelActive: { color: colors.textOnPrimary },
-  list: { padding: spacing.md, gap: spacing.sm },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    tabsWrap: { borderBottomWidth: 1, borderBottomColor: colors.divider },
+    tabsRow: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, gap: spacing.sm },
+    tab: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.pill,
+      backgroundColor: colors.surfaceMuted,
+    },
+    tabActive: { backgroundColor: colors.primary },
+    tabLabel: { ...typography.captionMedium, color: colors.textSecondary },
+    tabLabelActive: { color: colors.textOnPrimary },
+    list: { padding: spacing.md, gap: spacing.sm },
+  });

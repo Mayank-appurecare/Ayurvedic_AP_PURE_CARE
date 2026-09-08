@@ -126,12 +126,14 @@ export function AdminAddEditProductScreen() {
     const mrp = parseFloat(form.mrp);
     const stock = parseFloat(form.stock);
 
-    if (!form.price.trim() || Number.isNaN(price) || price < 0) nextErrors.price = 'Enter a valid selling price.';
+    if (!form.price.trim() || Number.isNaN(price) || price < 0)
+      nextErrors.price = 'Enter a valid selling price.';
     if (!form.mrp.trim() || Number.isNaN(mrp) || mrp < 0) nextErrors.mrp = 'Enter a valid MRP.';
     if (!Number.isNaN(price) && !Number.isNaN(mrp) && price > mrp) {
       nextErrors.price = 'Selling price cannot be greater than MRP.';
     }
-    if (!form.stock.trim() || Number.isNaN(stock) || stock < 0) nextErrors.stock = 'Enter a valid stock quantity.';
+    if (!form.stock.trim() || Number.isNaN(stock) || stock < 0)
+      nextErrors.stock = 'Enter a valid stock quantity.';
     if (!form.description.trim()) nextErrors.description = 'Description is required.';
 
     setErrors(nextErrors);
@@ -167,7 +169,9 @@ export function AdminAddEditProductScreen() {
           ingredients,
           howToUse,
           variants: existingProduct.variants.length
-            ? existingProduct.variants.map((v, index) => (index === 0 ? { ...v, price, mrp, stock } : v))
+            ? existingProduct.variants.map((v, index) =>
+                index === 0 ? { ...v, price, mrp, stock } : v
+              )
             : [{ id: `v-${Date.now()}`, label: 'Default', price, mrp, stock }],
         };
         await ProductRepository.updateProduct(updated);
@@ -204,7 +208,10 @@ export function AdminAddEditProductScreen() {
   if (loading) {
     return (
       <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-        <Header title={isEditMode ? 'Edit Product' : 'Add Product'} onBack={() => navigation.goBack()} />
+        <Header
+          title={isEditMode ? 'Edit Product' : 'Add Product'}
+          onBack={() => navigation.goBack()}
+        />
         <LoadingState label="Loading product..." />
       </SafeAreaView>
     );
@@ -212,11 +219,32 @@ export function AdminAddEditProductScreen() {
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
-      <Header title={isEditMode ? 'Edit Product' : 'Add Product'} onBack={() => navigation.goBack()} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
-        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-          <Field label="Product Name" value={form.name} onChangeText={(t) => updateField('name', t)} error={errors.name} placeholder="e.g. Ashwagandha Capsules" />
-          <Field label="Brand" value={form.brand} onChangeText={(t) => updateField('brand', t)} error={errors.brand} placeholder="e.g. AP Pure Care" />
+      <Header
+        title={isEditMode ? 'Edit Product' : 'Add Product'}
+        onBack={() => navigation.goBack()}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flex}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Field
+            label="Product Name"
+            value={form.name}
+            onChangeText={(t) => updateField('name', t)}
+            error={errors.name}
+            placeholder="e.g. Ashwagandha Capsules"
+          />
+          <Field
+            label="Brand"
+            value={form.brand}
+            onChangeText={(t) => updateField('brand', t)}
+            error={errors.brand}
+            placeholder="e.g. AP Pure Care"
+          />
 
           <View style={styles.field}>
             <Text style={styles.label}>Category</Text>
@@ -227,7 +255,11 @@ export function AdminAddEditProductScreen() {
                   onPress={() => updateField('categoryId', cat.id)}
                   style={[styles.chip, form.categoryId === cat.id && styles.chipActive]}
                 >
-                  <Text style={[styles.chipLabel, form.categoryId === cat.id && styles.chipLabelActive]}>{cat.name}</Text>
+                  <Text
+                    style={[styles.chipLabel, form.categoryId === cat.id && styles.chipLabelActive]}
+                  >
+                    {cat.name}
+                  </Text>
                 </Pressable>
               ))}
             </ScrollView>
@@ -235,12 +267,40 @@ export function AdminAddEditProductScreen() {
           </View>
 
           <View style={styles.row}>
-            <Field label="Selling Price (₹)" value={form.price} onChangeText={(t) => updateField('price', t)} error={errors.price} keyboardType="numeric" style={styles.halfField} placeholder="449" />
-            <Field label="MRP (₹)" value={form.mrp} onChangeText={(t) => updateField('mrp', t)} error={errors.mrp} keyboardType="numeric" style={styles.halfField} placeholder="599" />
+            <Field
+              label="Selling Price (₹)"
+              value={form.price}
+              onChangeText={(t) => updateField('price', t)}
+              error={errors.price}
+              keyboardType="numeric"
+              style={styles.halfField}
+              placeholder="449"
+            />
+            <Field
+              label="MRP (₹)"
+              value={form.mrp}
+              onChangeText={(t) => updateField('mrp', t)}
+              error={errors.mrp}
+              keyboardType="numeric"
+              style={styles.halfField}
+              placeholder="599"
+            />
           </View>
 
-          <Field label="Stock Quantity" value={form.stock} onChangeText={(t) => updateField('stock', t)} error={errors.stock} keyboardType="numeric" placeholder="120" />
-          <Field label="Image URL" value={form.imageUrl} onChangeText={(t) => updateField('imageUrl', t)} placeholder="https://..." />
+          <Field
+            label="Stock Quantity"
+            value={form.stock}
+            onChangeText={(t) => updateField('stock', t)}
+            error={errors.stock}
+            keyboardType="numeric"
+            placeholder="120"
+          />
+          <Field
+            label="Image URL"
+            value={form.imageUrl}
+            onChangeText={(t) => updateField('imageUrl', t)}
+            placeholder="https://..."
+          />
           <Field
             label="Description"
             value={form.description}
@@ -272,8 +332,17 @@ export function AdminAddEditProductScreen() {
           />
 
           <View style={styles.footerActions}>
-            <SecondaryButton label="Cancel" onPress={() => navigation.goBack()} style={styles.footerBtn} />
-            <PrimaryButton label={isEditMode ? 'Save Changes' : 'Add Product'} onPress={handleSave} loading={saving} style={styles.footerBtn} />
+            <SecondaryButton
+              label="Cancel"
+              onPress={() => navigation.goBack()}
+              style={styles.footerBtn}
+            />
+            <PrimaryButton
+              label={isEditMode ? 'Save Changes' : 'Add Product'}
+              onPress={handleSave}
+              loading={saving}
+              style={styles.footerBtn}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -284,7 +353,13 @@ export function AdminAddEditProductScreen() {
 function Header({ title, onBack }: { title: string; onBack: () => void }) {
   return (
     <View style={styles.header}>
-      <Pressable onPress={onBack} hitSlop={10} style={styles.iconBtn} accessibilityRole="button" accessibilityLabel="Go back">
+      <Pressable
+        onPress={onBack}
+        hitSlop={10}
+        style={styles.iconBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
         <Ionicons name="chevron-back" size={24} color={colors.textInverse} />
       </Pressable>
       <Text style={styles.headerTitle}>{title}</Text>
@@ -374,6 +449,11 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: colors.adminAccent, borderColor: colors.adminAccent },
   chipLabel: { ...typography.caption, color: colors.textSecondary },
   chipLabelActive: { color: colors.textOnPrimary, fontWeight: '700' },
-  footerActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md, marginBottom: spacing.xl },
+  footerActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    marginBottom: spacing.xl,
+  },
   footerBtn: { flex: 1 },
 });

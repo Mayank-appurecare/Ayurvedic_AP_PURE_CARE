@@ -14,7 +14,14 @@ interface Props {
   maxHeightPercent?: number;
 }
 
-export function BottomSheet({ visible, onClose, title, children, footer, maxHeightPercent = 80 }: Props) {
+export function BottomSheet({
+  visible,
+  onClose,
+  title,
+  children,
+  footer,
+  maxHeightPercent = 80,
+}: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -22,13 +29,21 @@ export function BottomSheet({ visible, onClose, title, children, footer, maxHeig
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose}>
         <Pressable
-          style={[styles.sheet, { maxHeight: `${maxHeightPercent}%`, paddingBottom: insets.bottom + spacing.md }]}
+          style={[
+            styles.sheet,
+            { maxHeight: `${maxHeightPercent}%`, paddingBottom: insets.bottom + spacing.md },
+          ]}
           onPress={(e) => e.stopPropagation()}
         >
           <View style={styles.handle} />
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
-            <Pressable onPress={onClose} hitSlop={10} accessibilityRole="button" accessibilityLabel="Close">
+            <Pressable
+              onPress={onClose}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+            >
               <Ionicons name="close" size={22} color={colors.textPrimary} />
             </Pressable>
           </View>
@@ -42,25 +57,38 @@ export function BottomSheet({ visible, onClose, title, children, footer, maxHeig
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
-  sheet: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
-    paddingTop: spacing.xs,
-  },
-  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: 'center', marginVertical: spacing.xs },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  title: { ...typography.h4, color: colors.textPrimary },
-  body: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
-  footer: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm, borderTopWidth: 1, borderTopColor: colors.divider },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    overlay: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
+    sheet: {
+      backgroundColor: colors.surface,
+      borderTopLeftRadius: radius.xl,
+      borderTopRightRadius: radius.xl,
+      paddingTop: spacing.xs,
+    },
+    handle: {
+      width: 40,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: colors.border,
+      alignSelf: 'center',
+      marginVertical: spacing.xs,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: spacing.lg,
+      paddingBottom: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    title: { ...typography.h4, color: colors.textPrimary },
+    body: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
+    footer: {
+      paddingHorizontal: spacing.lg,
+      paddingTop: spacing.sm,
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+    },
+  });

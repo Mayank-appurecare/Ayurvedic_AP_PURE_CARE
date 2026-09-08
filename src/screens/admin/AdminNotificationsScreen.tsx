@@ -54,11 +54,21 @@ export function AdminNotificationsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Notifications</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -67,7 +77,8 @@ export function AdminNotificationsScreen() {
         <View style={styles.demoNotice}>
           <Ionicons name="information-circle-outline" size={16} color={colors.info} />
           <Text style={styles.demoNoticeText}>
-            This is a demo broadcast log. No real push notifications are sent — messages are only recorded below.
+            This is a demo broadcast log. No real push notifications are sent — messages are only
+            recorded below.
           </Text>
         </View>
 
@@ -112,7 +123,9 @@ export function AdminNotificationsScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={a}
                 >
-                  <Text style={[styles.chipLabel, audience === a && styles.chipLabelActive]}>{a}</Text>
+                  <Text style={[styles.chipLabel, audience === a && styles.chipLabelActive]}>
+                    {a}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -130,12 +143,18 @@ export function AdminNotificationsScreen() {
 
         <Text style={styles.sectionTitle}>Sent Notifications</Text>
         {history.length === 0 ? (
-          <EmptyState icon="notifications-outline" title="No notifications sent yet" description="Composed broadcasts will appear here." />
+          <EmptyState
+            icon="notifications-outline"
+            title="No notifications sent yet"
+            description="Composed broadcasts will appear here."
+          />
         ) : (
           history.map((item) => (
             <View key={item.id} style={styles.historyCard}>
               <View style={styles.historyHeader}>
-                <Text style={styles.historyTitle} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.historyTitle} numberOfLines={1}>
+                  {item.title}
+                </Text>
                 <View style={styles.audienceChip}>
                   <Text style={styles.audienceChipText}>{item.audience}</Text>
                 </View>
@@ -147,7 +166,12 @@ export function AdminNotificationsScreen() {
         )}
       </ScrollView>
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminNotifications" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminNotifications"
+      />
     </SafeAreaView>
   );
 }
@@ -175,7 +199,13 @@ const styles = StyleSheet.create({
     padding: spacing.sm,
   },
   demoNoticeText: { ...typography.caption, color: colors.info, flex: 1 },
-  form: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  form: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   formTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
   field: { gap: spacing.xxs },
   fieldLabel: { ...typography.captionMedium, color: colors.textPrimary },
@@ -203,10 +233,26 @@ const styles = StyleSheet.create({
   chipLabel: { ...typography.caption, color: colors.textSecondary },
   chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
   sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: spacing.xs },
-  historyCard: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: 4, ...shadow.sm },
-  historyHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.xs },
+  historyCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: 4,
+    ...shadow.sm,
+  },
+  historyHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   historyTitle: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1 },
-  audienceChip: { backgroundColor: colors.primarySurface, paddingHorizontal: spacing.xs, paddingVertical: 2, borderRadius: radius.sm },
+  audienceChip: {
+    backgroundColor: colors.primarySurface,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    borderRadius: radius.sm,
+  },
   audienceChipText: { ...typography.tiny, color: colors.primary, fontWeight: '700' },
   historyMessage: { ...typography.body, color: colors.textSecondary },
   historyTimestamp: { ...typography.caption, color: colors.textMuted, marginTop: 2 },

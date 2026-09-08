@@ -59,7 +59,9 @@ export function CheckoutDeliveryScreen() {
                     <Ionicons name="time-outline" size={12} color={colors.textSecondary} />
                     <Text style={styles.etaText}>{option.etaLabel}</Text>
                   </View>
-                  <Text style={styles.priceText}>{isFree ? 'FREE' : option.price === 0 ? 'FREE' : formatPrice(option.price)}</Text>
+                  <Text style={styles.priceText}>
+                    {isFree ? 'FREE' : option.price === 0 ? 'FREE' : formatPrice(option.price)}
+                  </Text>
                 </View>
               </Pressable>
             );
@@ -68,42 +70,64 @@ export function CheckoutDeliveryScreen() {
         <View style={{ height: spacing.xxl }} />
       </ScrollView>
       <View style={styles.footer}>
-        <PrimaryButton label="Continue to Payment" onPress={() => navigation.navigate('CheckoutPayment')} />
+        <PrimaryButton
+          label="Continue to Payment"
+          onPress={() => navigation.navigate('CheckoutPayment')}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md },
-  noteCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    backgroundColor: colors.infoSurface,
-    borderRadius: radius.md,
-    padding: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  noteText: { ...typography.caption, color: colors.info, flex: 1 },
-  list: { gap: spacing.sm },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    gap: spacing.xxs,
-    ...shadow.sm,
-  },
-  cardSelected: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  cardTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  cardDescription: { ...typography.caption, color: colors.textSecondary },
-  cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.xxs },
-  etaChip: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.surfaceMuted, paddingHorizontal: spacing.xs, paddingVertical: 3, borderRadius: radius.sm },
-  etaText: { ...typography.tiny, color: colors.textSecondary },
-  priceText: { ...typography.bodyMedium, color: colors.textPrimary },
-  footer: { padding: spacing.md, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.divider },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md },
+    noteCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      backgroundColor: colors.infoSurface,
+      borderRadius: radius.md,
+      padding: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    noteText: { ...typography.caption, color: colors.info, flex: 1 },
+    list: { gap: spacing.sm },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      gap: spacing.xxs,
+      ...shadow.sm,
+    },
+    cardSelected: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
+    cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    cardTitle: { ...typography.bodyMedium, color: colors.textPrimary },
+    cardDescription: { ...typography.caption, color: colors.textSecondary },
+    cardFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: spacing.xxs,
+    },
+    etaChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: colors.surfaceMuted,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 3,
+      borderRadius: radius.sm,
+    },
+    etaText: { ...typography.tiny, color: colors.textSecondary },
+    priceText: { ...typography.bodyMedium, color: colors.textPrimary },
+    footer: {
+      padding: spacing.md,
+      backgroundColor: colors.surface,
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+    },
+  });

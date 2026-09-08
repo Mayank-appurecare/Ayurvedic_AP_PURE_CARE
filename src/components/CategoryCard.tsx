@@ -17,7 +17,11 @@ export function CategoryCard({ category, onPress }: { category: Category; onPres
     [category.image, category.id, category.name]
   );
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.pressed]} accessibilityRole="button">
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      accessibilityRole="button"
+    >
       <View style={styles.imageWrap}>
         {/* Priority: a real image from the API, then the bundled AP Pure Care
             artwork for this category, then the category's icon. The wrapper is
@@ -39,30 +43,31 @@ export function CategoryCard({ category, onPress }: { category: Category; onPres
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  card: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    // Narrower side padding than top/bottom: at three-across phone widths the
-    // card is ~91px, and 12px each side left too little room for a long single
-    // word like "Management", which was being ellipsised.
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xs,
-    alignItems: 'center',
-    ...shadow.sm,
-  },
-  pressed: { opacity: 0.9 },
-  imageWrap: {
-    width: 64,
-    height: 64,
-    borderRadius: radius.pill,
-    overflow: 'hidden',
-    backgroundColor: colors.primarySurface,
-    marginBottom: spacing.xs,
-  },
-  image: { width: '100%', height: '100%' },
-  iconFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
-  name: { ...typography.captionMedium, color: colors.textPrimary, textAlign: 'center' },
-  count: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    card: {
+      flex: 1,
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      // Narrower side padding than top/bottom: at three-across phone widths the
+      // card is ~91px, and 12px each side left too little room for a long single
+      // word like "Management", which was being ellipsised.
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.xs,
+      alignItems: 'center',
+      ...shadow.sm,
+    },
+    pressed: { opacity: 0.9 },
+    imageWrap: {
+      width: 64,
+      height: 64,
+      borderRadius: radius.pill,
+      overflow: 'hidden',
+      backgroundColor: colors.primarySurface,
+      marginBottom: spacing.xs,
+    },
+    image: { width: '100%', height: '100%' },
+    iconFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
+    name: { ...typography.captionMedium, color: colors.textPrimary, textAlign: 'center' },
+    count: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
+  });

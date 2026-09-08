@@ -3,7 +3,8 @@
 import { Address, User } from '../types';
 import { addresses as mockAddresses } from '../data/addresses';
 
-const delay = <T,>(value: T, ms = 500): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 500): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 let addressStore: Address[] = [...mockAddresses];
 
@@ -26,7 +27,12 @@ export const UserRepository = {
     });
   },
 
-  async register(params: { fullName: string; mobile: string; email: string; password: string }): Promise<User> {
+  async register(params: {
+    fullName: string;
+    mobile: string;
+    email: string;
+    password: string;
+  }): Promise<User> {
     return delay({
       id: 'user-1',
       name: params.fullName,

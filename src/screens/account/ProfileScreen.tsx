@@ -44,11 +44,33 @@ export function ProfileScreen() {
           <Text style={styles.changePhoto}>Change Photo</Text>
         </View>
 
-        <Field label="Full Name" value={name} onChangeText={setName} placeholder="Enter your full name" />
-        <Field label="Email Address" value={email} onChangeText={setEmail} placeholder="Enter your email" keyboardType="email-address" />
-        <Field label="Mobile Number" value={phone} onChangeText={setPhone} placeholder="Enter your mobile number" keyboardType="phone-pad" />
+        <Field
+          label="Full Name"
+          value={name}
+          onChangeText={setName}
+          placeholder="Enter your full name"
+        />
+        <Field
+          label="Email Address"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Enter your email"
+          keyboardType="email-address"
+        />
+        <Field
+          label="Mobile Number"
+          value={phone}
+          onChangeText={setPhone}
+          placeholder="Enter your mobile number"
+          keyboardType="phone-pad"
+        />
 
-        <PrimaryButton label="Save Changes" onPress={handleSave} loading={saving} style={styles.saveBtn} />
+        <PrimaryButton
+          label="Save Changes"
+          onPress={handleSave}
+          loading={saving}
+          style={styles.saveBtn}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -84,31 +106,36 @@ function Field({
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, paddingBottom: spacing.xxl },
-  avatarWrap: { alignItems: 'center', marginBottom: spacing.lg },
-  avatar: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { ...typography.h1, color: colors.primary },
-  changePhoto: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
-  field: { marginBottom: spacing.md },
-  fieldLabel: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    ...typography.body,
-    color: colors.textPrimary,
-  },
-  saveBtn: { marginTop: spacing.md },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, paddingBottom: spacing.xxl },
+    avatarWrap: { alignItems: 'center', marginBottom: spacing.lg },
+    avatar: {
+      width: 84,
+      height: 84,
+      borderRadius: 42,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: { ...typography.h1, color: colors.primary },
+    changePhoto: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
+    field: { marginBottom: spacing.md },
+    fieldLabel: {
+      ...typography.captionMedium,
+      color: colors.textSecondary,
+      marginBottom: spacing.xxs,
+    },
+    input: {
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.sm,
+      ...typography.body,
+      color: colors.textPrimary,
+    },
+    saveBtn: { marginTop: spacing.md },
+  });

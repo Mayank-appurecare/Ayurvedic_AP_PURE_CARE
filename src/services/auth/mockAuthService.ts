@@ -116,10 +116,16 @@ export const mockAuthService: OtpAuthService = {
 
     const existing = challenges.get(challengeId);
     if (!existing) {
-      throw new AuthError('CHALLENGE_NOT_FOUND', 'This verification has expired. Please start again.');
+      throw new AuthError(
+        'CHALLENGE_NOT_FOUND',
+        'This verification has expired. Please start again.'
+      );
     }
     if (Date.now() < existing.resendAvailableAt) {
-      throw new AuthError('RESEND_TOO_SOON', 'Please wait for the timer to finish before requesting a new code.');
+      throw new AuthError(
+        'RESEND_TOO_SOON',
+        'Please wait for the timer to finish before requesting a new code.'
+      );
     }
 
     // A resend replaces the code but keeps the same challenge handle.
@@ -133,15 +139,24 @@ export const mockAuthService: OtpAuthService = {
 
     const record = challenges.get(challengeId);
     if (!record) {
-      throw new AuthError('CHALLENGE_NOT_FOUND', 'This verification has expired. Please start again.');
+      throw new AuthError(
+        'CHALLENGE_NOT_FOUND',
+        'This verification has expired. Please start again.'
+      );
     }
     if (Date.now() > record.expiresAt) {
       challenges.delete(challengeId);
-      throw new AuthError('CODE_EXPIRED', 'This code has expired. Tap "Resend OTP" to get a new one.');
+      throw new AuthError(
+        'CODE_EXPIRED',
+        'This code has expired. Tap "Resend OTP" to get a new one.'
+      );
     }
     if (record.attemptsUsed >= MAX_VERIFY_ATTEMPTS) {
       challenges.delete(challengeId);
-      throw new AuthError('TOO_MANY_ATTEMPTS', 'Too many incorrect attempts. Please request a new code.');
+      throw new AuthError(
+        'TOO_MANY_ATTEMPTS',
+        'Too many incorrect attempts. Please request a new code.'
+      );
     }
 
     if (code !== record.code) {
@@ -149,7 +164,10 @@ export const mockAuthService: OtpAuthService = {
       const attemptsLeft = MAX_VERIFY_ATTEMPTS - record.attemptsUsed;
       if (attemptsLeft <= 0) {
         challenges.delete(challengeId);
-        throw new AuthError('TOO_MANY_ATTEMPTS', 'Too many incorrect attempts. Please request a new code.');
+        throw new AuthError(
+          'TOO_MANY_ATTEMPTS',
+          'Too many incorrect attempts. Please request a new code.'
+        );
       }
       throw new AuthError(
         'INVALID_CODE',

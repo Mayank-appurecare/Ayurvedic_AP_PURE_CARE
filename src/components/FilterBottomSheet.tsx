@@ -27,7 +27,15 @@ interface Props {
   hideCategoryFilter?: boolean;
 }
 
-export function FilterBottomSheet({ visible, onClose, categories, brands, value, onApply, hideCategoryFilter }: Props) {
+export function FilterBottomSheet({
+  visible,
+  onClose,
+  categories,
+  brands,
+  value,
+  onApply,
+  hideCategoryFilter,
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [draft, setDraft] = useState<ProductFilters>(value);
@@ -114,7 +122,12 @@ export function FilterBottomSheet({ visible, onClose, categories, brands, value,
       <Section title="Brand">
         <View style={styles.chipsWrap}>
           {brands.map((brand) => (
-            <Chip key={brand} label={brand} active={!!draft.brands?.includes(brand)} onPress={() => toggleBrand(brand)} />
+            <Chip
+              key={brand}
+              label={brand}
+              active={!!draft.brands?.includes(brand)}
+              onPress={() => toggleBrand(brand)}
+            />
           ))}
         </View>
       </Section>
@@ -133,7 +146,10 @@ export function FilterBottomSheet({ visible, onClose, categories, brands, value,
       </Section>
 
       <Section title="Availability & Offers">
-        <Pressable style={styles.checkboxRow} onPress={() => setDraft({ ...draft, inStockOnly: !draft.inStockOnly })}>
+        <Pressable
+          style={styles.checkboxRow}
+          onPress={() => setDraft({ ...draft, inStockOnly: !draft.inStockOnly })}
+        >
           <Ionicons
             name={draft.inStockOnly ? 'checkbox' : 'square-outline'}
             size={20}
@@ -141,7 +157,10 @@ export function FilterBottomSheet({ visible, onClose, categories, brands, value,
           />
           <Text style={styles.checkboxLabel}>In Stock Only</Text>
         </Pressable>
-        <Pressable style={styles.checkboxRow} onPress={() => setDraft({ ...draft, onOfferOnly: !draft.onOfferOnly })}>
+        <Pressable
+          style={styles.checkboxRow}
+          onPress={() => setDraft({ ...draft, onOfferOnly: !draft.onOfferOnly })}
+        >
           <Ionicons
             name={draft.onOfferOnly ? 'checkbox' : 'square-outline'}
             size={20}
@@ -178,23 +197,29 @@ function Chip({ label, active, onPress }: { label: string; active: boolean; onPr
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  section: { marginBottom: spacing.md },
-  sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xs },
-  chipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
-  chip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipLabel: { ...typography.caption, color: colors.textSecondary },
-  chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
-  checkboxRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingVertical: spacing.xs },
-  checkboxLabel: { ...typography.body, color: colors.textPrimary },
-  footerRow: { flexDirection: 'row', gap: spacing.sm },
-  footerBtn: { flex: 1 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    section: { marginBottom: spacing.md },
+    sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xs },
+    chipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
+    chip: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.pill,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+    chipLabel: { ...typography.caption, color: colors.textSecondary },
+    chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
+    checkboxRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      paddingVertical: spacing.xs,
+    },
+    checkboxLabel: { ...typography.body, color: colors.textPrimary },
+    footerRow: { flexDirection: 'row', gap: spacing.sm },
+    footerBtn: { flex: 1 },
+  });

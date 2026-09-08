@@ -3,7 +3,13 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
 
-export function LoadingState({ label = 'Loading...', fullScreen = true }: { label?: string; fullScreen?: boolean }) {
+export function LoadingState({
+  label = 'Loading...',
+  fullScreen = true,
+}: {
+  label?: string;
+  fullScreen?: boolean;
+}) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -14,8 +20,14 @@ export function LoadingState({ label = 'Loading...', fullScreen = true }: { labe
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, gap: spacing.sm },
-  fullScreen: { flex: 1 },
-  label: { ...typography.body, color: colors.textSecondary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.xxl,
+      gap: spacing.sm,
+    },
+    fullScreen: { flex: 1 },
+    label: { ...typography.body, color: colors.textSecondary },
+  });

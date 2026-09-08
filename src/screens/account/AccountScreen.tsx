@@ -34,18 +34,38 @@ export function AccountScreen() {
   const isGuest = !user || user.isGuest;
 
   const activityRows: Row[] = [
-    { icon: 'person-outline', label: 'My Profile', onPress: () => navigation.navigate('AccountProfile') },
+    {
+      icon: 'person-outline',
+      label: 'My Profile',
+      onPress: () => navigation.navigate('AccountProfile'),
+    },
     { icon: 'receipt-outline', label: 'My Orders', onPress: () => navigation.navigate('MyOrders') },
     { icon: 'heart-outline', label: 'Wishlist', onPress: () => navigation.navigate('Wishlist') },
-    { icon: 'location-outline', label: 'Addresses', onPress: () => navigation.navigate('Addresses') },
+    {
+      icon: 'location-outline',
+      label: 'Addresses',
+      onPress: () => navigation.navigate('Addresses'),
+    },
     { icon: 'star-outline', label: 'My Reviews', onPress: () => navigation.navigate('MyReviews') },
-    { icon: 'pricetag-outline', label: 'Offers & Coupons', onPress: () => navigation.navigate('Offers') },
+    {
+      icon: 'pricetag-outline',
+      label: 'Offers & Coupons',
+      onPress: () => navigation.navigate('Offers'),
+    },
   ];
 
   const supportRows: Row[] = [
-    { icon: 'notifications-outline', label: 'Notifications', onPress: () => navigation.navigate('Notifications') },
+    {
+      icon: 'notifications-outline',
+      label: 'Notifications',
+      onPress: () => navigation.navigate('Notifications'),
+    },
     { icon: 'settings-outline', label: 'Settings', onPress: () => navigation.navigate('Settings') },
-    { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => navigation.navigate('HelpSupport') },
+    {
+      icon: 'help-circle-outline',
+      label: 'Help & Support',
+      onPress: () => navigation.navigate('HelpSupport'),
+    },
   ];
 
   const handleConfirmLogout = async () => {
@@ -133,7 +153,11 @@ function Section({ title, rows }: { title: string; rows: Row[] }) {
           <Pressable
             key={row.label}
             onPress={row.onPress}
-            style={({ pressed }) => [styles.row, index !== rows.length - 1 && styles.rowDivider, pressed && styles.rowPressed]}
+            style={({ pressed }) => [
+              styles.row,
+              index !== rows.length - 1 && styles.rowDivider,
+              pressed && styles.rowPressed,
+            ]}
             accessibilityRole="button"
             accessibilityLabel={row.label}
           >
@@ -149,56 +173,79 @@ function Section({ title, rows }: { title: string; rows: Row[] }) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  scrollContent: { padding: spacing.md, paddingBottom: spacing.xxl },
-  screenTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    ...shadow.sm,
-  },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { ...typography.h3, color: colors.primary },
-  profileName: { ...typography.h4, color: colors.textPrimary },
-  profileMeta: { ...typography.caption, color: colors.textSecondary, marginTop: 2 },
-  loginBtn: { marginTop: spacing.sm },
-  section: { marginTop: spacing.lg },
-  sectionTitle: { ...typography.captionMedium, color: colors.textMuted, textTransform: 'uppercase', marginBottom: spacing.xs, marginLeft: spacing.xxs },
-  sectionCard: { backgroundColor: colors.surface, borderRadius: radius.lg, overflow: 'hidden', ...shadow.sm },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.sm + 2, paddingHorizontal: spacing.md },
-  rowDivider: { borderBottomWidth: 1, borderBottomColor: colors.divider },
-  rowPressed: { backgroundColor: colors.surfaceMuted },
-  rowIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rowLabel: { ...typography.body, color: colors.textPrimary, flex: 1 },
-  logoutRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginTop: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    ...shadow.sm,
-  },
-  logoutText: { ...typography.bodyMedium, color: colors.danger },
-  versionText: { ...typography.tiny, color: colors.textMuted, textAlign: 'center', marginTop: spacing.lg },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    scrollContent: { padding: spacing.md, paddingBottom: spacing.xxl },
+    screenTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
+    profileCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      ...shadow.sm,
+    },
+    avatar: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: { ...typography.h3, color: colors.primary },
+    profileName: { ...typography.h4, color: colors.textPrimary },
+    profileMeta: { ...typography.caption, color: colors.textSecondary, marginTop: 2 },
+    loginBtn: { marginTop: spacing.sm },
+    section: { marginTop: spacing.lg },
+    sectionTitle: {
+      ...typography.captionMedium,
+      color: colors.textMuted,
+      textTransform: 'uppercase',
+      marginBottom: spacing.xs,
+      marginLeft: spacing.xxs,
+    },
+    sectionCard: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+      ...shadow.sm,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      paddingVertical: spacing.sm + 2,
+      paddingHorizontal: spacing.md,
+    },
+    rowDivider: { borderBottomWidth: 1, borderBottomColor: colors.divider },
+    rowPressed: { backgroundColor: colors.surfaceMuted },
+    rowIconWrap: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    rowLabel: { ...typography.body, color: colors.textPrimary, flex: 1 },
+    logoutRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginTop: spacing.lg,
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      ...shadow.sm,
+    },
+    logoutText: { ...typography.bodyMedium, color: colors.danger },
+    versionText: {
+      ...typography.tiny,
+      color: colors.textMuted,
+      textAlign: 'center',
+      marginTop: spacing.lg,
+    },
+  });

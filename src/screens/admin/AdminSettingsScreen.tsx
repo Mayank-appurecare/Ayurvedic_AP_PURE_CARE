@@ -30,11 +30,21 @@ export function AdminSettingsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Settings</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -44,7 +54,12 @@ export function AdminSettingsScreen() {
           <Text style={styles.cardTitle}>Admin Profile</Text>
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>Name</Text>
-            <TextInput value={name} onChangeText={setName} style={styles.input} accessibilityLabel="Admin name" />
+            <TextInput
+              value={name}
+              onChangeText={setName}
+              style={styles.input}
+              accessibilityLabel="Admin name"
+            />
           </View>
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>Email</Text>
@@ -61,9 +76,21 @@ export function AdminSettingsScreen() {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Operational Alerts</Text>
-          <ToggleRow label="Low Stock Alerts" value={lowStockAlerts} onValueChange={setLowStockAlerts} />
-          <ToggleRow label="New Order Alerts" value={newOrderAlerts} onValueChange={setNewOrderAlerts} />
-          <ToggleRow label="Auto-approve Reviews" value={autoApproveReviews} onValueChange={setAutoApproveReviews} />
+          <ToggleRow
+            label="Low Stock Alerts"
+            value={lowStockAlerts}
+            onValueChange={setLowStockAlerts}
+          />
+          <ToggleRow
+            label="New Order Alerts"
+            value={newOrderAlerts}
+            onValueChange={setNewOrderAlerts}
+          />
+          <ToggleRow
+            label="Auto-approve Reviews"
+            value={autoApproveReviews}
+            onValueChange={setAutoApproveReviews}
+          />
           <ToggleRow
             label="Maintenance Mode (demo only)"
             value={maintenanceMode}
@@ -80,7 +107,12 @@ export function AdminSettingsScreen() {
         />
       </ScrollView>
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminSettings" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminSettings"
+      />
 
       <ConfirmationDialog
         visible={logoutVisible}
@@ -137,7 +169,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: { ...typography.h4, color: colors.textPrimary },
   content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxxl },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   cardTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
   field: { gap: spacing.xxs },
   fieldLabel: { ...typography.captionMedium, color: colors.textPrimary },

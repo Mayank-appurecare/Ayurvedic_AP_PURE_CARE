@@ -50,10 +50,14 @@ export function RegisterScreen() {
   const validate = (): boolean => {
     const nextErrors: FormErrors = {};
     if (!form.fullName.trim()) nextErrors.fullName = 'Enter your full name.';
-    if (!form.mobile.trim() || form.mobile.trim().length < 10) nextErrors.mobile = 'Enter a valid 10-digit mobile number.';
-    if (!form.email.trim() || !form.email.includes('@')) nextErrors.email = 'Enter a valid email address.';
-    if (!form.password || form.password.length < 6) nextErrors.password = 'Password must be at least 6 characters.';
-    if (form.confirmPassword !== form.password) nextErrors.confirmPassword = 'Passwords do not match.';
+    if (!form.mobile.trim() || form.mobile.trim().length < 10)
+      nextErrors.mobile = 'Enter a valid 10-digit mobile number.';
+    if (!form.email.trim() || !form.email.includes('@'))
+      nextErrors.email = 'Enter a valid email address.';
+    if (!form.password || form.password.length < 6)
+      nextErrors.password = 'Password must be at least 6 characters.';
+    if (form.confirmPassword !== form.password)
+      nextErrors.confirmPassword = 'Passwords do not match.';
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -74,7 +78,10 @@ export function RegisterScreen() {
       });
       navigation.navigate('OTPVerification', { mode: 'register', mobile: form.mobile.trim() });
     } catch (error) {
-      setErrors((prev) => ({ ...prev, form: error instanceof Error ? error.message : 'Unable to register. Please try again.' }));
+      setErrors((prev) => ({
+        ...prev,
+        form: error instanceof Error ? error.message : 'Unable to register. Please try again.',
+      }));
     } finally {
       setLoading(false);
     }
@@ -83,7 +90,10 @@ export function RegisterScreen() {
   const canSubmit = acceptedTerms;
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Create Account</Text>
         <Text style={styles.subtitle}>Join AP Pure Care for personalised wellness.</Text>
@@ -153,11 +163,21 @@ export function RegisterScreen() {
 
         {!!errors.form && <Text style={styles.formError}>{errors.form}</Text>}
 
-        <PrimaryButton label="Register" onPress={handleRegister} loading={loading} disabled={!canSubmit} style={styles.registerBtn} />
+        <PrimaryButton
+          label="Register"
+          onPress={handleRegister}
+          loading={loading}
+          disabled={!canSubmit}
+          style={styles.registerBtn}
+        />
 
         <View style={styles.footerRow}>
           <Text style={styles.footerText}>Already have an account? </Text>
-          <Pressable onPress={() => navigation.navigate('Login')} accessibilityRole="button" accessibilityLabel="Go to login">
+          <Pressable
+            onPress={() => navigation.navigate('Login')}
+            accessibilityRole="button"
+            accessibilityLabel="Go to login"
+          >
             <Text style={styles.footerLink}>Login</Text>
           </Pressable>
         </View>
@@ -178,7 +198,17 @@ interface FieldProps {
   maxLength?: number;
 }
 
-function Field({ label, value, onChangeText, placeholder, error, secureTextEntry, keyboardType, autoCapitalize, maxLength }: FieldProps) {
+function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  error,
+  secureTextEntry,
+  keyboardType,
+  autoCapitalize,
+  maxLength,
+}: FieldProps) {
   const [showSecure, setShowSecure] = useState(false);
   const isPassword = !!secureTextEntry;
 
@@ -204,7 +234,11 @@ function Field({ label, value, onChangeText, placeholder, error, secureTextEntry
             accessibilityRole="button"
             accessibilityLabel={showSecure ? 'Hide password' : 'Show password'}
           >
-            <Ionicons name={showSecure ? 'eye-off-outline' : 'eye-outline'} size={20} color={colors.textMuted} />
+            <Ionicons
+              name={showSecure ? 'eye-off-outline' : 'eye-outline'}
+              size={20}
+              color={colors.textMuted}
+            />
           </Pressable>
         )}
       </View>
@@ -217,7 +251,12 @@ const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.background },
   container: { padding: spacing.lg, paddingTop: spacing.xxl, flexGrow: 1 },
   title: { ...typography.h1, color: colors.textPrimary },
-  subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xxs, marginBottom: spacing.lg },
+  subtitle: {
+    ...typography.body,
+    color: colors.textSecondary,
+    marginTop: spacing.xxs,
+    marginBottom: spacing.lg,
+  },
   field: { marginBottom: spacing.md },
   label: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
   inputRow: {
@@ -232,10 +271,21 @@ const styles = StyleSheet.create({
   input: { flex: 1, paddingVertical: spacing.sm, color: colors.textPrimary, ...typography.body },
   inputError: { borderColor: colors.danger },
   errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
-  termsRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.xs, marginTop: spacing.xs, marginBottom: spacing.md },
+  termsRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+    marginBottom: spacing.md,
+  },
   termsText: { ...typography.caption, color: colors.textSecondary, flex: 1 },
   termsLink: { color: colors.primary, fontWeight: '600' },
-  formError: { ...typography.caption, color: colors.danger, textAlign: 'center', marginBottom: spacing.sm },
+  formError: {
+    ...typography.caption,
+    color: colors.danger,
+    textAlign: 'center',
+    marginBottom: spacing.sm,
+  },
   registerBtn: { marginBottom: spacing.lg },
   footerRow: { flexDirection: 'row', justifyContent: 'center', paddingBottom: spacing.lg },
   footerText: { ...typography.body, color: colors.textSecondary },

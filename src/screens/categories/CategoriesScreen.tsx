@@ -109,7 +109,12 @@ export function CategoriesScreen() {
             <View style={styles.cardWrap}>
               <CategoryCard
                 category={item}
-                onPress={() => navigation.navigate('CategoryProducts', { categoryId: item.id, categoryName: item.name })}
+                onPress={() =>
+                  navigation.navigate('CategoryProducts', {
+                    categoryId: item.id,
+                    categoryName: item.name,
+                  })
+                }
               />
             </View>
           )}
@@ -119,27 +124,28 @@ export function CategoriesScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  // paddingHorizontal is applied inline so it can tighten on narrow phones.
-  listContent: { paddingVertical: spacing.md, paddingBottom: spacing.xxl },
-  // Column spacing comes from `gap` alone; per-card horizontal margins used to
-  // stack on top of it and stole ~24px of usable width at phone sizes.
-  row: { gap: spacing.sm },
-  cardWrap: { flex: 1, marginBottom: spacing.sm },
-  concernSection: { marginBottom: spacing.sm },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
-  concernChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.surface,
-    borderRadius: 999,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginRight: spacing.xs,
-  },
-  concernLabel: { ...typography.captionMedium, color: colors.textPrimary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    // paddingHorizontal is applied inline so it can tighten on narrow phones.
+    listContent: { paddingVertical: spacing.md, paddingBottom: spacing.xxl },
+    // Column spacing comes from `gap` alone; per-card horizontal margins used to
+    // stack on top of it and stole ~24px of usable width at phone sizes.
+    row: { gap: spacing.sm },
+    cardWrap: { flex: 1, marginBottom: spacing.sm },
+    concernSection: { marginBottom: spacing.sm },
+    sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
+    concernChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      backgroundColor: colors.surface,
+      borderRadius: 999,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginRight: spacing.xs,
+    },
+    concernLabel: { ...typography.captionMedium, color: colors.textPrimary },
+  });

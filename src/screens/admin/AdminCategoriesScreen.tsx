@@ -66,7 +66,11 @@ export function AdminCategoriesScreen() {
 
   const openEditForm = (category: Category) => {
     setEditingCategory(category);
-    setForm({ name: category.name, description: category.description ?? '', image: category.image ?? PLACEHOLDER_IMAGE });
+    setForm({
+      name: category.name,
+      description: category.description ?? '',
+      image: category.image ?? PLACEHOLDER_IMAGE,
+    });
     setFormError('');
     setFormVisible(true);
   };
@@ -106,7 +110,13 @@ export function AdminCategoriesScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => setSidebarVisible(true)} hitSlop={10} style={styles.iconBtn} accessibilityRole="button" accessibilityLabel="Open menu">
+        <Pressable
+          onPress={() => setSidebarVisible(true)}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Open menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textInverse} />
         </Pressable>
         <Text style={styles.headerTitle}>Categories</Text>
@@ -114,7 +124,13 @@ export function AdminCategoriesScreen() {
       </View>
 
       <View style={styles.toolbar}>
-        <PrimaryButton label="+ Add Category" onPress={openAddForm} fullWidth={false} size="md" style={styles.addBtn} />
+        <PrimaryButton
+          label="+ Add Category"
+          onPress={openAddForm}
+          fullWidth={false}
+          size="md"
+          style={styles.addBtn}
+        />
       </View>
 
       {loading ? (
@@ -122,7 +138,12 @@ export function AdminCategoriesScreen() {
       ) : error ? (
         <ErrorState onRetry={loadCategories} />
       ) : categories.length === 0 ? (
-        <EmptyState icon="grid-outline" title="No categories yet" actionLabel="Add Category" onAction={openAddForm} />
+        <EmptyState
+          icon="grid-outline"
+          title="No categories yet"
+          actionLabel="Add Category"
+          onAction={openAddForm}
+        />
       ) : (
         <FlatList
           data={categories}
@@ -139,10 +160,20 @@ export function AdminCategoriesScreen() {
                 </Text>
                 <Text style={styles.cardCount}>{item.productCount} products</Text>
                 <View style={styles.cardActions}>
-                  <Pressable onPress={() => openEditForm(item)} style={styles.cardActionBtn} accessibilityRole="button" accessibilityLabel={`Edit ${item.name}`}>
+                  <Pressable
+                    onPress={() => openEditForm(item)}
+                    style={styles.cardActionBtn}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Edit ${item.name}`}
+                  >
                     <Ionicons name="create-outline" size={16} color={colors.adminAccent} />
                   </Pressable>
-                  <Pressable onPress={() => setPendingDeleteId(item.id)} style={styles.cardActionBtn} accessibilityRole="button" accessibilityLabel={`Delete ${item.name}`}>
+                  <Pressable
+                    onPress={() => setPendingDeleteId(item.id)}
+                    style={styles.cardActionBtn}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Delete ${item.name}`}
+                  >
                     <Ionicons name="trash-outline" size={16} color={colors.danger} />
                   </Pressable>
                 </View>
@@ -152,10 +183,17 @@ export function AdminCategoriesScreen() {
         />
       )}
 
-      <Modal visible={formVisible} transparent animationType="slide" onRequestClose={() => setFormVisible(false)}>
+      <Modal
+        visible={formVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setFormVisible(false)}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>{editingCategory ? 'Edit Category' : 'Add Category'}</Text>
+            <Text style={styles.modalTitle}>
+              {editingCategory ? 'Edit Category' : 'Add Category'}
+            </Text>
             <Text style={styles.modalLabel}>Category Name</Text>
             <TextInput
               value={form.name}
@@ -185,7 +223,11 @@ export function AdminCategoriesScreen() {
             />
             {!!formError && <Text style={styles.errorText}>{formError}</Text>}
             <View style={styles.modalActions}>
-              <SecondaryButton label="Cancel" onPress={() => setFormVisible(false)} style={styles.modalActionBtn} />
+              <SecondaryButton
+                label="Cancel"
+                onPress={() => setFormVisible(false)}
+                style={styles.modalActionBtn}
+              />
               <PrimaryButton label="Save" onPress={handleSave} style={styles.modalActionBtn} />
             </View>
           </View>
@@ -202,7 +244,12 @@ export function AdminCategoriesScreen() {
         onCancel={() => setPendingDeleteId(null)}
       />
 
-      <AdminSidebarNav visible={sidebarVisible} onClose={() => setSidebarVisible(false)} navigation={navigation} activeRoute="AdminCategories" />
+      <AdminSidebarNav
+        visible={sidebarVisible}
+        onClose={() => setSidebarVisible(false)}
+        navigation={navigation}
+        activeRoute="AdminCategories"
+      />
     </SafeAreaView>
   );
 }
@@ -223,15 +270,35 @@ const styles = StyleSheet.create({
   addBtn: { paddingHorizontal: spacing.sm },
   listContent: { padding: spacing.md, gap: spacing.sm },
   columnWrapper: { gap: spacing.sm },
-  card: { flex: 1, backgroundColor: colors.surface, borderRadius: radius.lg, overflow: 'hidden', marginBottom: spacing.sm, ...shadow.sm },
+  card: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    marginBottom: spacing.sm,
+    ...shadow.sm,
+  },
   cardImage: { width: '100%', height: 90, backgroundColor: colors.surfaceMuted },
   cardBody: { padding: spacing.sm, gap: 2 },
   cardName: { ...typography.bodyMedium, color: colors.textPrimary },
   cardCount: { ...typography.caption, color: colors.textMuted },
   cardActions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xs },
-  cardActionBtn: { width: 28, height: 28, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceMuted, borderRadius: radius.sm },
+  cardActionBtn: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.sm,
+  },
   modalOverlay: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end' },
-  modalCard: { backgroundColor: colors.surface, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl, padding: spacing.lg, gap: spacing.xxs },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    padding: spacing.lg,
+    gap: spacing.xxs,
+  },
   modalTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
   modalLabel: { ...typography.captionMedium, color: colors.textPrimary, marginTop: spacing.xs },
   modalInput: {

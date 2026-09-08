@@ -61,7 +61,11 @@ export function OrderConfirmationScreen() {
           <DetailRow label="Order ID" value={`#${order.orderNumber}`} />
           <DetailRow label="Amount Paid" value={formatPrice(order.total)} />
           <DetailRow label="Payment Method" value={order.paymentMethod} />
-          <DetailRow label="Estimated Delivery" value={order.deliveryEstimate ?? 'Arriving soon'} last />
+          <DetailRow
+            label="Estimated Delivery"
+            value={order.deliveryEstimate ?? 'Arriving soon'}
+            last
+          />
         </View>
 
         <PrimaryButton
@@ -92,22 +96,33 @@ function DetailRow({ label, value, last }: { label: string; value: string; last?
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1, padding: spacing.lg, alignItems: 'center', justifyContent: 'center' },
-  iconWrap: { marginBottom: spacing.md },
-  title: { ...typography.h2, color: colors.textPrimary, textAlign: 'center' },
-  subtitle: { ...typography.body, color: colors.textSecondary, textAlign: 'center', marginTop: spacing.xxs, marginBottom: spacing.lg },
-  detailsCard: {
-    width: '100%',
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  detailRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.sm },
-  detailRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.divider },
-  detailLabel: { ...typography.body, color: colors.textSecondary },
-  detailValue: { ...typography.bodyMedium, color: colors.textPrimary, maxWidth: '60%' },
-  button: { width: '100%', marginTop: spacing.sm },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { flex: 1, padding: spacing.lg, alignItems: 'center', justifyContent: 'center' },
+    iconWrap: { marginBottom: spacing.md },
+    title: { ...typography.h2, color: colors.textPrimary, textAlign: 'center' },
+    subtitle: {
+      ...typography.body,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginTop: spacing.xxs,
+      marginBottom: spacing.lg,
+    },
+    detailsCard: {
+      width: '100%',
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      marginBottom: spacing.lg,
+    },
+    detailRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: spacing.sm,
+    },
+    detailRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.divider },
+    detailLabel: { ...typography.body, color: colors.textSecondary },
+    detailValue: { ...typography.bodyMedium, color: colors.textPrimary, maxWidth: '60%' },
+    button: { width: '100%', marginTop: spacing.sm },
+  });

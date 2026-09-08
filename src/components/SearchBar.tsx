@@ -15,7 +15,16 @@ interface Props {
   onClear?: () => void;
 }
 
-export function SearchBar({ value, onChangeText, placeholder = 'Search Ayurvedic products', onSubmit, onPressIn, editable = true, autoFocus, onClear }: Props) {
+export function SearchBar({
+  value,
+  onChangeText,
+  placeholder = 'Search Ayurvedic products',
+  onSubmit,
+  onPressIn,
+  editable = true,
+  autoFocus,
+  onClear,
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -34,7 +43,12 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search Ayurvedic
         pointerEvents={editable ? 'auto' : 'none'}
       />
       {value.length > 0 && onClear && (
-        <Pressable onPress={onClear} hitSlop={8} accessibilityRole="button" accessibilityLabel="Clear search">
+        <Pressable
+          onPress={onClear}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Clear search"
+        >
           <Ionicons name="close-circle" size={18} color={colors.textMuted} />
         </Pressable>
       )}
@@ -42,20 +56,21 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search Ayurvedic
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    height: 44,
-    gap: spacing.xs,
-  },
-  input: {
-    flex: 1,
-    ...typography.body,
-    color: colors.textPrimary,
-    height: '100%',
-  },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surfaceMuted,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.sm,
+      height: 44,
+      gap: spacing.xs,
+    },
+    input: {
+      flex: 1,
+      ...typography.body,
+      color: colors.textPrimary,
+      height: '100%',
+    },
+  });

@@ -127,13 +127,25 @@ function logResponse(
   }
 }
 
-function logFailure(id: number, method: string, url: string, elapsedMs: number, reason: string): void {
+function logFailure(
+  id: number,
+  method: string,
+  url: string,
+  elapsedMs: number,
+  reason: string
+): void {
   if (!__DEV__) return;
   console.log(`${LOG_PREFIX} #${id} ✕ ${method} ${url} (${elapsedMs}ms) ${reason}`);
 }
 
 /** The reachability probe answers with no body, so it gets its own one-liner. */
-function logReachability(id: number, url: string, httpStatus: number, elapsedMs: number, ok: boolean): void {
+function logReachability(
+  id: number,
+  url: string,
+  httpStatus: number,
+  elapsedMs: number,
+  ok: boolean
+): void {
   if (!__DEV__) return;
   console.log(
     `${LOG_PREFIX} #${id} ← ${ok ? 'REACHABLE' : 'UNREACHABLE'} ${httpStatus} OPTIONS ${url} (${elapsedMs}ms)`
@@ -190,8 +202,17 @@ async function postJson<T>(path: string, body: unknown): Promise<ApiEnvelope<T>>
   try {
     raw = await response.text();
   } catch (error) {
-    logFailure(id, 'POST', url, Date.now() - startedAt, `could not read body: ${(error as Error | null)?.message ?? 'unknown'}`);
-    throw new AuthError('NETWORK', 'Received an unexpected response from the server. Please try again.');
+    logFailure(
+      id,
+      'POST',
+      url,
+      Date.now() - startedAt,
+      `could not read body: ${(error as Error | null)?.message ?? 'unknown'}`
+    );
+    throw new AuthError(
+      'NETWORK',
+      'Received an unexpected response from the server. Please try again.'
+    );
   }
 
   let envelope: ApiEnvelope<T> | null = null;
@@ -206,11 +227,17 @@ async function postJson<T>(path: string, body: unknown): Promise<ApiEnvelope<T>>
   if (!envelope) {
     // A non-JSON body means we reached something other than the API (a proxy
     // error page, the ngrok warning, a tunnel that is offline).
-    throw new AuthError('NETWORK', 'Received an unexpected response from the server. Please try again.');
+    throw new AuthError(
+      'NETWORK',
+      'Received an unexpected response from the server. Please try again.'
+    );
   }
 
   if (!response.ok || envelope.status !== STATUS_OK) {
-    throw new AuthError(mapErrorCode(response.status, envelope.message), errorMessage(response.status, envelope.message));
+    throw new AuthError(
+      mapErrorCode(response.status, envelope.message),
+      errorMessage(response.status, envelope.message)
+    );
   }
 
   return envelope;
@@ -287,10 +314,14 @@ function extractCatalog(data: unknown): AuthCatalog | null {
   const rawProducts = Array.isArray(payload.productList) ? payload.productList : null;
   if (!rawCategories && !rawProducts) return null;
 
-  const isNamedNode = (value: unknown): value is { id: number; name: string; description?: unknown } => {
+  const isNamedNode = (
+    value: unknown
+  ): value is { id: number; name: string; description?: unknown } => {
     if (!value || typeof value !== 'object') return false;
     const node = value as Record<string, unknown>;
-    return typeof node.id === 'number' && typeof node.name === 'string' && node.name.trim().length > 0;
+    return (
+      typeof node.id === 'number' && typeof node.name === 'string' && node.name.trim().length > 0
+    );
   };
 
   const categories: ApiCategory[] = (rawCategories ?? []).filter(isNamedNode).map((node) => {
@@ -315,14 +346,17 @@ function extractCatalog(data: unknown): AuthCatalog | null {
   // fields, so each is normalised rather than trusted.
   const str = (value: unknown): string | null =>
     typeof value === 'string' && value.trim() ? value.trim() : null;
-  const num = (value: unknown): number => (typeof value === 'number' && Number.isFinite(value) ? value : 0);
+  const num = (value: unknown): number =>
+    typeof value === 'number' && Number.isFinite(value) ? value : 0;
   const bool = (value: unknown): boolean => value === true;
 
   const products: ApiProduct[] = (rawProducts ?? [])
     .filter((value): value is Record<string, unknown> => {
       if (!value || typeof value !== 'object') return false;
       const node = value as Record<string, unknown>;
-      return typeof node.id === 'number' && typeof node.name === 'string' && node.name.trim().length > 0;
+      return (
+        typeof node.id === 'number' && typeof node.name === 'string' && node.name.trim().length > 0
+      );
     })
     .map((node) => ({
       id: node.id as number,

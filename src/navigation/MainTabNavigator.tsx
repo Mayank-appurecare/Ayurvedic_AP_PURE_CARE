@@ -15,7 +15,10 @@ import { AccountScreen } from '../screens/account/AccountScreen';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const ICONS: Record<keyof MainTabParamList, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }> = {
+const ICONS: Record<
+  keyof MainTabParamList,
+  { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }
+> = {
   HomeTab: { active: 'home', inactive: 'home-outline' },
   CategoriesTab: { active: 'grid', inactive: 'grid-outline' },
   WishlistTab: { active: 'heart', inactive: 'heart-outline' },
@@ -68,7 +71,11 @@ export function MainTabNavigator() {
           const iconSet = ICONS[route.name as keyof MainTabParamList];
           return (
             <View>
-              <Ionicons name={focused ? iconSet.active : iconSet.inactive} size={size} color={color} />
+              <Ionicons
+                name={focused ? iconSet.active : iconSet.inactive}
+                size={size}
+                color={color}
+              />
               {route.name === 'CartTab' && <TabBadge count={cartCount} />}
             </View>
           );
@@ -76,37 +83,50 @@ export function MainTabNavigator() {
       })}
     >
       <Tab.Screen name="HomeTab" component={HomeScreen} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="CategoriesTab" component={CategoriesScreen} options={{ tabBarLabel: 'Categories' }} />
-      <Tab.Screen name="WishlistTab" component={WishlistScreen} options={{ tabBarLabel: 'Wishlist' }} />
+      <Tab.Screen
+        name="CategoriesTab"
+        component={CategoriesScreen}
+        options={{ tabBarLabel: 'Categories' }}
+      />
+      <Tab.Screen
+        name="WishlistTab"
+        component={WishlistScreen}
+        options={{ tabBarLabel: 'Wishlist' }}
+      />
       <Tab.Screen name="CartTab" component={CartScreen} options={{ tabBarLabel: 'Cart' }} />
-      <Tab.Screen name="AccountTab" component={AccountScreen} options={{ tabBarLabel: 'Account' }} />
+      <Tab.Screen
+        name="AccountTab"
+        component={AccountScreen}
+        options={{ tabBarLabel: 'Account' }}
+      />
     </Tab.Navigator>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  tabBar: {
-    backgroundColor: colors.surface,
-    borderTopColor: colors.divider,
-    paddingTop: 8,
-  },
-  tabItem: {
-    paddingVertical: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabLabel: { ...typography.tiny, fontWeight: '600', marginTop: 2 },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -8,
-    backgroundColor: colors.danger,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  badgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    tabBar: {
+      backgroundColor: colors.surface,
+      borderTopColor: colors.divider,
+      paddingTop: 8,
+    },
+    tabItem: {
+      paddingVertical: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    tabLabel: { ...typography.tiny, fontWeight: '600', marginTop: 2 },
+    badge: {
+      position: 'absolute',
+      top: -4,
+      right: -8,
+      backgroundColor: colors.danger,
+      borderRadius: 8,
+      minWidth: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 3,
+    },
+    badgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
+  });

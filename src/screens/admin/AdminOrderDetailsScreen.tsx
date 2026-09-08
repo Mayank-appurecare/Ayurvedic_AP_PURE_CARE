@@ -72,11 +72,21 @@ export function AdminOrderDetailsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Order Details</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -100,9 +110,17 @@ export function AdminOrderDetailsScreen() {
                     key={step.key}
                     disabled={updating}
                     onPress={() => handleStatusChange(step.key)}
-                    style={[styles.statusChip, order.status === step.key && styles.statusChipActive]}
+                    style={[
+                      styles.statusChip,
+                      order.status === step.key && styles.statusChipActive,
+                    ]}
                   >
-                    <Text style={[styles.statusChipLabel, order.status === step.key && styles.statusChipLabelActive]}>
+                    <Text
+                      style={[
+                        styles.statusChipLabel,
+                        order.status === step.key && styles.statusChipLabelActive,
+                      ]}
+                    >
                       {step.label}
                     </Text>
                   </Pressable>
@@ -161,11 +179,15 @@ export function AdminOrderDetailsScreen() {
             </View>
             <View style={styles.priceRow}>
               <Text style={styles.priceLabel}>Discount</Text>
-              <Text style={[styles.priceValue, { color: colors.success }]}>-{formatPrice(order.discount)}</Text>
+              <Text style={[styles.priceValue, { color: colors.success }]}>
+                -{formatPrice(order.discount)}
+              </Text>
             </View>
             <View style={styles.priceRow}>
               <Text style={styles.priceLabel}>Delivery Fee</Text>
-              <Text style={styles.priceValue}>{order.deliveryFee === 0 ? 'FREE' : formatPrice(order.deliveryFee)}</Text>
+              <Text style={styles.priceValue}>
+                {order.deliveryFee === 0 ? 'FREE' : formatPrice(order.deliveryFee)}
+              </Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.priceRow}>
@@ -181,7 +203,12 @@ export function AdminOrderDetailsScreen() {
         </ScrollView>
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminOrders" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminOrders"
+      />
 
       <ConfirmationDialog
         visible={confirmCancel}
@@ -210,7 +237,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: { ...typography.h4, color: colors.textPrimary },
   content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxxl },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.xs, ...shadow.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.xs,
+    ...shadow.sm,
+  },
   orderNumber: { ...typography.h4, color: colors.textPrimary },
   date: { ...typography.caption, color: colors.textMuted },
   sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
@@ -226,10 +259,26 @@ const styles = StyleSheet.create({
   statusChipActive: { backgroundColor: colors.adminAccent, borderColor: colors.adminAccent },
   statusChipLabel: { ...typography.caption, color: colors.textSecondary },
   statusChipLabelActive: { color: colors.textOnPrimary, fontWeight: '700' },
-  cancelBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing.sm, alignSelf: 'flex-start' },
+  cancelBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: spacing.sm,
+    alignSelf: 'flex-start',
+  },
   cancelText: { ...typography.captionMedium, color: colors.danger },
-  itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xs },
-  itemImage: { width: 44, height: 44, borderRadius: radius.sm, backgroundColor: colors.surfaceMuted },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  itemImage: {
+    width: 44,
+    height: 44,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surfaceMuted,
+  },
   itemName: { ...typography.bodyMedium, color: colors.textPrimary },
   itemMeta: { ...typography.caption, color: colors.textMuted },
   itemPrice: { ...typography.bodyMedium, color: colors.textPrimary },

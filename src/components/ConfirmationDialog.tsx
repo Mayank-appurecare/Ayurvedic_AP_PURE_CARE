@@ -48,12 +48,26 @@ export function ConfirmationDialog({
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: spacing.lg },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, width: '100%', maxWidth: 400, gap: spacing.sm },
-  title: { ...typography.h4, color: colors.textPrimary },
-  description: { ...typography.body, color: colors.textSecondary },
-  actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
-  actionBtn: { flex: 1 },
-  destructiveBtn: { backgroundColor: colors.danger },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    overlay: {
+      flex: 1,
+      backgroundColor: colors.overlay,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.lg,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.lg,
+      width: '100%',
+      maxWidth: 400,
+      gap: spacing.sm,
+    },
+    title: { ...typography.h4, color: colors.textPrimary },
+    description: { ...typography.body, color: colors.textSecondary },
+    actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.sm },
+    actionBtn: { flex: 1 },
+    destructiveBtn: { backgroundColor: colors.danger },
+  });

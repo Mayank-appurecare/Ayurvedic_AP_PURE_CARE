@@ -94,7 +94,11 @@ export const ProductRepository = {
     return delay(list.find((p) => p.id === id));
   },
 
-  async getByCategory(categoryId: string, filters?: ProductFilters, sort?: SortOption): Promise<Product[]> {
+  async getByCategory(
+    categoryId: string,
+    filters?: ProductFilters,
+    sort?: SortOption
+  ): Promise<Product[]> {
     // Products carry the most specific category id, so a top-level category
     // matches its own id plus all of its sub-service ids.
     const catalog = await getCatalog();
@@ -125,7 +129,9 @@ export const ProductRepository = {
     const list = await catalogProducts();
     const product = list.find((p) => p.id === productId);
     if (!product) return delay([]);
-    return delay(list.filter((p) => p.id !== productId && p.categoryId === product.categoryId).slice(0, limit));
+    return delay(
+      list.filter((p) => p.id !== productId && p.categoryId === product.categoryId).slice(0, limit)
+    );
   },
 
   async getFrequentlyBoughtTogether(productId: string, limit = 3): Promise<Product[]> {

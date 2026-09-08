@@ -45,11 +45,21 @@ export function AdminCustomersScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Customers</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -75,7 +85,11 @@ export function AdminCustomersScreen() {
             </View>
           }
           ListEmptyComponent={
-            <EmptyState icon="people-outline" title="No customers found" description="Try a different search term." />
+            <EmptyState
+              icon="people-outline"
+              title="No customers found"
+              description="Try a different search term."
+            />
           }
           renderItem={({ item }) => {
             const expanded = expandedId === item.id;
@@ -100,18 +114,29 @@ export function AdminCustomersScreen() {
                       <Text style={styles.detailLine}>Phone: {item.phone}</Text>
                       <Text style={styles.detailLine}>Joined: {formatDate(item.joinedDate)}</Text>
                       <Text style={styles.detailLine}>Orders: {item.totalOrders}</Text>
-                      <Text style={styles.detailLine}>Total Spent: {formatPrice(item.totalSpent)}</Text>
+                      <Text style={styles.detailLine}>
+                        Total Spent: {formatPrice(item.totalSpent)}
+                      </Text>
                     </View>
                   )}
                 </View>
-                <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={colors.textMuted} />
+                <Ionicons
+                  name={expanded ? 'chevron-up' : 'chevron-down'}
+                  size={18}
+                  color={colors.textMuted}
+                />
               </Pressable>
             );
           }}
         />
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminCustomers" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminCustomers"
+      />
     </SafeAreaView>
   );
 }

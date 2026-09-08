@@ -74,8 +74,18 @@ export function AdminSidebarNav({ visible, onClose, navigation, activeRoute }: P
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.overlay}>
-        <Pressable style={styles.backdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close menu" />
-        <View style={[styles.drawer, { paddingTop: insets.top + spacing.md, paddingBottom: insets.bottom + spacing.md }]}>
+        <Pressable
+          style={styles.backdrop}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel="Close menu"
+        />
+        <View
+          style={[
+            styles.drawer,
+            { paddingTop: insets.top + spacing.md, paddingBottom: insets.bottom + spacing.md },
+          ]}
+        >
           <View style={styles.header}>
             <View style={styles.logoWrap}>
               <Ionicons name="leaf" size={20} color={colors.textOnPrimary} />
@@ -100,8 +110,14 @@ export function AdminSidebarNav({ visible, onClose, navigation, activeRoute }: P
                       accessibilityRole="button"
                       accessibilityLabel={item.label}
                     >
-                      <Ionicons name={item.icon} size={18} color={active ? colors.textOnPrimary : colors.textInverse} />
-                      <Text style={[styles.navLabel, active && styles.navLabelActive]}>{item.label}</Text>
+                      <Ionicons
+                        name={item.icon}
+                        size={18}
+                        color={active ? colors.textOnPrimary : colors.textInverse}
+                      />
+                      <Text style={[styles.navLabel, active && styles.navLabelActive]}>
+                        {item.label}
+                      </Text>
                     </Pressable>
                   );
                 })}
@@ -109,7 +125,13 @@ export function AdminSidebarNav({ visible, onClose, navigation, activeRoute }: P
             ))}
           </ScrollView>
 
-          <Pressable onPress={onClose} style={styles.closeBtn} accessibilityRole="button" accessibilityLabel="Close menu" hitSlop={10}>
+          <Pressable
+            onPress={onClose}
+            style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close menu"
+            hitSlop={10}
+          >
             <Ionicons name="close" size={20} color={colors.textInverse} />
             <Text style={styles.closeLabel}>Close Menu</Text>
           </Pressable>
@@ -127,7 +149,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.adminSidebar,
     paddingHorizontal: spacing.md,
   },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg, paddingHorizontal: spacing.xs },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+    paddingHorizontal: spacing.xs,
+  },
   logoWrap: {
     width: 36,
     height: 36,

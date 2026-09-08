@@ -22,15 +22,78 @@ interface NotificationItem {
 }
 
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  { id: 'n1', kind: 'order', icon: 'bicycle-outline', title: 'Your order #OJA10023841 is out for delivery', time: '2h ago', read: false },
-  { id: 'n2', kind: 'offer', icon: 'pricetag-outline', title: 'Flat ₹100 off — use APWELCOME on your next order', time: '5h ago', read: false },
-  { id: 'n3', kind: 'wellness', icon: 'leaf-outline', title: 'New article: Understanding Ashwagandha', time: 'Yesterday', read: false },
-  { id: 'n4', kind: 'order', icon: 'checkmark-circle-outline', title: 'Your order #OJA10022190 has been delivered', time: 'Yesterday', read: true },
-  { id: 'n5', kind: 'offer', icon: 'gift-outline', title: 'Immunity Season Sale — up to 25% off is live now', time: '2 days ago', read: true },
-  { id: 'n6', kind: 'order', icon: 'cube-outline', title: 'Your order #OJA10024410 has been confirmed', time: '2 days ago', read: true },
-  { id: 'n7', kind: 'wellness', icon: 'book-outline', title: '5 Ayurvedic Tips for Better Sleep — new read', time: '3 days ago', read: true },
-  { id: 'n8', kind: 'offer', icon: 'ribbon-outline', title: 'Free shipping this weekend on all orders above ₹299', time: '4 days ago', read: true },
-  { id: 'n9', kind: 'wellness', icon: 'flask-outline', title: 'The Golden Herb: Turmeric in Ayurveda is trending', time: '5 days ago', read: true },
+  {
+    id: 'n1',
+    kind: 'order',
+    icon: 'bicycle-outline',
+    title: 'Your order #OJA10023841 is out for delivery',
+    time: '2h ago',
+    read: false,
+  },
+  {
+    id: 'n2',
+    kind: 'offer',
+    icon: 'pricetag-outline',
+    title: 'Flat ₹100 off — use APWELCOME on your next order',
+    time: '5h ago',
+    read: false,
+  },
+  {
+    id: 'n3',
+    kind: 'wellness',
+    icon: 'leaf-outline',
+    title: 'New article: Understanding Ashwagandha',
+    time: 'Yesterday',
+    read: false,
+  },
+  {
+    id: 'n4',
+    kind: 'order',
+    icon: 'checkmark-circle-outline',
+    title: 'Your order #OJA10022190 has been delivered',
+    time: 'Yesterday',
+    read: true,
+  },
+  {
+    id: 'n5',
+    kind: 'offer',
+    icon: 'gift-outline',
+    title: 'Immunity Season Sale — up to 25% off is live now',
+    time: '2 days ago',
+    read: true,
+  },
+  {
+    id: 'n6',
+    kind: 'order',
+    icon: 'cube-outline',
+    title: 'Your order #OJA10024410 has been confirmed',
+    time: '2 days ago',
+    read: true,
+  },
+  {
+    id: 'n7',
+    kind: 'wellness',
+    icon: 'book-outline',
+    title: '5 Ayurvedic Tips for Better Sleep — new read',
+    time: '3 days ago',
+    read: true,
+  },
+  {
+    id: 'n8',
+    kind: 'offer',
+    icon: 'ribbon-outline',
+    title: 'Free shipping this weekend on all orders above ₹299',
+    time: '4 days ago',
+    read: true,
+  },
+  {
+    id: 'n9',
+    kind: 'wellness',
+    icon: 'flask-outline',
+    title: 'The Golden Herb: Turmeric in Ayurveda is trending',
+    time: '5 days ago',
+    read: true,
+  },
 ];
 
 export function NotificationsScreen() {
@@ -55,7 +118,11 @@ export function NotificationsScreen() {
       <AppHeader title="Notifications" showBack onBackPress={() => navigation.goBack()} />
 
       {notifications.length === 0 ? (
-        <EmptyState icon="notifications-outline" title="No notifications yet" description="We'll let you know when there's something new." />
+        <EmptyState
+          icon="notifications-outline"
+          title="No notifications yet"
+          description="We'll let you know when there's something new."
+        />
       ) : (
         <FlatList
           data={notifications}
@@ -87,30 +154,37 @@ export function NotificationsScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.md, paddingBottom: spacing.xxl },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    ...shadow.sm,
-  },
-  rowPressed: { backgroundColor: colors.surfaceMuted },
-  iconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textWrap: { flex: 1 },
-  title: { ...typography.body, color: colors.textSecondary },
-  titleUnread: { color: colors.textPrimary, fontWeight: '600' },
-  time: { ...typography.tiny, color: colors.textMuted, marginTop: 4 },
-  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.danger, marginTop: 6 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    list: { padding: spacing.md, paddingBottom: spacing.xxl },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: spacing.sm,
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      ...shadow.sm,
+    },
+    rowPressed: { backgroundColor: colors.surfaceMuted },
+    iconWrap: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textWrap: { flex: 1 },
+    title: { ...typography.body, color: colors.textSecondary },
+    titleUnread: { color: colors.textPrimary, fontWeight: '600' },
+    time: { ...typography.tiny, color: colors.textMuted, marginTop: 4 },
+    unreadDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.danger,
+      marginTop: 6,
+    },
+  });

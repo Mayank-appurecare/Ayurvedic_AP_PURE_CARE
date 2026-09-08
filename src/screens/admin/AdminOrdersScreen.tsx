@@ -57,7 +57,8 @@ export function AdminOrdersScreen() {
   );
 
   const filtered = (orders ?? []).filter((o) => {
-    const matchesQuery = !query.trim() || o.orderNumber.toLowerCase().includes(query.trim().toLowerCase());
+    const matchesQuery =
+      !query.trim() || o.orderNumber.toLowerCase().includes(query.trim().toLowerCase());
     const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
     return matchesQuery && matchesStatus;
   });
@@ -65,11 +66,21 @@ export function AdminOrdersScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Orders</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -105,14 +116,25 @@ export function AdminOrdersScreen() {
                     onPress={() => setStatusFilter(item.key)}
                     style={[styles.chip, statusFilter === item.key && styles.chipActive]}
                   >
-                    <Text style={[styles.chipLabel, statusFilter === item.key && styles.chipLabelActive]}>{item.label}</Text>
+                    <Text
+                      style={[
+                        styles.chipLabel,
+                        statusFilter === item.key && styles.chipLabelActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
                   </Pressable>
                 )}
               />
             </View>
           }
           ListEmptyComponent={
-            <EmptyState icon="receipt-outline" title="No orders found" description="Try a different search or filter." />
+            <EmptyState
+              icon="receipt-outline"
+              title="No orders found"
+              description="Try a different search or filter."
+            />
           }
           renderItem={({ item }) => {
             const meta = STATUS_META[item.status];
@@ -126,7 +148,8 @@ export function AdminOrdersScreen() {
                 <View style={styles.rowInfo}>
                   <Text style={styles.orderNumber}>#{item.orderNumber}</Text>
                   <Text style={styles.customerName} numberOfLines={1}>
-                    {item.address.fullName} · {item.items.length} item{item.items.length > 1 ? 's' : ''}
+                    {item.address.fullName} · {item.items.length} item
+                    {item.items.length > 1 ? 's' : ''}
                   </Text>
                   <Text style={styles.date}>{formatDate(item.date)}</Text>
                 </View>
@@ -142,7 +165,12 @@ export function AdminOrdersScreen() {
         />
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminOrders" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminOrders"
+      />
     </SafeAreaView>
   );
 }

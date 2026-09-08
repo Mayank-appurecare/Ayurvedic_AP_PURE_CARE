@@ -28,11 +28,13 @@ export function OffersScreen() {
   const [errorByCoupon, setErrorByCoupon] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    Promise.all([OfferRepository.getOffers(), OfferRepository.getCoupons()]).then(([offerList, couponList]) => {
-      setOffers(offerList);
-      setCoupons(couponList);
-      setLoading(false);
-    });
+    Promise.all([OfferRepository.getOffers(), OfferRepository.getCoupons()]).then(
+      ([offerList, couponList]) => {
+        setOffers(offerList);
+        setCoupons(couponList);
+        setLoading(false);
+      }
+    );
   }, []);
 
   const handleApply = async (coupon: Coupon) => {
@@ -67,7 +69,11 @@ export function OffersScreen() {
                 contentContainerStyle={styles.offersRow}
                 renderItem={({ item }) => (
                   <View style={styles.offerCard}>
-                    <Image source={{ uri: item.image }} style={styles.offerImage} contentFit="cover" />
+                    <Image
+                      source={{ uri: item.image }}
+                      style={styles.offerImage}
+                      contentFit="cover"
+                    />
                     <View style={styles.offerOverlay}>
                       {item.badge && (
                         <View style={styles.offerBadge}>
@@ -91,7 +97,9 @@ export function OffersScreen() {
           renderItem={({ item: coupon }) => (
             <View>
               <CouponCard coupon={coupon} showApply onApply={() => handleApply(coupon)} />
-              {!!errorByCoupon[coupon.id] && <Text style={styles.errorText}>{errorByCoupon[coupon.id]}</Text>}
+              {!!errorByCoupon[coupon.id] && (
+                <Text style={styles.errorText}>{errorByCoupon[coupon.id]}</Text>
+              )}
             </View>
           )}
           ItemSeparatorComponent={() => <View style={{ height: spacing.sm }} />}
@@ -101,37 +109,49 @@ export function OffersScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: spacing.xxl },
-  offersRow: { paddingHorizontal: spacing.md, gap: spacing.sm, paddingTop: spacing.md },
-  offerCard: {
-    width: 260,
-    height: 140,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    backgroundColor: colors.surfaceMuted,
-    ...shadow.sm,
-  },
-  offerImage: { ...StyleSheet.absoluteFill },
-  offerOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: colors.overlay,
-    padding: spacing.sm,
-    justifyContent: 'flex-end',
-  },
-  offerBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.accentGold,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 3,
-    borderRadius: radius.sm,
-    marginBottom: spacing.xs,
-  },
-  offerBadgeText: { ...typography.tiny, color: colors.textInverse, fontWeight: '700' },
-  offerTitle: { ...typography.bodyMedium, color: colors.textInverse },
-  offerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary, marginTop: spacing.lg, marginBottom: spacing.sm, marginLeft: spacing.md },
-  couponsList: { paddingHorizontal: spacing.md, gap: spacing.sm },
-  errorText: { ...typography.caption, color: colors.danger, marginTop: 4, marginLeft: spacing.xs },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    content: { paddingBottom: spacing.xxl },
+    offersRow: { paddingHorizontal: spacing.md, gap: spacing.sm, paddingTop: spacing.md },
+    offerCard: {
+      width: 260,
+      height: 140,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+      backgroundColor: colors.surfaceMuted,
+      ...shadow.sm,
+    },
+    offerImage: { ...StyleSheet.absoluteFill },
+    offerOverlay: {
+      ...StyleSheet.absoluteFill,
+      backgroundColor: colors.overlay,
+      padding: spacing.sm,
+      justifyContent: 'flex-end',
+    },
+    offerBadge: {
+      alignSelf: 'flex-start',
+      backgroundColor: colors.accentGold,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 3,
+      borderRadius: radius.sm,
+      marginBottom: spacing.xs,
+    },
+    offerBadgeText: { ...typography.tiny, color: colors.textInverse, fontWeight: '700' },
+    offerTitle: { ...typography.bodyMedium, color: colors.textInverse },
+    offerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
+    sectionTitle: {
+      ...typography.h4,
+      color: colors.textPrimary,
+      marginTop: spacing.lg,
+      marginBottom: spacing.sm,
+      marginLeft: spacing.md,
+    },
+    couponsList: { paddingHorizontal: spacing.md, gap: spacing.sm },
+    errorText: {
+      ...typography.caption,
+      color: colors.danger,
+      marginTop: 4,
+      marginLeft: spacing.xs,
+    },
+  });

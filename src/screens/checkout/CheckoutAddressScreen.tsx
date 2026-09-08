@@ -61,7 +61,11 @@ export function CheckoutAddressScreen() {
       ) : (
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           {addresses.length === 0 ? (
-            <EmptyState icon="location-outline" title="No saved addresses" description="Add a delivery address to continue." />
+            <EmptyState
+              icon="location-outline"
+              title="No saved addresses"
+              description="Add a delivery address to continue."
+            />
           ) : (
             <View style={styles.list}>
               {addresses.map((address) => (
@@ -95,10 +99,16 @@ export function CheckoutAddressScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md },
-  list: { gap: spacing.sm },
-  addBtn: { marginTop: spacing.md },
-  footer: { padding: spacing.md, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.divider },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md },
+    list: { gap: spacing.sm },
+    addBtn: { marginTop: spacing.md },
+    footer: {
+      padding: spacing.md,
+      backgroundColor: colors.surface,
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+    },
+  });

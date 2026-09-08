@@ -50,7 +50,8 @@ export function AdminInventoryScreen() {
 
   const filtered = products.filter((p) => {
     const q = query.trim().toLowerCase();
-    const matchesQuery = !q || p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q);
+    const matchesQuery =
+      !q || p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q);
     const matchesStock = !lowStockOnly || p.stock <= LOW_STOCK_THRESHOLD;
     return matchesQuery && matchesStock;
   });
@@ -75,7 +76,13 @@ export function AdminInventoryScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => setSidebarVisible(true)} hitSlop={10} style={styles.iconBtn} accessibilityRole="button" accessibilityLabel="Open menu">
+        <Pressable
+          onPress={() => setSidebarVisible(true)}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Open menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textInverse} />
         </Pressable>
         <Text style={styles.headerTitle}>Inventory</Text>
@@ -99,8 +106,14 @@ export function AdminInventoryScreen() {
           accessibilityRole="button"
           accessibilityLabel="Toggle low stock only filter"
         >
-          <Ionicons name="alert-circle-outline" size={14} color={lowStockOnly ? colors.textOnPrimary : colors.textSecondary} />
-          <Text style={[styles.filterToggleText, lowStockOnly && styles.filterToggleTextActive]}>Low Stock</Text>
+          <Ionicons
+            name="alert-circle-outline"
+            size={14}
+            color={lowStockOnly ? colors.textOnPrimary : colors.textSecondary}
+          />
+          <Text style={[styles.filterToggleText, lowStockOnly && styles.filterToggleTextActive]}>
+            Low Stock
+          </Text>
         </Pressable>
       </View>
 
@@ -109,7 +122,11 @@ export function AdminInventoryScreen() {
       ) : error ? (
         <ErrorState onRetry={loadProducts} />
       ) : filtered.length === 0 ? (
-        <EmptyState icon="file-tray-stacked-outline" title="No matching products" description="Try adjusting your search or filter." />
+        <EmptyState
+          icon="file-tray-stacked-outline"
+          title="No matching products"
+          description="Try adjusting your search or filter."
+        />
       ) : (
         <FlatList
           data={filtered}
@@ -131,10 +148,17 @@ export function AdminInventoryScreen() {
                   )}
                 </View>
                 <View style={styles.stockColumn}>
-                  <Text style={[styles.stockValue, isLow && styles.stockValueLow]}>{item.stock}</Text>
+                  <Text style={[styles.stockValue, isLow && styles.stockValueLow]}>
+                    {item.stock}
+                  </Text>
                   <Text style={styles.stockLabel}>in stock</Text>
                 </View>
-                <Pressable onPress={() => openRestock(item)} style={styles.restockBtn} accessibilityRole="button" accessibilityLabel={`Restock ${item.name}`}>
+                <Pressable
+                  onPress={() => openRestock(item)}
+                  style={styles.restockBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Restock ${item.name}`}
+                >
                   <Ionicons name="add-circle-outline" size={16} color={colors.adminAccent} />
                   <Text style={styles.restockText}>Restock</Text>
                 </Pressable>
@@ -144,7 +168,12 @@ export function AdminInventoryScreen() {
         />
       )}
 
-      <Modal visible={!!restockProduct} transparent animationType="fade" onRequestClose={() => setRestockProduct(null)}>
+      <Modal
+        visible={!!restockProduct}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setRestockProduct(null)}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Restock Product</Text>
@@ -166,14 +195,28 @@ export function AdminInventoryScreen() {
               </>
             )}
             <View style={styles.modalActions}>
-              <SecondaryButton label="Cancel" onPress={() => setRestockProduct(null)} style={styles.modalActionBtn} />
-              <PrimaryButton label="Update Stock" onPress={handleSaveRestock} loading={saving} style={styles.modalActionBtn} />
+              <SecondaryButton
+                label="Cancel"
+                onPress={() => setRestockProduct(null)}
+                style={styles.modalActionBtn}
+              />
+              <PrimaryButton
+                label="Update Stock"
+                onPress={handleSaveRestock}
+                loading={saving}
+                style={styles.modalActionBtn}
+              />
             </View>
           </View>
         </View>
       </Modal>
 
-      <AdminSidebarNav visible={sidebarVisible} onClose={() => setSidebarVisible(false)} navigation={navigation} activeRoute="AdminInventory" />
+      <AdminSidebarNav
+        visible={sidebarVisible}
+        onClose={() => setSidebarVisible(false)}
+        navigation={navigation}
+        activeRoute="AdminInventory"
+      />
     </SafeAreaView>
   );
 }
@@ -237,8 +280,21 @@ const styles = StyleSheet.create({
   stockLabel: { ...typography.tiny, color: colors.textMuted },
   restockBtn: { alignItems: 'center', gap: 2 },
   restockText: { ...typography.tiny, color: colors.adminAccent, fontWeight: '700' },
-  modalOverlay: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: spacing.lg },
-  modalCard: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, width: '100%', maxWidth: 400, gap: spacing.xs },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: colors.overlay,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.lg,
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    width: '100%',
+    maxWidth: 400,
+    gap: spacing.xs,
+  },
   modalTitle: { ...typography.h4, color: colors.textPrimary },
   modalProductName: { ...typography.bodyMedium, color: colors.textPrimary },
   modalCurrentStock: { ...typography.caption, color: colors.textMuted },

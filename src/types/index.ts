@@ -97,13 +97,7 @@ export interface CartItem {
 }
 
 export type OrderStatus =
-  | 'placed'
-  | 'confirmed'
-  | 'packed'
-  | 'shipped'
-  | 'out_for_delivery'
-  | 'delivered'
-  | 'cancelled';
+  'placed' | 'confirmed' | 'packed' | 'shipped' | 'out_for_delivery' | 'delivered' | 'cancelled';
 
 export interface OrderTimelineEvent {
   status: OrderStatus;
@@ -217,12 +211,7 @@ export interface PaymentMethodOption {
 }
 
 export type SortOption =
-  | 'relevance'
-  | 'popularity'
-  | 'rating'
-  | 'price_low_high'
-  | 'price_high_low'
-  | 'newest';
+  'relevance' | 'popularity' | 'rating' | 'price_low_high' | 'price_high_low' | 'newest';
 
 export interface ProductFilters {
   categoryIds?: ID[];

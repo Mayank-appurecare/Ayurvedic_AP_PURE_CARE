@@ -24,7 +24,12 @@ export function ProductImageGallery({ images }: { images: string[] }) {
         }}
         renderItem={({ item }) => (
           <View style={[styles.imageWrap, { width }]}>
-            <Image source={{ uri: item }} style={styles.image} contentFit="cover" transition={150} />
+            <Image
+              source={{ uri: item }}
+              style={styles.image}
+              contentFit="cover"
+              transition={150}
+            />
           </View>
         )}
       />
@@ -37,10 +42,11 @@ export function ProductImageGallery({ images }: { images: string[] }) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  imageWrap: { aspectRatio: 1, backgroundColor: colors.surfaceMuted },
-  image: { width: '100%', height: '100%' },
-  dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, paddingVertical: spacing.sm },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.border },
-  dotActive: { backgroundColor: colors.primary, width: 18 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    imageWrap: { aspectRatio: 1, backgroundColor: colors.surfaceMuted },
+    image: { width: '100%', height: '100%' },
+    dots: { flexDirection: 'row', justifyContent: 'center', gap: 6, paddingVertical: spacing.sm },
+    dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.border },
+    dotActive: { backgroundColor: colors.primary, width: 18 },
+  });

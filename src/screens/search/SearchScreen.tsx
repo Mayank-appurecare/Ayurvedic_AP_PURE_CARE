@@ -22,15 +22,26 @@ import { Category, Product, ProductFilters, SortOption } from '../../types';
 type NavProp = NativeStackNavigationProp<RootStackParamList, 'Search'>;
 
 const RECENT_SEARCHES_KEY = '@ojas_ayurveda/recent_searches';
-const POPULAR_SEARCHES = ['Ashwagandha', 'Hair Oil', 'Immunity', 'Chyawanprash', 'Skin Care', 'Turmeric', 'Triphala', 'Sleep'];
+const POPULAR_SEARCHES = [
+  'Ashwagandha',
+  'Hair Oil',
+  'Immunity',
+  'Chyawanprash',
+  'Skin Care',
+  'Turmeric',
+  'Triphala',
+  'Sleep',
+];
 
 function applyClientFilters(list: Product[], filters: ProductFilters): Product[] {
   let result = list;
-  if (filters.categoryIds?.length) result = result.filter((p) => filters.categoryIds!.includes(p.categoryId));
+  if (filters.categoryIds?.length)
+    result = result.filter((p) => filters.categoryIds!.includes(p.categoryId));
   if (filters.minPrice !== undefined) result = result.filter((p) => p.price >= filters.minPrice!);
   if (filters.maxPrice !== undefined) result = result.filter((p) => p.price <= filters.maxPrice!);
   if (filters.brands?.length) result = result.filter((p) => filters.brands!.includes(p.brand));
-  if (filters.minRating !== undefined) result = result.filter((p) => p.rating >= filters.minRating!);
+  if (filters.minRating !== undefined)
+    result = result.filter((p) => p.rating >= filters.minRating!);
   if (filters.inStockOnly) result = result.filter((p) => p.stock > 0);
   if (filters.onOfferOnly) result = result.filter((p) => p.discountPercent > 0);
   return result;
@@ -74,7 +85,10 @@ export function SearchScreen() {
     (async () => {
       const raw = await AsyncStorage.getItem(RECENT_SEARCHES_KEY);
       if (raw) setRecentSearches(JSON.parse(raw));
-      const [categoriesResult, brandsResult] = await Promise.all([CategoryRepository.getAll(), ProductRepository.getBrands()]);
+      const [categoriesResult, brandsResult] = await Promise.all([
+        CategoryRepository.getAll(),
+        ProductRepository.getBrands(),
+      ]);
       setCategories(categoriesResult);
       setBrands(brandsResult);
     })();
@@ -103,7 +117,10 @@ export function SearchScreen() {
   const persistRecentSearch = async (term: string) => {
     const trimmed = term.trim();
     if (!trimmed) return;
-    const next = [trimmed, ...recentSearches.filter((s) => s.toLowerCase() !== trimmed.toLowerCase())].slice(0, 8);
+    const next = [
+      trimmed,
+      ...recentSearches.filter((s) => s.toLowerCase() !== trimmed.toLowerCase()),
+    ].slice(0, 8);
     setRecentSearches(next);
     await AsyncStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(next));
   };
@@ -130,7 +147,13 @@ export function SearchScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
       <View style={styles.headerRow}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} style={styles.backBtn} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          style={styles.backBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <View style={{ flex: 1 }}>
@@ -155,7 +178,12 @@ export function SearchScreen() {
               <Text style={styles.suggestionTitle}>Recent Searches</Text>
               <View style={styles.chipsWrap}>
                 {recentSearches.map((term) => (
-                  <Pressable key={term} style={styles.chip} onPress={() => handleChipPress(term)} accessibilityRole="button">
+                  <Pressable
+                    key={term}
+                    style={styles.chip}
+                    onPress={() => handleChipPress(term)}
+                    accessibilityRole="button"
+                  >
                     <Ionicons name="time-outline" size={14} color={colors.textSecondary} />
                     <Text style={styles.chipLabel}>{term}</Text>
                   </Pressable>
@@ -167,7 +195,12 @@ export function SearchScreen() {
             <Text style={styles.suggestionTitle}>Popular Searches</Text>
             <View style={styles.chipsWrap}>
               {POPULAR_SEARCHES.map((term) => (
-                <Pressable key={term} style={styles.chip} onPress={() => handleChipPress(term)} accessibilityRole="button">
+                <Pressable
+                  key={term}
+                  style={styles.chip}
+                  onPress={() => handleChipPress(term)}
+                  accessibilityRole="button"
+                >
                   <Ionicons name="trending-up-outline" size={14} color={colors.textSecondary} />
                   <Text style={styles.chipLabel}>{term}</Text>
                 </Pressable>
@@ -190,11 +223,19 @@ export function SearchScreen() {
           <View style={styles.toolbar}>
             <Text style={styles.count}>{displayedResults.length} results</Text>
             <View style={styles.toolbarActions}>
-              <Pressable style={styles.pillBtn} onPress={() => setFilterVisible(true)} accessibilityRole="button">
+              <Pressable
+                style={styles.pillBtn}
+                onPress={() => setFilterVisible(true)}
+                accessibilityRole="button"
+              >
                 <Ionicons name="options-outline" size={16} color={colors.primary} />
                 <Text style={styles.pillLabel}>Filter</Text>
               </Pressable>
-              <Pressable style={styles.pillBtn} onPress={() => setSortVisible(true)} accessibilityRole="button">
+              <Pressable
+                style={styles.pillBtn}
+                onPress={() => setSortVisible(true)}
+                accessibilityRole="button"
+              >
                 <Ionicons name="swap-vertical-outline" size={16} color={colors.primary} />
                 <Text style={styles.pillLabel}>Sort</Text>
               </Pressable>
@@ -209,7 +250,10 @@ export function SearchScreen() {
             columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
             renderItem={({ item }) => (
               <View style={styles.cardWrap}>
-                <ProductCard product={item} onPress={() => navigation.navigate('ProductDetail', { productId: item.id })} />
+                <ProductCard
+                  product={item}
+                  onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+                />
               </View>
             )}
           />
@@ -224,52 +268,64 @@ export function SearchScreen() {
         value={filters}
         onApply={setFilters}
       />
-      <SortBottomSheet visible={sortVisible} value={sort} onSelect={setSort} onClose={() => setSortVisible(false)} />
+      <SortBottomSheet
+        visible={sortVisible}
+        value={sort}
+        onSelect={setSort}
+        onClose={() => setSortVisible(false)}
+      />
     </SafeAreaView>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  headerRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.sm, paddingBottom: spacing.sm, gap: spacing.xxs },
-  backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  suggestionsContainer: { padding: spacing.md, gap: spacing.lg },
-  suggestionSection: { gap: spacing.sm },
-  suggestionTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  chipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  chipLabel: { ...typography.caption, color: colors.textPrimary },
-  toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  count: { ...typography.caption, color: colors.textSecondary },
-  toolbarActions: { flexDirection: 'row', gap: spacing.sm },
-  pillBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-  },
-  pillLabel: { ...typography.captionMedium, color: colors.primary },
-  listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
-  row: { gap: spacing.sm },
-  cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: spacing.sm,
+      paddingBottom: spacing.sm,
+      gap: spacing.xxs,
+    },
+    backBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+    suggestionsContainer: { padding: spacing.md, gap: spacing.lg },
+    suggestionSection: { gap: spacing.sm },
+    suggestionTitle: { ...typography.bodyMedium, color: colors.textPrimary },
+    chipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
+    chip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      backgroundColor: colors.surfaceMuted,
+      borderRadius: radius.pill,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+    },
+    chipLabel: { ...typography.caption, color: colors.textPrimary },
+    toolbar: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    count: { ...typography.caption, color: colors.textSecondary },
+    toolbarActions: { flexDirection: 'row', gap: spacing.sm },
+    pillBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.pill,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 6,
+    },
+    pillLabel: { ...typography.captionMedium, color: colors.primary },
+    listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
+    row: { gap: spacing.sm },
+    cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
+  });

@@ -35,14 +35,17 @@ export function RatingStars({ rating, size = 14, showValue = false, reviewCount,
         })}
       </View>
       {showValue && <Text style={styles.value}>{rating.toFixed(1)}</Text>}
-      {reviewCount !== undefined && <Text style={styles.count}>({reviewCount.toLocaleString('en-IN')})</Text>}
+      {reviewCount !== undefined && (
+        <Text style={styles.count}>({reviewCount.toLocaleString('en-IN')})</Text>
+      )}
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
-  stars: { flexDirection: 'row' },
-  value: { ...typography.captionMedium, color: colors.textPrimary },
-  count: { ...typography.caption, color: colors.textMuted },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
+    stars: { flexDirection: 'row' },
+    value: { ...typography.captionMedium, color: colors.textPrimary },
+    count: { ...typography.caption, color: colors.textMuted },
+  });

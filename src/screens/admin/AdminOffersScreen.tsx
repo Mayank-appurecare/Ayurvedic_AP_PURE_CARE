@@ -70,11 +70,21 @@ export function AdminOffersScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Offers</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -87,23 +97,59 @@ export function AdminOffersScreen() {
           <PrimaryButton
             label={showForm ? 'Close Form' : '+ Add Offer'}
             onPress={() => setShowForm((v) => !v)}
-            icon={<Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />}
+            icon={
+              <Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />
+            }
           />
 
           {showForm && (
             <View style={styles.form}>
               <Text style={styles.formTitle}>New Offer</Text>
-              <FormField label="Title" value={form.title} onChangeText={(v) => setForm({ ...form, title: v })} placeholder="Immunity Season Sale" />
-              <FormField label="Subtitle" value={form.subtitle} onChangeText={(v) => setForm({ ...form, subtitle: v })} placeholder="Up to 25% off" />
-              <FormField label="Image URL" value={form.image} onChangeText={(v) => setForm({ ...form, image: v })} placeholder="https://..." />
-              <FormField label="Badge Text" value={form.badge} onChangeText={(v) => setForm({ ...form, badge: v })} placeholder="25% OFF" />
-              <FormField label="Coupon Code (optional)" value={form.couponCode} onChangeText={(v) => setForm({ ...form, couponCode: v })} placeholder="IMMUNITY20" />
-              <PrimaryButton label="Save Offer" onPress={handleAdd} loading={saving} style={{ marginTop: spacing.xs }} />
+              <FormField
+                label="Title"
+                value={form.title}
+                onChangeText={(v) => setForm({ ...form, title: v })}
+                placeholder="Immunity Season Sale"
+              />
+              <FormField
+                label="Subtitle"
+                value={form.subtitle}
+                onChangeText={(v) => setForm({ ...form, subtitle: v })}
+                placeholder="Up to 25% off"
+              />
+              <FormField
+                label="Image URL"
+                value={form.image}
+                onChangeText={(v) => setForm({ ...form, image: v })}
+                placeholder="https://..."
+              />
+              <FormField
+                label="Badge Text"
+                value={form.badge}
+                onChangeText={(v) => setForm({ ...form, badge: v })}
+                placeholder="25% OFF"
+              />
+              <FormField
+                label="Coupon Code (optional)"
+                value={form.couponCode}
+                onChangeText={(v) => setForm({ ...form, couponCode: v })}
+                placeholder="IMMUNITY20"
+              />
+              <PrimaryButton
+                label="Save Offer"
+                onPress={handleAdd}
+                loading={saving}
+                style={{ marginTop: spacing.xs }}
+              />
             </View>
           )}
 
           {offers.length === 0 ? (
-            <EmptyState icon="gift-outline" title="No offers yet" description="Add your first promotional offer." />
+            <EmptyState
+              icon="gift-outline"
+              title="No offers yet"
+              description="Add your first promotional offer."
+            />
           ) : (
             offers.map((offer) => (
               <View key={offer.id} style={styles.card}>
@@ -114,11 +160,23 @@ export function AdminOffersScreen() {
                       <Text style={styles.badgeText}>{offer.badge}</Text>
                     </View>
                   )}
-                  <Text style={styles.cardTitle} numberOfLines={1}>{offer.title}</Text>
-                  <Text style={styles.cardSubtitle} numberOfLines={2}>{offer.subtitle}</Text>
-                  {!!offer.couponCode && <Text style={styles.couponCode}>Code: {offer.couponCode}</Text>}
+                  <Text style={styles.cardTitle} numberOfLines={1}>
+                    {offer.title}
+                  </Text>
+                  <Text style={styles.cardSubtitle} numberOfLines={2}>
+                    {offer.subtitle}
+                  </Text>
+                  {!!offer.couponCode && (
+                    <Text style={styles.couponCode}>Code: {offer.couponCode}</Text>
+                  )}
                   <View style={styles.actions}>
-                    <SecondaryButton label="Delete" variant="ghost" fullWidth={false} onPress={() => setDeleteTarget(offer)} style={styles.actionBtn} />
+                    <SecondaryButton
+                      label="Delete"
+                      variant="ghost"
+                      fullWidth={false}
+                      onPress={() => setDeleteTarget(offer)}
+                      style={styles.actionBtn}
+                    />
                   </View>
                 </View>
               </View>
@@ -127,7 +185,12 @@ export function AdminOffersScreen() {
         </ScrollView>
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminOffers" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminOffers"
+      />
 
       <ConfirmationDialog
         visible={!!deleteTarget}
@@ -182,7 +245,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: { ...typography.h4, color: colors.textPrimary },
   content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxxl },
-  form: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  form: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   formTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
   field: { gap: spacing.xxs },
   fieldLabel: { ...typography.captionMedium, color: colors.textPrimary },
@@ -196,10 +265,22 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     backgroundColor: colors.background,
   },
-  card: { flexDirection: 'row', backgroundColor: colors.surface, borderRadius: radius.lg, overflow: 'hidden', ...shadow.sm },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    ...shadow.sm,
+  },
   image: { width: 96, height: '100%', minHeight: 120, backgroundColor: colors.surfaceMuted },
   cardContent: { flex: 1, padding: spacing.sm, gap: 4 },
-  badge: { alignSelf: 'flex-start', backgroundColor: colors.warningSurface, paddingHorizontal: spacing.xs, paddingVertical: 2, borderRadius: radius.sm },
+  badge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.warningSurface,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    borderRadius: radius.sm,
+  },
   badgeText: { ...typography.tiny, color: colors.warning, fontWeight: '700' },
   cardTitle: { ...typography.bodyMedium, color: colors.textPrimary },
   cardSubtitle: { ...typography.caption, color: colors.textSecondary },

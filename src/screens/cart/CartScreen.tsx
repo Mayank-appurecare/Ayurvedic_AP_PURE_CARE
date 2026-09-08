@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Pressable } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -42,13 +42,14 @@ export function CartScreen() {
   const [removeTarget, setRemoveTarget] = useState<EnrichedCartItem | null>(null);
 
   const showBack = navigation.canGoBack();
-  const deliveryFee = enrichedItems.length === 0 ? 0 : subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : MOCK_DELIVERY_FEE;
+  const deliveryFee =
+    enrichedItems.length === 0 ? 0 : subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : MOCK_DELIVERY_FEE;
   const couponDiscount = appliedCoupon
     ? appliedCoupon.discountType === 'flat'
       ? appliedCoupon.discountValue
       : appliedCoupon.discountType === 'percent'
-      ? Math.round((subtotal * appliedCoupon.discountValue) / 100)
-      : 0
+        ? Math.round((subtotal * appliedCoupon.discountValue) / 100)
+        : 0
     : 0;
   const total = Math.max(subtotal - couponDiscount + deliveryFee, 0);
 
@@ -78,7 +79,11 @@ export function CartScreen() {
       ) : (
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           {enrichedItems.length === 0 ? (
-            <EmptyState icon="bag-outline" title="Your cart is empty" description="Move items back from Saved for Later, or continue shopping." />
+            <EmptyState
+              icon="bag-outline"
+              title="Your cart is empty"
+              description="Move items back from Saved for Later, or continue shopping."
+            />
           ) : (
             <View style={styles.section}>
               {enrichedItems.map((item) => (
@@ -93,8 +98,12 @@ export function CartScreen() {
                     <View style={styles.itemActionsRow}>
                       <QuantitySelector
                         quantity={item.quantity}
-                        onIncrease={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
-                        onDecrease={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
+                        onIncrease={() =>
+                          updateQuantity(item.productId, item.variantId, item.quantity + 1)
+                        }
+                        onDecrease={() =>
+                          updateQuantity(item.productId, item.variantId, item.quantity - 1)
+                        }
                         size="sm"
                       />
                       <Pressable
@@ -160,7 +169,11 @@ export function CartScreen() {
             <View style={styles.summaryCard}>
               <Text style={styles.summaryTitle}>Price Details</Text>
               <SummaryRow label="MRP Total" value={formatPrice(mrpTotal)} />
-              <SummaryRow label="Discount on MRP" value={`- ${formatPrice(discountTotal)}`} valueColor={colors.success} />
+              <SummaryRow
+                label="Discount on MRP"
+                value={`- ${formatPrice(discountTotal)}`}
+                valueColor={colors.success}
+              />
               <SummaryRow
                 label="Delivery Fee"
                 value={deliveryFee === 0 ? 'FREE' : formatPrice(deliveryFee)}
@@ -173,17 +186,31 @@ export function CartScreen() {
                       <Ionicons name="pricetag" size={13} color={colors.primary} />
                       <Text style={styles.couponAppliedText}>{appliedCoupon.code} applied</Text>
                     </View>
-                    <Pressable onPress={() => setAppliedCoupon(null)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Remove coupon">
+                    <Pressable
+                      onPress={() => setAppliedCoupon(null)}
+                      hitSlop={8}
+                      accessibilityRole="button"
+                      accessibilityLabel="Remove coupon"
+                    >
                       <Ionicons name="close-circle" size={18} color={colors.textMuted} />
                     </Pressable>
                   </>
                 ) : (
-                  <Pressable onPress={() => navigation.navigate('Offers')} accessibilityRole="button">
+                  <Pressable
+                    onPress={() => navigation.navigate('Offers')}
+                    accessibilityRole="button"
+                  >
                     <Text style={styles.linkText}>Apply Coupon</Text>
                   </Pressable>
                 )}
               </View>
-              {couponDiscount > 0 && <SummaryRow label="Coupon Discount" value={`- ${formatPrice(couponDiscount)}`} valueColor={colors.success} />}
+              {couponDiscount > 0 && (
+                <SummaryRow
+                  label="Coupon Discount"
+                  value={`- ${formatPrice(couponDiscount)}`}
+                  valueColor={colors.success}
+                />
+              )}
               <View style={styles.divider} />
               <SummaryRow label="Total Amount" value={formatPrice(total)} bold />
             </View>
@@ -223,61 +250,115 @@ export function CartScreen() {
   );
 }
 
-function SummaryRow({ label, value, valueColor, bold }: { label: string; value: string; valueColor?: string; bold?: boolean }) {
+function SummaryRow({
+  label,
+  value,
+  valueColor,
+  bold,
+}: {
+  label: string;
+  value: string;
+  valueColor?: string;
+  bold?: boolean;
+}) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
     <View style={styles.summaryRow}>
       <Text style={[styles.summaryLabel, bold && styles.summaryLabelBold]}>{label}</Text>
-      <Text style={[styles.summaryValue, valueColor ? { color: valueColor } : undefined, bold && styles.summaryValueBold]}>
+      <Text
+        style={[
+          styles.summaryValue,
+          valueColor ? { color: valueColor } : undefined,
+          bold && styles.summaryValueBold,
+        ]}
+      >
         {value}
       </Text>
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, gap: spacing.md },
-  section: { gap: spacing.sm },
-  sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
-  itemCard: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.sm,
-    gap: spacing.sm,
-    ...shadow.sm,
-  },
-  itemImage: { width: 76, height: 76, borderRadius: radius.md, backgroundColor: colors.surfaceMuted },
-  itemInfo: { flex: 1, gap: 3 },
-  itemName: { ...typography.bodyMedium, color: colors.textPrimary },
-  variantLabel: { ...typography.caption, color: colors.textMuted },
-  itemActionsRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: spacing.xxs },
-  linkText: { ...typography.captionMedium, color: colors.primary },
-  removeBtn: { padding: spacing.xxs },
-  summaryCard: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.xs, ...shadow.sm },
-  summaryTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  summaryLabel: { ...typography.body, color: colors.textSecondary },
-  summaryLabelBold: { ...typography.bodyMedium, color: colors.textPrimary },
-  summaryValue: { ...typography.body, color: colors.textPrimary },
-  summaryValueBold: { ...typography.h4, color: colors.textPrimary },
-  divider: { height: 1, backgroundColor: colors.divider, marginVertical: spacing.xxs },
-  couponRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: spacing.xxs },
-  couponAppliedChip: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.primarySurface, paddingHorizontal: spacing.xs, paddingVertical: 4, borderRadius: radius.sm },
-  couponAppliedText: { ...typography.captionMedium, color: colors.primary },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: spacing.md,
-    backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: colors.divider,
-    ...shadow.md,
-  },
-  footerTotalLabel: { ...typography.caption, color: colors.textMuted },
-  footerTotalValue: { ...typography.h3, color: colors.textPrimary },
-  checkoutBtn: { paddingHorizontal: spacing.xl },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, gap: spacing.md },
+    section: { gap: spacing.sm },
+    sectionTitle: {
+      ...typography.bodyMedium,
+      color: colors.textPrimary,
+      marginBottom: spacing.xxs,
+    },
+    itemCard: {
+      flexDirection: 'row',
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.sm,
+      gap: spacing.sm,
+      ...shadow.sm,
+    },
+    itemImage: {
+      width: 76,
+      height: 76,
+      borderRadius: radius.md,
+      backgroundColor: colors.surfaceMuted,
+    },
+    itemInfo: { flex: 1, gap: 3 },
+    itemName: { ...typography.bodyMedium, color: colors.textPrimary },
+    variantLabel: { ...typography.caption, color: colors.textMuted },
+    itemActionsRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: spacing.xxs,
+    },
+    linkText: { ...typography.captionMedium, color: colors.primary },
+    removeBtn: { padding: spacing.xxs },
+    summaryCard: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      gap: spacing.xs,
+      ...shadow.sm,
+    },
+    summaryTitle: {
+      ...typography.bodyMedium,
+      color: colors.textPrimary,
+      marginBottom: spacing.xxs,
+    },
+    summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
+    summaryLabel: { ...typography.body, color: colors.textSecondary },
+    summaryLabelBold: { ...typography.bodyMedium, color: colors.textPrimary },
+    summaryValue: { ...typography.body, color: colors.textPrimary },
+    summaryValueBold: { ...typography.h4, color: colors.textPrimary },
+    divider: { height: 1, backgroundColor: colors.divider, marginVertical: spacing.xxs },
+    couponRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.xxs,
+    },
+    couponAppliedChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: colors.primarySurface,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 4,
+      borderRadius: radius.sm,
+    },
+    couponAppliedText: { ...typography.captionMedium, color: colors.primary },
+    footer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: spacing.md,
+      backgroundColor: colors.surface,
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+      ...shadow.md,
+    },
+    footerTotalLabel: { ...typography.caption, color: colors.textMuted },
+    footerTotalValue: { ...typography.h3, color: colors.textPrimary },
+    checkoutBtn: { paddingHorizontal: spacing.xl },
+  });

@@ -91,7 +91,10 @@ export function toUiProduct(api: ApiProduct): Product {
     benefits: [],
     // `composition` is the API's ingredient list, comma separated.
     ingredients: api.composition
-      ? api.composition.split(',').map((part) => part.trim()).filter(Boolean)
+      ? api.composition
+          .split(',')
+          .map((part) => part.trim())
+          .filter(Boolean)
       : [],
     howToUse: [],
     productInfo: buildProductInfo(api),

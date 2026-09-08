@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, Image, Platform, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,7 +30,9 @@ import { formatDate, formatPrice } from '../../utils/format';
 
 type Route = RouteProp<RootStackParamList, 'OrderDetails'>;
 
-const getStatusMeta = (colors: AppColors): Record<string, { label: string; color: string; bg: string }> => ({
+const getStatusMeta = (
+  colors: AppColors
+): Record<string, { label: string; color: string; bg: string }> => ({
   placed: { label: 'Order Placed', color: colors.info, bg: colors.infoSurface },
   confirmed: { label: 'Confirmed', color: colors.info, bg: colors.infoSurface },
   packed: { label: 'Packed', color: colors.warning, bg: colors.warningSurface },
@@ -149,8 +160,18 @@ export function OrderDetailsScreen() {
           <Text style={styles.paymentMethod}>{order.paymentMethod}</Text>
           <View style={styles.divider} />
           <SummaryRow label="Subtotal" value={formatPrice(order.subtotal)} />
-          {order.discount > 0 && <SummaryRow label="Discount" value={`- ${formatPrice(order.discount)}`} valueColor={colors.success} />}
-          <SummaryRow label="Delivery Fee" value={order.deliveryFee === 0 ? 'FREE' : formatPrice(order.deliveryFee)} valueColor={order.deliveryFee === 0 ? colors.success : undefined} />
+          {order.discount > 0 && (
+            <SummaryRow
+              label="Discount"
+              value={`- ${formatPrice(order.discount)}`}
+              valueColor={colors.success}
+            />
+          )}
+          <SummaryRow
+            label="Delivery Fee"
+            value={order.deliveryFee === 0 ? 'FREE' : formatPrice(order.deliveryFee)}
+            valueColor={order.deliveryFee === 0 ? colors.success : undefined}
+          />
           <View style={styles.divider} />
           <SummaryRow label="Total" value={formatPrice(order.total)} bold />
         </View>
@@ -196,43 +217,77 @@ export function OrderDetailsScreen() {
   );
 }
 
-function SummaryRow({ label, value, valueColor, bold }: { label: string; value: string; valueColor?: string; bold?: boolean }) {
+function SummaryRow({
+  label,
+  value,
+  valueColor,
+  bold,
+}: {
+  label: string;
+  value: string;
+  valueColor?: string;
+  bold?: boolean;
+}) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
     <View style={styles.summaryRow}>
       <Text style={[styles.summaryLabel, bold && styles.summaryLabelBold]}>{label}</Text>
-      <Text style={[styles.summaryValue, valueColor ? { color: valueColor } : undefined, bold && styles.summaryValueBold]}>
+      <Text
+        style={[
+          styles.summaryValue,
+          valueColor ? { color: valueColor } : undefined,
+          bold && styles.summaryValueBold,
+        ]}
+      >
         {value}
       </Text>
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, gap: spacing.md },
-  headerCard: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.xxs, ...shadow.sm },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  orderNumber: { ...typography.h4, color: colors.textPrimary },
-  statusBadge: { paddingHorizontal: spacing.xs, paddingVertical: 3, borderRadius: radius.sm },
-  statusText: { ...typography.tiny, fontWeight: '700' },
-  date: { ...typography.caption, color: colors.textMuted },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
-  sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  itemImage: { width: 48, height: 48, borderRadius: radius.sm, backgroundColor: colors.surfaceMuted },
-  itemName: { ...typography.body, color: colors.textPrimary },
-  itemMeta: { ...typography.caption, color: colors.textMuted },
-  itemPrice: { ...typography.bodyMedium, color: colors.textPrimary },
-  paymentMethod: { ...typography.body, color: colors.textSecondary },
-  divider: { height: 1, backgroundColor: colors.divider },
-  summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  summaryLabel: { ...typography.body, color: colors.textSecondary },
-  summaryLabelBold: { ...typography.bodyMedium, color: colors.textPrimary },
-  summaryValue: { ...typography.body, color: colors.textPrimary },
-  summaryValueBold: { ...typography.h4, color: colors.textPrimary },
-  actions: { gap: spacing.sm },
-  actionBtn: {},
-  cancelBtn: { borderColor: colors.danger },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, gap: spacing.md },
+    headerCard: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      gap: spacing.xxs,
+      ...shadow.sm,
+    },
+    headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    orderNumber: { ...typography.h4, color: colors.textPrimary },
+    statusBadge: { paddingHorizontal: spacing.xs, paddingVertical: 3, borderRadius: radius.sm },
+    statusText: { ...typography.tiny, fontWeight: '700' },
+    date: { ...typography.caption, color: colors.textMuted },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      gap: spacing.sm,
+      ...shadow.sm,
+    },
+    sectionTitle: { ...typography.bodyMedium, color: colors.textPrimary },
+    itemRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+    itemImage: {
+      width: 48,
+      height: 48,
+      borderRadius: radius.sm,
+      backgroundColor: colors.surfaceMuted,
+    },
+    itemName: { ...typography.body, color: colors.textPrimary },
+    itemMeta: { ...typography.caption, color: colors.textMuted },
+    itemPrice: { ...typography.bodyMedium, color: colors.textPrimary },
+    paymentMethod: { ...typography.body, color: colors.textSecondary },
+    divider: { height: 1, backgroundColor: colors.divider },
+    summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
+    summaryLabel: { ...typography.body, color: colors.textSecondary },
+    summaryLabelBold: { ...typography.bodyMedium, color: colors.textPrimary },
+    summaryValue: { ...typography.body, color: colors.textPrimary },
+    summaryValueBold: { ...typography.h4, color: colors.textPrimary },
+    actions: { gap: spacing.sm },
+    actionBtn: {},
+    cancelBtn: { borderColor: colors.danger },
+  });

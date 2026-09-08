@@ -157,7 +157,9 @@ export function HomeScreen() {
               <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
               {MOCK_UNREAD_NOTIFICATIONS > 0 && (
                 <View style={styles.cartBadge}>
-                  <Text style={styles.cartBadgeText}>{MOCK_UNREAD_NOTIFICATIONS > 9 ? '9+' : MOCK_UNREAD_NOTIFICATIONS}</Text>
+                  <Text style={styles.cartBadgeText}>
+                    {MOCK_UNREAD_NOTIFICATIONS > 9 ? '9+' : MOCK_UNREAD_NOTIFICATIONS}
+                  </Text>
                 </View>
               )}
             </Pressable>
@@ -185,7 +187,9 @@ export function HomeScreen() {
         >
           <Ionicons name="location-outline" size={13} color={colors.primary} />
           <Text style={styles.locationText} numberOfLines={1}>
-            {selectedAddress ? `Deliver to ${selectedAddress.city} ${selectedAddress.pincode}` : 'Deliver to Bengaluru 560001'}
+            {selectedAddress
+              ? `Deliver to ${selectedAddress.city} ${selectedAddress.pincode}`
+              : 'Deliver to Bengaluru 560001'}
           </Text>
           <Ionicons name="chevron-down" size={12} color={colors.textMuted} />
         </Pressable>
@@ -262,7 +266,12 @@ export function HomeScreen() {
             renderItem={({ item }) => (
               <CategoryCard
                 category={item}
-                onPress={() => navigation.navigate('CategoryProducts', { categoryId: item.id, categoryName: item.name })}
+                onPress={() =>
+                  navigation.navigate('CategoryProducts', {
+                    categoryId: item.id,
+                    categoryName: item.name,
+                  })
+                }
               />
             )}
             ItemSeparatorComponent={() => <View style={{ width: spacing.sm }} />}
@@ -281,7 +290,11 @@ export function HomeScreen() {
               <Pressable
                 style={styles.concernChip}
                 onPress={() =>
-                  navigation.navigate('CategoryProducts', { categoryId: '', categoryName: item.name, concernId: item.id })
+                  navigation.navigate('CategoryProducts', {
+                    categoryId: '',
+                    categoryName: item.name,
+                    concernId: item.id,
+                  })
                 }
                 accessibilityRole="button"
               >
@@ -326,7 +339,10 @@ export function HomeScreen() {
             contentContainerStyle={styles.railPadding}
             renderItem={({ item }) => (
               <View style={styles.articleCardWrap}>
-                <ArticleCard article={item} onPress={() => navigation.navigate('ArticleDetail', { articleId: item.id })} />
+                <ArticleCard
+                  article={item}
+                  onPress={() => navigation.navigate('ArticleDetail', { articleId: item.id })}
+                />
               </View>
             )}
             ItemSeparatorComponent={() => <View style={{ width: spacing.sm }} />}
@@ -356,7 +372,15 @@ export function HomeScreen() {
   );
 }
 
-function Section({ title, onSeeAll, children }: { title: string; onSeeAll?: () => void; children: React.ReactNode }) {
+function Section({
+  title,
+  onSeeAll,
+  children,
+}: {
+  title: string;
+  onSeeAll?: () => void;
+  children: React.ReactNode;
+}) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -421,95 +445,102 @@ function ProductRail({
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  header: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs },
-  headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brandRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
-  brandMark: { width: 28, height: 28 },
-  brand: { ...typography.h4, color: colors.primary },
-  headerIcons: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  cartBtn: { padding: spacing.xxs },
-  cartBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    backgroundColor: colors.danger,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  cartBadgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
-  locationPill: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
-  locationText: { ...typography.caption, color: colors.textSecondary },
-  searchWrap: { marginTop: spacing.xxs },
-  scrollContent: { paddingBottom: spacing.lg },
-  bannerList: { paddingHorizontal: spacing.md, paddingTop: spacing.sm },
-  bannerCard: {
-    width: BANNER_CARD_WIDTH,
-    height: BANNER_CARD_HEIGHT,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    backgroundColor: colors.surfaceMuted,
-    ...shadow.sm,
-  },
-  bannerImage: { width: '100%', height: '100%' },
-  bannerOverlay: {
-    ...StyleSheet.absoluteFill,
-    justifyContent: 'flex-end',
-    padding: spacing.md,
-  },
-  bannerTitle: { ...typography.h4, color: colors.textInverse },
-  bannerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
-  bannerCta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: 4,
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-    borderRadius: radius.pill,
-    marginTop: spacing.xs,
-  },
-  bannerCtaText: { ...typography.captionMedium, color: colors.textOnPrimary, fontWeight: '700' },
-  section: { marginTop: spacing.lg },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    marginBottom: spacing.sm,
-  },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary },
-  seeAll: { ...typography.captionMedium, color: colors.primary },
-  railPadding: { paddingHorizontal: spacing.md },
-  productCardWrap: { width: 160 },
-  concernChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.surface,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  concernLabel: { ...typography.captionMedium, color: colors.textPrimary },
-  reviewsWrap: { paddingHorizontal: spacing.md, backgroundColor: colors.surface, marginHorizontal: spacing.md, borderRadius: radius.lg, ...shadow.sm },
-  articleCardWrap: { width: 220 },
-  trustSection: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    paddingHorizontal: spacing.md,
-    marginTop: spacing.xl,
-    gap: spacing.sm,
-  },
-  trustBadge: { alignItems: 'center', gap: 4, width: 76 },
-  trustLabel: { ...typography.tiny, color: colors.textSecondary, textAlign: 'center' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    header: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs },
+    headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    brandRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
+    brandMark: { width: 28, height: 28 },
+    brand: { ...typography.h4, color: colors.primary },
+    headerIcons: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+    cartBtn: { padding: spacing.xxs },
+    cartBadge: {
+      position: 'absolute',
+      top: -2,
+      right: -2,
+      backgroundColor: colors.danger,
+      borderRadius: 8,
+      minWidth: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 3,
+    },
+    cartBadgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
+    locationPill: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
+    locationText: { ...typography.caption, color: colors.textSecondary },
+    searchWrap: { marginTop: spacing.xxs },
+    scrollContent: { paddingBottom: spacing.lg },
+    bannerList: { paddingHorizontal: spacing.md, paddingTop: spacing.sm },
+    bannerCard: {
+      width: BANNER_CARD_WIDTH,
+      height: BANNER_CARD_HEIGHT,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+      backgroundColor: colors.surfaceMuted,
+      ...shadow.sm,
+    },
+    bannerImage: { width: '100%', height: '100%' },
+    bannerOverlay: {
+      ...StyleSheet.absoluteFill,
+      justifyContent: 'flex-end',
+      padding: spacing.md,
+    },
+    bannerTitle: { ...typography.h4, color: colors.textInverse },
+    bannerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
+    bannerCta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+      gap: 4,
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 6,
+      borderRadius: radius.pill,
+      marginTop: spacing.xs,
+    },
+    bannerCtaText: { ...typography.captionMedium, color: colors.textOnPrimary, fontWeight: '700' },
+    section: { marginTop: spacing.lg },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: spacing.md,
+      marginBottom: spacing.sm,
+    },
+    sectionTitle: { ...typography.h4, color: colors.textPrimary },
+    seeAll: { ...typography.captionMedium, color: colors.primary },
+    railPadding: { paddingHorizontal: spacing.md },
+    productCardWrap: { width: 160 },
+    concernChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      backgroundColor: colors.surface,
+      borderRadius: radius.pill,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    concernLabel: { ...typography.captionMedium, color: colors.textPrimary },
+    reviewsWrap: {
+      paddingHorizontal: spacing.md,
+      backgroundColor: colors.surface,
+      marginHorizontal: spacing.md,
+      borderRadius: radius.lg,
+      ...shadow.sm,
+    },
+    articleCardWrap: { width: 220 },
+    trustSection: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      paddingHorizontal: spacing.md,
+      marginTop: spacing.xl,
+      gap: spacing.sm,
+    },
+    trustBadge: { alignItems: 'center', gap: 4, width: 76 },
+    trustLabel: { ...typography.tiny, color: colors.textSecondary, textAlign: 'center' },
+  });

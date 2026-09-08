@@ -3,7 +3,8 @@ import { Category, Concern } from '../types';
 import { getCatalog } from '../services/catalog/catalogStore';
 import { toUiCategories, toUiConcerns } from '../services/catalog/categoryAdapter';
 
-const delay = <T,>(value: T, ms = 200): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 200): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 // In-memory store seeded from mock data so admin create/update/delete
 // operations persist for the session without a real backend.

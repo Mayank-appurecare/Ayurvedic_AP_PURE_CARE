@@ -1,7 +1,8 @@
 import { orders as mockOrders } from '../data/orders';
 import { Address, CartItem, Order, OrderItem, OrderStatus } from '../types';
 
-const delay = <T,>(value: T, ms = 300): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 300): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 // In-memory store seeded from mock data so newly placed orders persist for the session.
 let ordersStore: Order[] = [...mockOrders];
@@ -88,13 +89,21 @@ export const OrderRepository = {
   },
 
   async updateStatus(id: string, status: OrderStatus): Promise<Order | undefined> {
-    ordersStore = ordersStore.map((o) => (o.id === id ? { ...o, status, timeline: buildTimeline(status) } : o));
+    ordersStore = ordersStore.map((o) =>
+      o.id === id ? { ...o, status, timeline: buildTimeline(status) } : o
+    );
     return delay(ordersStore.find((o) => o.id === id));
   },
 
   async reorder(id: string): Promise<CartItem[]> {
     const order = ordersStore.find((o) => o.id === id);
     if (!order) return delay([]);
-    return delay(order.items.map((item) => ({ productId: item.productId, variantId: item.variantId, quantity: item.quantity })));
+    return delay(
+      order.items.map((item) => ({
+        productId: item.productId,
+        variantId: item.variantId,
+        quantity: item.quantity,
+      }))
+    );
   },
 };

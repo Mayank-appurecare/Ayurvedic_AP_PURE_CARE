@@ -35,7 +35,7 @@ export function isCustomerFacingCategory(category: ApiCategory): boolean {
  * must precede "men", because "Women's Health" contains the substring "men".
  * Every glyph here was checked against the installed Ionicons glyphmap.
  */
-const ICON_RULES: Array<{ match: RegExp; icon: string }> = [
+const ICON_RULES: { match: RegExp; icon: string }[] = [
   { match: /women|menstrual|pcos|fertilit|lactat|menopause/i, icon: 'woman-outline' },
   { match: /baby|kid|child/i, icon: 'happy-outline' },
   { match: /diabet|sugar/i, icon: 'water-outline' },

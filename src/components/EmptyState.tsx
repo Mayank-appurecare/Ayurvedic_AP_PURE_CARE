@@ -13,7 +13,13 @@ interface Props {
   onAction?: () => void;
 }
 
-export function EmptyState({ icon = 'leaf-outline', title, description, actionLabel, onAction }: Props) {
+export function EmptyState({
+  icon = 'leaf-outline',
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -24,24 +30,40 @@ export function EmptyState({ icon = 'leaf-outline', title, description, actionLa
       <Text style={styles.title}>{title}</Text>
       {description && <Text style={styles.description}>{description}</Text>}
       {actionLabel && onAction && (
-        <PrimaryButton label={actionLabel} onPress={onAction} fullWidth={false} style={styles.action} />
+        <PrimaryButton
+          label={actionLabel}
+          onPress={onAction}
+          fullWidth={false}
+          style={styles.action}
+        />
       )}
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, gap: spacing.xs },
-  iconWrap: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-  },
-  title: { ...typography.h4, color: colors.textPrimary, textAlign: 'center' },
-  description: { ...typography.body, color: colors.textSecondary, textAlign: 'center', maxWidth: 280 },
-  action: { marginTop: spacing.md, paddingHorizontal: spacing.xl },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.xxl,
+      gap: spacing.xs,
+    },
+    iconWrap: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm,
+    },
+    title: { ...typography.h4, color: colors.textPrimary, textAlign: 'center' },
+    description: {
+      ...typography.body,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      maxWidth: 280,
+    },
+    action: { marginTop: spacing.md, paddingHorizontal: spacing.xl },
+  });

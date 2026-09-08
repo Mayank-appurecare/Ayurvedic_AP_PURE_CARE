@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Animated,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -81,7 +74,9 @@ export function ProductDetailScreen() {
         setStatus('ready');
 
         ReviewRepository.getSummary(productId).then(setReviewSummary);
-        ReviewRepository.getForProduct(productId).then((list) => setSampleReviews(list.slice(0, 2)));
+        ReviewRepository.getForProduct(productId).then((list) =>
+          setSampleReviews(list.slice(0, 2))
+        );
         ProductRepository.getRelated(productId).then(setRelatedProducts);
         ProductRepository.getFrequentlyBoughtTogether(productId).then(setFbtProducts);
       })
@@ -187,7 +182,11 @@ export function ProductDetailScreen() {
         cartCount={cartCount}
         onCartPress={() => navigation.navigate('Cart')}
       />
-      <ScrollView style={styles.flex} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.flex}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <ProductImageGallery images={product.images} />
 
         <View style={styles.section}>
@@ -203,10 +202,24 @@ export function ProductDetailScreen() {
             <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
           </Pressable>
 
-          <PriceDisplay price={selectedVariant.price} mrp={selectedVariant.mrp} size="lg" showDiscountLabel />
+          <PriceDisplay
+            price={selectedVariant.price}
+            mrp={selectedVariant.mrp}
+            size="lg"
+            showDiscountLabel
+          />
 
-          <Text style={[styles.stockText, outOfStock ? styles.stockOut : lowStock ? styles.stockLow : styles.stockIn]}>
-            {outOfStock ? 'Out of Stock' : lowStock ? `Only ${selectedVariant.stock} left!` : 'In Stock'}
+          <Text
+            style={[
+              styles.stockText,
+              outOfStock ? styles.stockOut : lowStock ? styles.stockLow : styles.stockIn,
+            ]}
+          >
+            {outOfStock
+              ? 'Out of Stock'
+              : lowStock
+                ? `Only ${selectedVariant.stock} left!`
+                : 'In Stock'}
           </Text>
 
           {product.variants.length > 1 && (
@@ -224,7 +237,9 @@ export function ProductDetailScreen() {
                       }}
                       style={[styles.variantChip, active && styles.variantChipActive]}
                     >
-                      <Text style={[styles.variantLabel, active && styles.variantLabelActive]}>{variant.label}</Text>
+                      <Text style={[styles.variantLabel, active && styles.variantLabelActive]}>
+                        {variant.label}
+                      </Text>
                       <Text style={[styles.variantPrice, active && styles.variantLabelActive]}>
                         {formatPrice(variant.price)}
                       </Text>
@@ -252,7 +267,12 @@ export function ProductDetailScreen() {
               disabled={outOfStock}
               style={styles.ctaBtn}
             />
-            <PrimaryButton label="Buy Now" onPress={handleBuyNow} disabled={outOfStock} style={styles.ctaBtn} />
+            <PrimaryButton
+              label="Buy Now"
+              onPress={handleBuyNow}
+              disabled={outOfStock}
+              style={styles.ctaBtn}
+            />
           </View>
         </View>
 
@@ -278,7 +298,12 @@ export function ProductDetailScreen() {
         <InfoSection title="Ingredients">
           {product.ingredients.map((ingredient, index) => (
             <View key={index} style={styles.bulletRow}>
-              <Ionicons name="flask-outline" size={14} color={colors.primary} style={styles.bulletIcon} />
+              <Ionicons
+                name="flask-outline"
+                size={14}
+                color={colors.primary}
+                style={styles.bulletIcon}
+              />
               <Text style={styles.bulletText}>{ingredient}</Text>
             </View>
           ))}
@@ -335,7 +360,11 @@ export function ProductDetailScreen() {
                       <View
                         style={[
                           styles.distFill,
-                          { width: reviewSummary.total ? `${(row.count / reviewSummary.total) * 100}%` : '0%' },
+                          {
+                            width: reviewSummary.total
+                              ? `${(row.count / reviewSummary.total) * 100}%`
+                              : '0%',
+                          },
                         ]}
                       />
                     </View>
@@ -361,7 +390,11 @@ export function ProductDetailScreen() {
           <>
             <Divider />
             <InfoSection title="Related Products">
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.railContent}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.railContent}
+              >
                 {relatedProducts.map((related) => (
                   <ProductCard
                     key={related.id}
@@ -390,7 +423,12 @@ export function ProductDetailScreen() {
               </View>
               <View style={styles.fbtFooter}>
                 <Text style={styles.fbtTotal}>Total: {formatPrice(fbtTotal)}</Text>
-                <PrimaryButton label="Add All to Cart" onPress={handleAddAllFbt} fullWidth={false} style={styles.fbtBtn} />
+                <PrimaryButton
+                  label="Add All to Cart"
+                  onPress={handleAddAllFbt}
+                  fullWidth={false}
+                  style={styles.fbtBtn}
+                />
               </View>
             </InfoSection>
           </>
@@ -427,7 +465,13 @@ function TopBar({
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
     <View style={[styles.topBar, { paddingTop: insets.top + spacing.xs }]}>
-      <Pressable onPress={onBack} hitSlop={10} style={styles.topBarBtn} accessibilityRole="button" accessibilityLabel="Go back">
+      <Pressable
+        onPress={onBack}
+        hitSlop={10}
+        style={styles.topBarBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
         <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
       </Pressable>
       <View style={styles.topBarRight}>
@@ -438,9 +482,19 @@ function TopBar({
           accessibilityRole="button"
           accessibilityLabel={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <Ionicons name={wishlisted ? 'heart' : 'heart-outline'} size={22} color={wishlisted ? colors.danger : colors.textPrimary} />
+          <Ionicons
+            name={wishlisted ? 'heart' : 'heart-outline'}
+            size={22}
+            color={wishlisted ? colors.danger : colors.textPrimary}
+          />
         </Pressable>
-        <Pressable onPress={onCartPress} hitSlop={10} style={styles.topBarBtn} accessibilityRole="button" accessibilityLabel="Go to cart">
+        <Pressable
+          onPress={onCartPress}
+          hitSlop={10}
+          style={styles.topBarBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Go to cart"
+        >
           <Ionicons name="bag-outline" size={22} color={colors.textPrimary} />
           {cartCount > 0 && (
             <View style={styles.topBarBadge}>
@@ -472,7 +526,11 @@ function FaqRow({ question, answer }: { question: string; answer: string }) {
     <Pressable onPress={() => setExpanded((e) => !e)} style={styles.faqRow}>
       <View style={styles.faqHeader}>
         <Text style={styles.faqQuestion}>{question}</Text>
-        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={16} color={colors.textSecondary} />
+        <Ionicons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={16}
+          color={colors.textSecondary}
+        />
       </View>
       {expanded && <Text style={styles.faqAnswer}>{answer}</Text>}
     </Pressable>
@@ -498,122 +556,153 @@ function Divider() {
   return <View style={styles.divider} />;
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  scrollContent: { paddingBottom: spacing.xl },
-  topBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.xs,
-  },
-  topBarBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadow.sm,
-  },
-  topBarRight: { flexDirection: 'row', gap: spacing.xs },
-  topBarBadge: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    backgroundColor: colors.danger,
-    borderRadius: 8,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  topBarBadgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
-  section: { paddingHorizontal: spacing.md, paddingVertical: spacing.md, gap: spacing.xs },
-  brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
-  name: { ...typography.h3, color: colors.textPrimary },
-  ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
-  stockText: { ...typography.captionMedium, marginTop: 2 },
-  stockIn: { color: colors.success },
-  stockLow: { color: colors.warning },
-  stockOut: { color: colors.danger },
-  subheading: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xs },
-  variantSection: { marginTop: spacing.sm },
-  variantRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
-  variantChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    minWidth: 90,
-  },
-  variantChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
-  variantLabel: { ...typography.captionMedium, color: colors.textPrimary },
-  variantLabelActive: { color: colors.primary },
-  variantPrice: { ...typography.caption, color: colors.textSecondary, marginTop: 2 },
-  qtyRow: { marginTop: spacing.md },
-  ctaRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },
-  ctaBtn: { flex: 1 },
-  divider: { height: 8, backgroundColor: colors.surfaceMuted },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.xs },
-  paragraph: { ...typography.body, color: colors.textSecondary, lineHeight: 21 },
-  bulletRow: { flexDirection: 'row', gap: spacing.xs, marginBottom: spacing.xs, alignItems: 'flex-start' },
-  bulletIcon: { marginTop: 3 },
-  bulletText: { ...typography.body, color: colors.textSecondary, flex: 1 },
-  stepNumber: { ...typography.bodyMedium, color: colors.primary, width: 20 },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.xs,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  infoLabel: { ...typography.body, color: colors.textMuted, flex: 1 },
-  infoValue: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1, textAlign: 'right' },
-  faqRow: { paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.divider },
-  faqHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm },
-  faqQuestion: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1 },
-  faqAnswer: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs },
-  reviewSummaryRow: { flexDirection: 'row', gap: spacing.lg, marginBottom: spacing.md },
-  reviewAverageBlock: { alignItems: 'center', justifyContent: 'center', width: 90, gap: 4 },
-  reviewAverageNumber: { ...typography.h1, color: colors.textPrimary },
-  reviewTotalText: { ...typography.caption, color: colors.textMuted },
-  reviewBarsBlock: { flex: 1, justifyContent: 'center', gap: 4 },
-  distRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  distLabel: { ...typography.tiny, color: colors.textSecondary, width: 22 },
-  distTrack: { flex: 1, height: 6, borderRadius: 3, backgroundColor: colors.surfaceMuted, overflow: 'hidden' },
-  distFill: { height: '100%', backgroundColor: colors.star, borderRadius: 3 },
-  distCount: { ...typography.tiny, color: colors.textMuted, width: 24, textAlign: 'right' },
-  seeAllBtn: { marginTop: spacing.sm },
-  railContent: { gap: spacing.sm, paddingRight: spacing.md },
-  railCard: { width: 160 },
-  fbtRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs },
-  fbtThumbWrap: { width: 76, alignItems: 'center', gap: 4 },
-  fbtThumb: { width: 60, height: 60, borderRadius: radius.md, backgroundColor: colors.surfaceMuted },
-  fbtLabel: { ...typography.tiny, color: colors.textSecondary, textAlign: 'center' },
-  fbtFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.md },
-  fbtTotal: { ...typography.bodyMedium, color: colors.textPrimary },
-  fbtBtn: { paddingHorizontal: spacing.md },
-  toast: {
-    position: 'absolute',
-    bottom: spacing.xl,
-    alignSelf: 'center',
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    ...shadow.md,
-  },
-  toastText: { ...typography.captionMedium, color: colors.textOnPrimary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    flex: { flex: 1, backgroundColor: colors.background },
+    scrollContent: { paddingBottom: spacing.xl },
+    topBar: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: spacing.sm,
+      paddingBottom: spacing.xs,
+    },
+    topBarBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: 'rgba(255,255,255,0.9)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      ...shadow.sm,
+    },
+    topBarRight: { flexDirection: 'row', gap: spacing.xs },
+    topBarBadge: {
+      position: 'absolute',
+      top: 2,
+      right: 2,
+      backgroundColor: colors.danger,
+      borderRadius: 8,
+      minWidth: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 2,
+    },
+    topBarBadgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
+    section: { paddingHorizontal: spacing.md, paddingVertical: spacing.md, gap: spacing.xs },
+    brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
+    name: { ...typography.h3, color: colors.textPrimary },
+    ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
+    stockText: { ...typography.captionMedium, marginTop: 2 },
+    stockIn: { color: colors.success },
+    stockLow: { color: colors.warning },
+    stockOut: { color: colors.danger },
+    subheading: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xs },
+    variantSection: { marginTop: spacing.sm },
+    variantRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
+    variantChip: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+      minWidth: 90,
+    },
+    variantChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
+    variantLabel: { ...typography.captionMedium, color: colors.textPrimary },
+    variantLabelActive: { color: colors.primary },
+    variantPrice: { ...typography.caption, color: colors.textSecondary, marginTop: 2 },
+    qtyRow: { marginTop: spacing.md },
+    ctaRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },
+    ctaBtn: { flex: 1 },
+    divider: { height: 8, backgroundColor: colors.surfaceMuted },
+    sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.xs },
+    paragraph: { ...typography.body, color: colors.textSecondary, lineHeight: 21 },
+    bulletRow: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+      marginBottom: spacing.xs,
+      alignItems: 'flex-start',
+    },
+    bulletIcon: { marginTop: 3 },
+    bulletText: { ...typography.body, color: colors.textSecondary, flex: 1 },
+    stepNumber: { ...typography.bodyMedium, color: colors.primary, width: 20 },
+    infoRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: spacing.xs,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    infoLabel: { ...typography.body, color: colors.textMuted, flex: 1 },
+    infoValue: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1, textAlign: 'right' },
+    faqRow: {
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    faqHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    faqQuestion: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1 },
+    faqAnswer: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs },
+    reviewSummaryRow: { flexDirection: 'row', gap: spacing.lg, marginBottom: spacing.md },
+    reviewAverageBlock: { alignItems: 'center', justifyContent: 'center', width: 90, gap: 4 },
+    reviewAverageNumber: { ...typography.h1, color: colors.textPrimary },
+    reviewTotalText: { ...typography.caption, color: colors.textMuted },
+    reviewBarsBlock: { flex: 1, justifyContent: 'center', gap: 4 },
+    distRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+    distLabel: { ...typography.tiny, color: colors.textSecondary, width: 22 },
+    distTrack: {
+      flex: 1,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: colors.surfaceMuted,
+      overflow: 'hidden',
+    },
+    distFill: { height: '100%', backgroundColor: colors.star, borderRadius: 3 },
+    distCount: { ...typography.tiny, color: colors.textMuted, width: 24, textAlign: 'right' },
+    seeAllBtn: { marginTop: spacing.sm },
+    railContent: { gap: spacing.sm, paddingRight: spacing.md },
+    railCard: { width: 160 },
+    fbtRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs },
+    fbtThumbWrap: { width: 76, alignItems: 'center', gap: 4 },
+    fbtThumb: {
+      width: 60,
+      height: 60,
+      borderRadius: radius.md,
+      backgroundColor: colors.surfaceMuted,
+    },
+    fbtLabel: { ...typography.tiny, color: colors.textSecondary, textAlign: 'center' },
+    fbtFooter: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: spacing.md,
+    },
+    fbtTotal: { ...typography.bodyMedium, color: colors.textPrimary },
+    fbtBtn: { paddingHorizontal: spacing.md },
+    toast: {
+      position: 'absolute',
+      bottom: spacing.xl,
+      alignSelf: 'center',
+      backgroundColor: colors.primary,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: radius.pill,
+      ...shadow.md,
+    },
+    toastText: { ...typography.captionMedium, color: colors.textOnPrimary },
+  });

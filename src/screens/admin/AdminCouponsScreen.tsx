@@ -57,7 +57,13 @@ export function AdminCouponsScreen() {
   );
 
   const handleAdd = async () => {
-    if (!form.code.trim() || !form.description.trim() || !form.discountValue.trim() || !form.expiryDate.trim()) return;
+    if (
+      !form.code.trim() ||
+      !form.description.trim() ||
+      !form.discountValue.trim() ||
+      !form.expiryDate.trim()
+    )
+      return;
     setSaving(true);
     try {
       await OfferRepository.createCoupon({
@@ -87,11 +93,21 @@ export function AdminCouponsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Coupons</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -104,13 +120,20 @@ export function AdminCouponsScreen() {
           <PrimaryButton
             label={showForm ? 'Close Form' : '+ Add Coupon'}
             onPress={() => setShowForm((v) => !v)}
-            icon={<Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />}
+            icon={
+              <Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />
+            }
           />
 
           {showForm && (
             <View style={styles.form}>
               <Text style={styles.formTitle}>New Coupon</Text>
-              <FormField label="Code" value={form.code} onChangeText={(v) => setForm({ ...form, code: v })} placeholder="SAVE20" />
+              <FormField
+                label="Code"
+                value={form.code}
+                onChangeText={(v) => setForm({ ...form, code: v })}
+                placeholder="SAVE20"
+              />
               <FormField
                 label="Description"
                 value={form.description}
@@ -124,9 +147,17 @@ export function AdminCouponsScreen() {
                     <Pressable
                       key={t.key}
                       onPress={() => setForm({ ...form, discountType: t.key })}
-                      style={[styles.typeChip, form.discountType === t.key && styles.typeChipActive]}
+                      style={[
+                        styles.typeChip,
+                        form.discountType === t.key && styles.typeChipActive,
+                      ]}
                     >
-                      <Text style={[styles.typeChipLabel, form.discountType === t.key && styles.typeChipLabelActive]}>
+                      <Text
+                        style={[
+                          styles.typeChipLabel,
+                          form.discountType === t.key && styles.typeChipLabelActive,
+                        ]}
+                      >
                         {t.label}
                       </Text>
                     </Pressable>
@@ -153,12 +184,21 @@ export function AdminCouponsScreen() {
                 onChangeText={(v) => setForm({ ...form, expiryDate: v })}
                 placeholder="2026-12-31"
               />
-              <PrimaryButton label="Save Coupon" onPress={handleAdd} loading={saving} style={{ marginTop: spacing.xs }} />
+              <PrimaryButton
+                label="Save Coupon"
+                onPress={handleAdd}
+                loading={saving}
+                style={{ marginTop: spacing.xs }}
+              />
             </View>
           )}
 
           {coupons.length === 0 ? (
-            <EmptyState icon="pricetag-outline" title="No coupons yet" description="Add your first coupon code." />
+            <EmptyState
+              icon="pricetag-outline"
+              title="No coupons yet"
+              description="Add your first coupon code."
+            />
           ) : (
             coupons.map((coupon) => (
               <View key={coupon.id} style={styles.couponWrap}>
@@ -178,7 +218,12 @@ export function AdminCouponsScreen() {
         </ScrollView>
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminCoupons" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminCoupons"
+      />
 
       <ConfirmationDialog
         visible={!!deleteTarget}
@@ -236,7 +281,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: { ...typography.h4, color: colors.textPrimary },
   content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxxl },
-  form: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  form: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   formTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
   field: { gap: spacing.xxs },
   fieldLabel: { ...typography.captionMedium, color: colors.textPrimary },

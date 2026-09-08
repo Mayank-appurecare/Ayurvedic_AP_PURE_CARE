@@ -36,7 +36,12 @@ export function ProductCard({ product, onPress, style }: Props) {
         {/* API products carry no image URL. Fall back to a neutral placeholder
             rather than requesting an invented one. */}
         {product.images[0] ? (
-          <Image source={{ uri: product.images[0] }} style={styles.image} contentFit="cover" transition={150} />
+          <Image
+            source={{ uri: product.images[0] }}
+            style={styles.image}
+            contentFit="cover"
+            transition={150}
+          />
         ) : (
           <View style={styles.imageFallback}>
             <Ionicons name="leaf-outline" size={32} color={colors.primaryLight} />
@@ -52,7 +57,11 @@ export function ProductCard({ product, onPress, style }: Props) {
           accessibilityRole="button"
           accessibilityLabel={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <Ionicons name={wishlisted ? 'heart' : 'heart-outline'} size={18} color={wishlisted ? colors.danger : colors.textSecondary} />
+          <Ionicons
+            name={wishlisted ? 'heart' : 'heart-outline'}
+            size={18}
+            color={wishlisted ? colors.danger : colors.textSecondary}
+          />
         </Pressable>
         {outOfStock && (
           <View style={styles.outOfStockOverlay}>
@@ -87,7 +96,13 @@ export function ProductCard({ product, onPress, style }: Props) {
           size={16}
           color={outOfStock ? colors.textMuted : inCart ? colors.textOnPrimary : colors.primary}
         />
-        <Text style={[styles.addBtnText, outOfStock && styles.addBtnTextDisabled, inCart && styles.addBtnTextActive]}>
+        <Text
+          style={[
+            styles.addBtnText,
+            outOfStock && styles.addBtnTextDisabled,
+            inCart && styles.addBtnTextActive,
+          ]}
+        >
           {outOfStock ? 'Notify Me' : inCart ? 'Added' : 'Add'}
         </Text>
       </Pressable>
@@ -95,53 +110,59 @@ export function ProductCard({ product, onPress, style }: Props) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  card: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    ...shadow.sm,
-  },
-  pressed: { opacity: 0.92 },
-  imageWrap: { width: '100%', aspectRatio: 1, backgroundColor: colors.surfaceMuted },
-  image: { width: '100%', height: '100%' },
-  imageFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
-  wishlistBtn: {
-    position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
-    backgroundColor: colors.surface,
-    borderRadius: radius.pill,
-    padding: 6,
-    ...shadow.sm,
-  },
-  discountBadge: { position: 'absolute', top: spacing.xs, left: spacing.xs },
-  outOfStockOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: colors.overlay,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  outOfStockText: { color: colors.textInverse, ...typography.captionMedium },
-  info: { padding: spacing.sm, gap: 4 },
-  brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
-  name: { ...typography.body, color: colors.textPrimary, fontWeight: '600', minHeight: 36 },
-  addBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    margin: spacing.sm,
-    marginTop: 0,
-    paddingVertical: 8,
-    borderRadius: radius.sm,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-  },
-  addBtnDisabled: { borderColor: colors.border },
-  addBtnActive: { backgroundColor: colors.primary },
-  addBtnText: { ...typography.captionMedium, color: colors.primary },
-  addBtnTextDisabled: { color: colors.textMuted },
-  addBtnTextActive: { color: colors.textOnPrimary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    card: {
+      flex: 1,
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      overflow: 'hidden',
+      ...shadow.sm,
+    },
+    pressed: { opacity: 0.92 },
+    imageWrap: { width: '100%', aspectRatio: 1, backgroundColor: colors.surfaceMuted },
+    image: { width: '100%', height: '100%' },
+    imageFallback: {
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    wishlistBtn: {
+      position: 'absolute',
+      top: spacing.xs,
+      right: spacing.xs,
+      backgroundColor: colors.surface,
+      borderRadius: radius.pill,
+      padding: 6,
+      ...shadow.sm,
+    },
+    discountBadge: { position: 'absolute', top: spacing.xs, left: spacing.xs },
+    outOfStockOverlay: {
+      ...StyleSheet.absoluteFill,
+      backgroundColor: colors.overlay,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    outOfStockText: { color: colors.textInverse, ...typography.captionMedium },
+    info: { padding: spacing.sm, gap: 4 },
+    brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
+    name: { ...typography.body, color: colors.textPrimary, fontWeight: '600', minHeight: 36 },
+    addBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+      margin: spacing.sm,
+      marginTop: 0,
+      paddingVertical: 8,
+      borderRadius: radius.sm,
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+    },
+    addBtnDisabled: { borderColor: colors.border },
+    addBtnActive: { backgroundColor: colors.primary },
+    addBtnText: { ...typography.captionMedium, color: colors.primary },
+    addBtnTextDisabled: { color: colors.textMuted },
+    addBtnTextActive: { color: colors.textOnPrimary },
+  });

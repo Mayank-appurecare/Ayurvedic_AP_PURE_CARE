@@ -26,18 +26,22 @@ export function ArticlesScreen() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([ArticleRepository.getAll(), ArticleRepository.getFeatured()]).then(([list, feat]) => {
-      setAllArticles(list);
-      setFeatured(feat);
-      setLoading(false);
-    });
+    Promise.all([ArticleRepository.getAll(), ArticleRepository.getFeatured()]).then(
+      ([list, feat]) => {
+        setAllArticles(list);
+        setFeatured(feat);
+        setLoading(false);
+      }
+    );
   }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return allArticles.filter((article) => {
       const matchesQuery =
-        !q || article.title.toLowerCase().includes(q) || article.tags.some((t) => t.toLowerCase().includes(q));
+        !q ||
+        article.title.toLowerCase().includes(q) ||
+        article.tags.some((t) => t.toLowerCase().includes(q));
       const matchesCategory = !activeCategory || article.category === activeCategory;
       return matchesQuery && matchesCategory && article.id !== featured?.id;
     });
@@ -57,7 +61,12 @@ export function ArticlesScreen() {
           ListHeaderComponent={
             <View>
               <View style={styles.searchWrap}>
-                <SearchBar value={query} onChangeText={setQuery} placeholder="Search articles" onClear={() => setQuery('')} />
+                <SearchBar
+                  value={query}
+                  onChangeText={setQuery}
+                  placeholder="Search articles"
+                  onClear={() => setQuery('')}
+                />
               </View>
 
               <ScrollView
@@ -65,7 +74,11 @@ export function ArticlesScreen() {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.chipsRow}
               >
-                <Chip label="All" active={!activeCategory} onPress={() => setActiveCategory(null)} />
+                <Chip
+                  label="All"
+                  active={!activeCategory}
+                  onPress={() => setActiveCategory(null)}
+                />
                 {articleCategories.map((category) => (
                   <Chip
                     key={category}
@@ -79,7 +92,10 @@ export function ArticlesScreen() {
               {featured && !query && !activeCategory && (
                 <View style={styles.featuredWrap}>
                   <Text style={styles.sectionTitle}>Featured</Text>
-                  <ArticleCard article={featured} onPress={() => navigation.navigate('ArticleDetail', { articleId: featured.id })} />
+                  <ArticleCard
+                    article={featured}
+                    onPress={() => navigation.navigate('ArticleDetail', { articleId: featured.id })}
+                  />
                 </View>
               )}
 
@@ -88,11 +104,19 @@ export function ArticlesScreen() {
           }
           renderItem={({ item }) => (
             <View style={styles.cardWrap}>
-              <ArticleCard horizontal article={item} onPress={() => navigation.navigate('ArticleDetail', { articleId: item.id })} />
+              <ArticleCard
+                horizontal
+                article={item}
+                onPress={() => navigation.navigate('ArticleDetail', { articleId: item.id })}
+              />
             </View>
           )}
           ListEmptyComponent={
-            <EmptyState icon="book-outline" title="No articles found" description="Try a different search term or category." />
+            <EmptyState
+              icon="book-outline"
+              title="No articles found"
+              description="Try a different search term or category."
+            />
           }
         />
       )}
@@ -110,23 +134,24 @@ function Chip({ label, active, onPress }: { label: string; active: boolean; onPr
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.md, paddingBottom: spacing.xxl },
-  searchWrap: { marginBottom: spacing.sm },
-  chipsRow: { gap: spacing.xs, paddingBottom: spacing.sm },
-  chip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipLabel: { ...typography.caption, color: colors.textSecondary },
-  chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
-  featuredWrap: { marginBottom: spacing.md },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
-  cardWrap: { marginBottom: spacing.sm },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    list: { padding: spacing.md, paddingBottom: spacing.xxl },
+    searchWrap: { marginBottom: spacing.sm },
+    chipsRow: { gap: spacing.xs, paddingBottom: spacing.sm },
+    chip: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.pill,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+    chipLabel: { ...typography.caption, color: colors.textSecondary },
+    chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
+    featuredWrap: { marginBottom: spacing.md },
+    sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
+    cardWrap: { marginBottom: spacing.sm },
+  });

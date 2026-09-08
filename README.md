@@ -16,6 +16,7 @@ npx expo start
 ```
 
 Then:
+
 - Press `a` for Android emulator, `i` for iOS simulator (Mac only), `w` for web.
 - Or scan the QR code with the **Expo Go** app on your phone (fastest way to see it on a real device).
 
@@ -25,12 +26,12 @@ Requirements: Node.js 18+ and npm. No native build tools needed — this runs en
 
 ## 2. Demo Logins (all mock — nothing is verified against a server)
 
-| Flow | Credentials |
-|---|---|
-| Customer Login | Any email/mobile + a password of 4+ characters |
-| Customer Register → OTP screen | OTP is always **`1234`** |
-| Continue as Guest | No credentials needed, from the Welcome screen |
-| Admin Login | `admin@ojas.com` / `admin123` (any valid-looking email + 4+ char password also works) |
+| Flow                           | Credentials                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| Customer Login                 | Any email/mobile + a password of 4+ characters                                        |
+| Customer Register → OTP screen | OTP is always **`1234`**                                                              |
+| Continue as Guest              | No credentials needed, from the Welcome screen                                        |
+| Admin Login                    | `admin@ojas.com` / `admin123` (any valid-looking email + 4+ char password also works) |
 
 The Admin panel is reached via a small, low-emphasis **"Admin Login"** text link at the very
 bottom of the customer **Welcome** screen — it's intentionally de-emphasized since it's not a
@@ -41,6 +42,7 @@ customer-facing feature.
 ## 3. What's Implemented
 
 ### Customer App
+
 - **Onboarding**: Splash → Onboarding carousel → Welcome (Login / Register / Continue as Guest)
 - **Auth**: Login, Register, OTP Verification (all mock, session persisted via AsyncStorage)
 - **Home**: hero banners, shop by category, shop by concern, best sellers, featured, new
@@ -60,6 +62,7 @@ customer-facing feature.
 - **Search**, **Wishlist**, **Offers & Coupons**, **Ayurveda & Wellness articles** all fully wired
 
 ### Admin App (separate navigation stack, not mixed into customer nav)
+
 Login → Dashboard (KPIs, sales trend, best sellers, recent orders/reviews) → Products (list/add/edit/delete)
 → Categories → Inventory (stock levels & quick adjust) → Orders (status update, cancel) →
 Customers → Reviews (moderate) → Coupons (create/edit/delete) → Offers → Banners → Articles
@@ -100,6 +103,7 @@ Screens  →  Reusable UI Components  →  Context/Hooks (state)  →  Repositor
   (separate stack for the whole admin app).
 
 ### Folder structure
+
 ```
 src/
   theme/            colors.ts, typography.ts, spacing.ts (+ responsive helpers)

@@ -36,7 +36,9 @@ export function SortBottomSheet({ visible, value, onSelect, onClose }: Props) {
           }}
           style={styles.row}
         >
-          <Text style={[styles.label, value === option.value && styles.labelActive]}>{option.label}</Text>
+          <Text style={[styles.label, value === option.value && styles.labelActive]}>
+            {option.label}
+          </Text>
           <Ionicons
             name={value === option.value ? 'radio-button-on' : 'radio-button-off'}
             size={20}
@@ -48,15 +50,16 @@ export function SortBottomSheet({ visible, value, onSelect, onClose }: Props) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  label: { ...typography.body, color: colors.textPrimary },
-  labelActive: { color: colors.primary, fontWeight: '700' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.md,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    label: { ...typography.body, color: colors.textPrimary },
+    labelActive: { color: colors.primary, fontWeight: '700' },
+  });

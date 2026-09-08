@@ -26,7 +26,11 @@ export function AddressCard({ address, selected, onSelect, onEdit, onDelete }: P
     <Pressable onPress={onSelect} style={[styles.card, selected && styles.cardSelected]}>
       <View style={styles.header}>
         <View style={styles.labelRow}>
-          <Ionicons name={LABEL_ICON[address.label] ?? 'location-outline'} size={16} color={colors.primary} />
+          <Ionicons
+            name={LABEL_ICON[address.label] ?? 'location-outline'}
+            size={16}
+            color={colors.primary}
+          />
           <Text style={styles.label}>{address.label}</Text>
           {address.isDefault && (
             <View style={styles.defaultBadge}>
@@ -71,25 +75,36 @@ export function AddressCard({ address, selected, onSelect, onEdit, onDelete }: P
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    gap: 2,
-    ...shadow.sm,
-  },
-  cardSelected: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  labelRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  label: { ...typography.bodyMedium, color: colors.textPrimary },
-  defaultBadge: { backgroundColor: colors.primarySurface, paddingHorizontal: 6, paddingVertical: 2, borderRadius: radius.sm },
-  defaultText: { ...typography.tiny, color: colors.primary, fontWeight: '700' },
-  name: { ...typography.bodyMedium, color: colors.textPrimary },
-  text: { ...typography.body, color: colors.textSecondary },
-  actions: { flexDirection: 'row', gap: spacing.lg, marginTop: spacing.xs },
-  actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  actionText: { ...typography.captionMedium, color: colors.primary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      gap: 2,
+      ...shadow.sm,
+    },
+    cardSelected: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    labelRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+    label: { ...typography.bodyMedium, color: colors.textPrimary },
+    defaultBadge: {
+      backgroundColor: colors.primarySurface,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: radius.sm,
+    },
+    defaultText: { ...typography.tiny, color: colors.primary, fontWeight: '700' },
+    name: { ...typography.bodyMedium, color: colors.textPrimary },
+    text: { ...typography.body, color: colors.textSecondary },
+    actions: { flexDirection: 'row', gap: spacing.lg, marginTop: spacing.xs },
+    actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    actionText: { ...typography.captionMedium, color: colors.primary },
+  });

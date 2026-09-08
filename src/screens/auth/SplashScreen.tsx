@@ -91,26 +91,32 @@ export function SplashScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoWrap: { alignItems: 'center', gap: spacing.xs },
-  iconCircle: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
-    // White badge rather than the old green one: the logo's own artwork is
-    // gold + dark green, which would sink into a green circle.
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-  },
-  logoImage: { width: 84, height: 84 },
-  brand: { ...typography.h1, color: colors.textOnPrimary },
-  tagline: { ...typography.body, color: colors.primarySurface, marginTop: spacing.xxs, textAlign: 'center' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    logoWrap: { alignItems: 'center', gap: spacing.xs },
+    iconCircle: {
+      width: 112,
+      height: 112,
+      borderRadius: 56,
+      // White badge rather than the old green one: the logo's own artwork is
+      // gold + dark green, which would sink into a green circle.
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm,
+    },
+    logoImage: { width: 84, height: 84 },
+    brand: { ...typography.h1, color: colors.textOnPrimary },
+    tagline: {
+      ...typography.body,
+      color: colors.primarySurface,
+      marginTop: spacing.xxs,
+      textAlign: 'center',
+    },
+  });

@@ -1,5 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -82,7 +91,8 @@ export function AddEditAddressScreen() {
   const validate = (): boolean => {
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
     if (!form.fullName.trim()) nextErrors.fullName = 'Full name is required';
-    if (!/^[\d+\-\s]{7,15}$/.test(form.phone.trim())) nextErrors.phone = 'Enter a valid phone number';
+    if (!/^[\d+\-\s]{7,15}$/.test(form.phone.trim()))
+      nextErrors.phone = 'Enter a valid phone number';
     if (!form.line1.trim()) nextErrors.line1 = 'Address line 1 is required';
     if (!form.city.trim()) nextErrors.city = 'City is required';
     if (!form.state.trim()) nextErrors.state = 'State is required';
@@ -128,8 +138,15 @@ export function AddEditAddressScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.screen}>
-      <AppHeader title={isEditing ? 'Edit Address' : 'Add New Address'} showBack onBackPress={() => navigation.goBack()} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <AppHeader
+        title={isEditing ? 'Edit Address' : 'Add New Address'}
+        showBack
+        onBackPress={() => navigation.goBack()}
+      />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Text style={styles.sectionLabel}>Address Type</Text>
           <View style={styles.labelRow}>
@@ -139,12 +156,21 @@ export function AddEditAddressScreen() {
                 onPress={() => setField('label', label)}
                 style={[styles.labelChip, form.label === label && styles.labelChipActive]}
               >
-                <Text style={[styles.labelChipText, form.label === label && styles.labelChipTextActive]}>{label}</Text>
+                <Text
+                  style={[styles.labelChipText, form.label === label && styles.labelChipTextActive]}
+                >
+                  {label}
+                </Text>
               </Pressable>
             ))}
           </View>
 
-          <FormField label="Full Name" value={form.fullName} onChangeText={(v) => setField('fullName', v)} error={errors.fullName} />
+          <FormField
+            label="Full Name"
+            value={form.fullName}
+            onChangeText={(v) => setField('fullName', v)}
+            error={errors.fullName}
+          />
           <FormField
             label="Phone Number"
             value={form.phone}
@@ -152,10 +178,29 @@ export function AddEditAddressScreen() {
             error={errors.phone}
             keyboardType="phone-pad"
           />
-          <FormField label="Address Line 1" value={form.line1} onChangeText={(v) => setField('line1', v)} error={errors.line1} />
-          <FormField label="Address Line 2 (Optional)" value={form.line2} onChangeText={(v) => setField('line2', v)} />
-          <FormField label="City" value={form.city} onChangeText={(v) => setField('city', v)} error={errors.city} />
-          <FormField label="State" value={form.state} onChangeText={(v) => setField('state', v)} error={errors.state} />
+          <FormField
+            label="Address Line 1"
+            value={form.line1}
+            onChangeText={(v) => setField('line1', v)}
+            error={errors.line1}
+          />
+          <FormField
+            label="Address Line 2 (Optional)"
+            value={form.line2}
+            onChangeText={(v) => setField('line2', v)}
+          />
+          <FormField
+            label="City"
+            value={form.city}
+            onChangeText={(v) => setField('city', v)}
+            error={errors.city}
+          />
+          <FormField
+            label="State"
+            value={form.state}
+            onChangeText={(v) => setField('state', v)}
+            error={errors.state}
+          />
           <FormField
             label="Pincode"
             value={form.pincode}
@@ -165,7 +210,12 @@ export function AddEditAddressScreen() {
             maxLength={6}
           />
 
-          <PrimaryButton label="Save Address" onPress={handleSave} loading={saving} style={styles.saveBtn} />
+          <PrimaryButton
+            label="Save Address"
+            onPress={handleSave}
+            loading={saving}
+            style={styles.saveBtn}
+          />
           <View style={{ height: spacing.xxl }} />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -206,36 +256,41 @@ function FormField({
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, gap: spacing.sm },
-  sectionLabel: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
-  labelRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xs },
-  labelChip: {
-    flex: 1,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-  },
-  labelChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
-  labelChipText: { ...typography.captionMedium, color: colors.textSecondary },
-  labelChipTextActive: { color: colors.primary },
-  fieldWrap: { gap: 4 },
-  fieldLabel: { ...typography.captionMedium, color: colors.textSecondary },
-  input: {
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    ...typography.body,
-    color: colors.textPrimary,
-    backgroundColor: colors.surface,
-  },
-  inputError: { borderColor: colors.danger },
-  errorText: { ...typography.caption, color: colors.danger },
-  saveBtn: { marginTop: spacing.md },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, gap: spacing.sm },
+    sectionLabel: {
+      ...typography.captionMedium,
+      color: colors.textSecondary,
+      marginBottom: spacing.xxs,
+    },
+    labelRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xs },
+    labelChip: {
+      flex: 1,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+    },
+    labelChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySurface },
+    labelChipText: { ...typography.captionMedium, color: colors.textSecondary },
+    labelChipTextActive: { color: colors.primary },
+    fieldWrap: { gap: 4 },
+    fieldLabel: { ...typography.captionMedium, color: colors.textSecondary },
+    input: {
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.sm,
+      ...typography.body,
+      color: colors.textPrimary,
+      backgroundColor: colors.surface,
+    },
+    inputError: { borderColor: colors.danger },
+    errorText: { ...typography.caption, color: colors.danger },
+    saveBtn: { marginTop: spacing.md },
+  });

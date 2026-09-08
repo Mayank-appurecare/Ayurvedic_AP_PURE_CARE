@@ -89,11 +89,21 @@ export function AdminArticlesScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Articles</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -106,13 +116,20 @@ export function AdminArticlesScreen() {
           <PrimaryButton
             label={showForm ? 'Close Form' : '+ Add Article'}
             onPress={() => setShowForm((v) => !v)}
-            icon={<Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />}
+            icon={
+              <Ionicons name={showForm ? 'close' : 'add'} size={16} color={colors.textOnPrimary} />
+            }
           />
 
           {showForm && (
             <View style={styles.form}>
               <Text style={styles.formTitle}>New Article</Text>
-              <FormField label="Title" value={form.title} onChangeText={(v) => setForm({ ...form, title: v })} placeholder="Understanding Ashwagandha" />
+              <FormField
+                label="Title"
+                value={form.title}
+                onChangeText={(v) => setForm({ ...form, title: v })}
+                placeholder="Understanding Ashwagandha"
+              />
 
               <View style={styles.field}>
                 <Text style={styles.fieldLabel}>Category</Text>
@@ -123,14 +140,29 @@ export function AdminArticlesScreen() {
                       onPress={() => setForm({ ...form, category: cat })}
                       style={[styles.chip, form.category === cat && styles.chipActive]}
                     >
-                      <Text style={[styles.chipLabel, form.category === cat && styles.chipLabelActive]}>{cat}</Text>
+                      <Text
+                        style={[styles.chipLabel, form.category === cat && styles.chipLabelActive]}
+                      >
+                        {cat}
+                      </Text>
                     </Pressable>
                   ))}
                 </View>
               </View>
 
-              <FormField label="Image URL" value={form.image} onChangeText={(v) => setForm({ ...form, image: v })} placeholder="https://..." />
-              <FormField label="Excerpt" value={form.excerpt} onChangeText={(v) => setForm({ ...form, excerpt: v })} placeholder="Short summary shown on article cards" multiline />
+              <FormField
+                label="Image URL"
+                value={form.image}
+                onChangeText={(v) => setForm({ ...form, image: v })}
+                placeholder="https://..."
+              />
+              <FormField
+                label="Excerpt"
+                value={form.excerpt}
+                onChangeText={(v) => setForm({ ...form, excerpt: v })}
+                placeholder="Short summary shown on article cards"
+                multiline
+              />
               <FormField
                 label="Content (one paragraph per line)"
                 value={form.content}
@@ -139,7 +171,12 @@ export function AdminArticlesScreen() {
                 multiline
                 numberOfLines={5}
               />
-              <FormField label="Author" value={form.author} onChangeText={(v) => setForm({ ...form, author: v })} placeholder="AP Pure Care Wellness Desk" />
+              <FormField
+                label="Author"
+                value={form.author}
+                onChangeText={(v) => setForm({ ...form, author: v })}
+                placeholder="AP Pure Care Wellness Desk"
+              />
               <View style={styles.row}>
                 <View style={[styles.field, { flex: 1 }]}>
                   <Text style={styles.fieldLabel}>Date (YYYY-MM-DD)</Text>
@@ -155,7 +192,9 @@ export function AdminArticlesScreen() {
                   <Text style={styles.fieldLabel}>Read Time (min)</Text>
                   <TextInput
                     value={form.readTimeMinutes}
-                    onChangeText={(v) => setForm({ ...form, readTimeMinutes: v.replace(/[^0-9]/g, '') })}
+                    onChangeText={(v) =>
+                      setForm({ ...form, readTimeMinutes: v.replace(/[^0-9]/g, '') })
+                    }
                     style={styles.input}
                     keyboardType="number-pad"
                     placeholder="4"
@@ -163,22 +202,41 @@ export function AdminArticlesScreen() {
                   />
                 </View>
               </View>
-              <PrimaryButton label="Save Article" onPress={handleAdd} loading={saving} style={{ marginTop: spacing.xs }} />
+              <PrimaryButton
+                label="Save Article"
+                onPress={handleAdd}
+                loading={saving}
+                style={{ marginTop: spacing.xs }}
+              />
             </View>
           )}
 
           {articles.length === 0 ? (
-            <EmptyState icon="document-text-outline" title="No articles yet" description="Publish your first wellness article." />
+            <EmptyState
+              icon="document-text-outline"
+              title="No articles yet"
+              description="Publish your first wellness article."
+            />
           ) : (
             articles.map((article) => (
               <View key={article.id} style={styles.card}>
                 <Image source={{ uri: article.image }} style={styles.thumb} />
                 <View style={styles.cardContent}>
                   <Text style={styles.category}>{article.category}</Text>
-                  <Text style={styles.cardTitle} numberOfLines={2}>{article.title}</Text>
-                  <Text style={styles.cardMeta}>{formatDate(article.date)} • {article.readTimeMinutes} min read</Text>
+                  <Text style={styles.cardTitle} numberOfLines={2}>
+                    {article.title}
+                  </Text>
+                  <Text style={styles.cardMeta}>
+                    {formatDate(article.date)} • {article.readTimeMinutes} min read
+                  </Text>
                   <View style={styles.actions}>
-                    <SecondaryButton label="Delete" variant="ghost" fullWidth={false} onPress={() => setDeleteTarget(article)} style={styles.actionBtn} />
+                    <SecondaryButton
+                      label="Delete"
+                      variant="ghost"
+                      fullWidth={false}
+                      onPress={() => setDeleteTarget(article)}
+                      style={styles.actionBtn}
+                    />
                   </View>
                 </View>
               </View>
@@ -187,7 +245,12 @@ export function AdminArticlesScreen() {
         </ScrollView>
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminArticles" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminArticles"
+      />
 
       <ConfirmationDialog
         visible={!!deleteTarget}
@@ -249,7 +312,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: { ...typography.h4, color: colors.textPrimary },
   content: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxxl },
-  form: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  form: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   formTitle: { ...typography.bodyMedium, color: colors.textPrimary, marginBottom: spacing.xxs },
   field: { gap: spacing.xxs },
   fieldLabel: { ...typography.captionMedium, color: colors.textPrimary },
@@ -277,10 +346,21 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: colors.adminAccent, borderColor: colors.adminAccent },
   chipLabel: { ...typography.caption, color: colors.textSecondary },
   chipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
-  card: { flexDirection: 'row', backgroundColor: colors.surface, borderRadius: radius.lg, overflow: 'hidden', ...shadow.sm },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    ...shadow.sm,
+  },
   thumb: { width: 88, height: 100, backgroundColor: colors.surfaceMuted },
   cardContent: { flex: 1, padding: spacing.sm, gap: 3 },
-  category: { ...typography.tiny, color: colors.primary, textTransform: 'uppercase', fontWeight: '700' },
+  category: {
+    ...typography.tiny,
+    color: colors.primary,
+    textTransform: 'uppercase',
+    fontWeight: '700',
+  },
   cardTitle: { ...typography.bodyMedium, color: colors.textPrimary },
   cardMeta: { ...typography.caption, color: colors.textMuted },
   actions: { flexDirection: 'row', marginTop: spacing.xxs },

@@ -112,7 +112,12 @@ export function AdminLoginScreen() {
               {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
             </View>
 
-            <PrimaryButton label="Sign In" onPress={handleSignIn} loading={loading} style={styles.signInBtn} />
+            <PrimaryButton
+              label="Sign In"
+              onPress={handleSignIn}
+              loading={loading}
+              style={styles.signInBtn}
+            />
 
             <View style={styles.demoBox}>
               <Ionicons name="information-circle-outline" size={14} color={colors.textMuted} />
@@ -120,7 +125,12 @@ export function AdminLoginScreen() {
             </View>
           </View>
 
-          <Pressable onPress={handleBackToCustomerApp} style={styles.backLink} accessibilityRole="button" accessibilityLabel="Back to customer app">
+          <Pressable
+            onPress={handleBackToCustomerApp}
+            style={styles.backLink}
+            accessibilityRole="button"
+            accessibilityLabel="Back to customer app"
+          >
             <Ionicons name="arrow-back" size={14} color={colors.textSecondary} />
             <Text style={styles.backLinkText}>Back to Customer App</Text>
           </Pressable>
@@ -133,7 +143,12 @@ export function AdminLoginScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.adminSidebar },
   flex: { flex: 1 },
-  scrollContent: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg },
+  scrollContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.lg,
+  },
   logoWrap: {
     width: 64,
     height: 64,

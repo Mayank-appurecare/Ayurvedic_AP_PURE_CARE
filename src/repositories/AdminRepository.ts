@@ -4,12 +4,15 @@ import { orders } from '../data/orders';
 import { customers } from '../data/customers';
 import { reviews } from '../data/reviews';
 
-const delay = <T,>(value: T, ms = 300): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 300): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 export const AdminRepository = {
   async getDashboardStats(): Promise<AdminStats> {
     const revenue = orders.reduce((sum, o) => sum + o.total, 0);
-    const pendingOrdersCount = orders.filter((o) => !['delivered', 'cancelled'].includes(o.status)).length;
+    const pendingOrdersCount = orders.filter(
+      (o) => !['delivered', 'cancelled'].includes(o.status)
+    ).length;
     const lowStockCount = products.filter((p) => p.stock <= 100).length;
     return delay({
       revenue,
@@ -34,9 +37,7 @@ export const AdminRepository = {
   },
 
   async getBestSellers(limit = 5) {
-    return delay(
-      [...products].sort((a, b) => b.reviewCount - a.reviewCount).slice(0, limit)
-    );
+    return delay([...products].sort((a, b) => b.reviewCount - a.reviewCount).slice(0, limit));
   },
 
   async getRecentOrders(limit = 5) {

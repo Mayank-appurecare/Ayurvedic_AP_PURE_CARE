@@ -1,7 +1,8 @@
 import { coupons as mockCoupons, offers as mockOffers } from '../data/coupons';
 import { Coupon, Offer } from '../types';
 
-const delay = <T,>(value: T, ms = 250): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 250): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 // In-memory store seeded from mock data so admin create/update/delete
 // operations persist for the session without a real backend.
@@ -17,7 +18,10 @@ export const OfferRepository = {
     return delay(coupons);
   },
 
-  async validateCoupon(code: string, orderValue: number): Promise<{ valid: boolean; coupon?: Coupon; message: string }> {
+  async validateCoupon(
+    code: string,
+    orderValue: number
+  ): Promise<{ valid: boolean; coupon?: Coupon; message: string }> {
     const coupon = coupons.find((c) => c.code.toLowerCase() === code.trim().toLowerCase());
     if (!coupon) {
       return delay({ valid: false, message: 'Invalid coupon code.' }, 400);
@@ -27,7 +31,10 @@ export const OfferRepository = {
     }
     if (coupon.minOrderValue && orderValue < coupon.minOrderValue) {
       return delay(
-        { valid: false, message: `Add items worth ₹${coupon.minOrderValue - orderValue} more to use this coupon.` },
+        {
+          valid: false,
+          message: `Add items worth ₹${coupon.minOrderValue - orderValue} more to use this coupon.`,
+        },
         400
       );
     }

@@ -25,11 +25,41 @@ export const deliveryOptions: DeliveryOption[] = [
 ];
 
 export const paymentMethods: PaymentMethodOption[] = [
-  { id: 'pay-upi', type: 'upi', label: 'UPI', icon: 'qr-code-outline', description: 'Google Pay, PhonePe, Paytm & more' },
-  { id: 'pay-card', type: 'card', label: 'Credit / Debit Card', icon: 'card-outline', description: 'Visa, Mastercard, RuPay' },
-  { id: 'pay-netbanking', type: 'netbanking', label: 'Net Banking', icon: 'business-outline', description: 'All major banks supported' },
-  { id: 'pay-wallet', type: 'wallet', label: 'Wallet', icon: 'wallet-outline', description: 'Paytm, Amazon Pay & more' },
-  { id: 'pay-cod', type: 'cod', label: 'Cash on Delivery', icon: 'cash-outline', description: 'Pay when your order arrives' },
+  {
+    id: 'pay-upi',
+    type: 'upi',
+    label: 'UPI',
+    icon: 'qr-code-outline',
+    description: 'Google Pay, PhonePe, Paytm & more',
+  },
+  {
+    id: 'pay-card',
+    type: 'card',
+    label: 'Credit / Debit Card',
+    icon: 'card-outline',
+    description: 'Visa, Mastercard, RuPay',
+  },
+  {
+    id: 'pay-netbanking',
+    type: 'netbanking',
+    label: 'Net Banking',
+    icon: 'business-outline',
+    description: 'All major banks supported',
+  },
+  {
+    id: 'pay-wallet',
+    type: 'wallet',
+    label: 'Wallet',
+    icon: 'wallet-outline',
+    description: 'Paytm, Amazon Pay & more',
+  },
+  {
+    id: 'pay-cod',
+    type: 'cod',
+    label: 'Cash on Delivery',
+    icon: 'cash-outline',
+    description: 'Pay when your order arrives',
+  },
 ];
 
 export const FREE_DELIVERY_THRESHOLD = 499;

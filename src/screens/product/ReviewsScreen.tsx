@@ -92,15 +92,26 @@ export function ReviewsScreen() {
                 </View>
                 <View style={styles.distBlock}>
                   {summary.distribution.map((row) => (
-                    <Pressable key={row.star} onPress={() => toggleFilter(row.star)} style={styles.distRow}>
-                      <Text style={[styles.distLabel, activeFilter === row.star && styles.distLabelActive]}>
+                    <Pressable
+                      key={row.star}
+                      onPress={() => toggleFilter(row.star)}
+                      style={styles.distRow}
+                    >
+                      <Text
+                        style={[
+                          styles.distLabel,
+                          activeFilter === row.star && styles.distLabelActive,
+                        ]}
+                      >
                         {row.star}★
                       </Text>
                       <View style={styles.distTrack}>
                         <View
                           style={[
                             styles.distFill,
-                            { width: summary.total ? `${(row.count / summary.total) * 100}%` : '0%' },
+                            {
+                              width: summary.total ? `${(row.count / summary.total) * 100}%` : '0%',
+                            },
                           ]}
                         />
                       </View>
@@ -119,7 +130,10 @@ export function ReviewsScreen() {
                 renderItem={({ item }) => {
                   const active = activeFilter === item;
                   return (
-                    <Pressable onPress={() => toggleFilter(item)} style={[styles.filterChip, active && styles.filterChipActive]}>
+                    <Pressable
+                      onPress={() => toggleFilter(item)}
+                      style={[styles.filterChip, active && styles.filterChipActive]}
+                    >
                       <Text style={[styles.filterLabel, active && styles.filterLabelActive]}>
                         {item === 0 ? 'All' : `${item}★`}
                       </Text>
@@ -133,50 +147,64 @@ export function ReviewsScreen() {
             <EmptyState
               icon="chatbubble-ellipses-outline"
               title="No reviews found"
-              description={activeFilter ? `No ${activeFilter}-star reviews yet.` : 'Be the first to review this product.'}
+              description={
+                activeFilter
+                  ? `No ${activeFilter}-star reviews yet.`
+                  : 'Be the first to review this product.'
+              }
             />
           }
         />
       )}
 
       <View style={styles.footer}>
-        <PrimaryButton label="Write a Review" onPress={() => navigation.navigate('WriteReview', { productId })} />
+        <PrimaryButton
+          label="Write a Review"
+          onPress={() => navigation.navigate('WriteReview', { productId })}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxxl },
-  summaryRow: { flexDirection: 'row', gap: spacing.lg, paddingVertical: spacing.md },
-  averageBlock: { alignItems: 'center', justifyContent: 'center', width: 90, gap: 4 },
-  averageNumber: { ...typography.h1, color: colors.textPrimary },
-  totalText: { ...typography.caption, color: colors.textMuted },
-  distBlock: { flex: 1, justifyContent: 'center', gap: 6 },
-  distRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  distLabel: { ...typography.captionMedium, color: colors.textSecondary, width: 26 },
-  distLabelActive: { color: colors.primary },
-  distTrack: { flex: 1, height: 7, borderRadius: 4, backgroundColor: colors.surfaceMuted, overflow: 'hidden' },
-  distFill: { height: '100%', backgroundColor: colors.star, borderRadius: 4 },
-  distCount: { ...typography.tiny, color: colors.textMuted, width: 24, textAlign: 'right' },
-  filterRow: { gap: spacing.xs, paddingBottom: spacing.sm },
-  filterChip: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  filterChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  filterLabel: { ...typography.captionMedium, color: colors.textSecondary },
-  filterLabelActive: { color: colors.textOnPrimary },
-  footer: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderTopWidth: 1,
-    borderTopColor: colors.divider,
-    backgroundColor: colors.surface,
-  },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    flex: { flex: 1, backgroundColor: colors.background },
+    listContent: { paddingHorizontal: spacing.md, paddingBottom: spacing.xxxl },
+    summaryRow: { flexDirection: 'row', gap: spacing.lg, paddingVertical: spacing.md },
+    averageBlock: { alignItems: 'center', justifyContent: 'center', width: 90, gap: 4 },
+    averageNumber: { ...typography.h1, color: colors.textPrimary },
+    totalText: { ...typography.caption, color: colors.textMuted },
+    distBlock: { flex: 1, justifyContent: 'center', gap: 6 },
+    distRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+    distLabel: { ...typography.captionMedium, color: colors.textSecondary, width: 26 },
+    distLabelActive: { color: colors.primary },
+    distTrack: {
+      flex: 1,
+      height: 7,
+      borderRadius: 4,
+      backgroundColor: colors.surfaceMuted,
+      overflow: 'hidden',
+    },
+    distFill: { height: '100%', backgroundColor: colors.star, borderRadius: 4 },
+    distCount: { ...typography.tiny, color: colors.textMuted, width: 24, textAlign: 'right' },
+    filterRow: { gap: spacing.xs, paddingBottom: spacing.sm },
+    filterChip: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.pill,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    filterChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+    filterLabel: { ...typography.captionMedium, color: colors.textSecondary },
+    filterLabelActive: { color: colors.textOnPrimary },
+    footer: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderTopWidth: 1,
+      borderTopColor: colors.divider,
+      backgroundColor: colors.surface,
+    },
+  });

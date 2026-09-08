@@ -60,7 +60,13 @@ export function AdminProductsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => setSidebarVisible(true)} hitSlop={10} style={styles.iconBtn} accessibilityRole="button" accessibilityLabel="Open menu">
+        <Pressable
+          onPress={() => setSidebarVisible(true)}
+          hitSlop={10}
+          style={styles.iconBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Open menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textInverse} />
         </Pressable>
         <Text style={styles.headerTitle}>Products</Text>
@@ -92,7 +98,11 @@ export function AdminProductsScreen() {
       ) : error ? (
         <ErrorState onRetry={loadProducts} />
       ) : filtered.length === 0 ? (
-        <EmptyState icon="cube-outline" title="No products found" description="Try a different search term or add a new product." />
+        <EmptyState
+          icon="cube-outline"
+          title="No products found"
+          description="Try a different search term or add a new product."
+        />
       ) : (
         <FlatList
           data={filtered}
@@ -108,8 +118,18 @@ export function AdminProductsScreen() {
                 <Text style={styles.rowBrand}>{item.brand}</Text>
                 <View style={styles.rowMetaRow}>
                   <Text style={styles.rowPrice}>{formatPrice(item.price)}</Text>
-                  <View style={[styles.stockChip, item.stock <= 30 ? styles.stockChipLow : styles.stockChipOk]}>
-                    <Text style={[styles.stockChipText, item.stock <= 30 ? styles.stockChipTextLow : styles.stockChipTextOk]}>
+                  <View
+                    style={[
+                      styles.stockChip,
+                      item.stock <= 30 ? styles.stockChipLow : styles.stockChipOk,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.stockChipText,
+                        item.stock <= 30 ? styles.stockChipTextLow : styles.stockChipTextOk,
+                      ]}
+                    >
                       {item.stock <= 30 ? `Low Stock: ${item.stock}` : `Stock: ${item.stock}`}
                     </Text>
                   </View>
@@ -196,10 +216,21 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
     ...shadow.sm,
   },
-  rowImage: { width: 56, height: 56, borderRadius: radius.sm, backgroundColor: colors.surfaceMuted },
+  rowImage: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surfaceMuted,
+  },
   rowName: { ...typography.bodyMedium, color: colors.textPrimary },
   rowBrand: { ...typography.caption, color: colors.textMuted },
-  rowMetaRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginTop: 4, flexWrap: 'wrap' },
+  rowMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: 4,
+    flexWrap: 'wrap',
+  },
   rowPrice: { ...typography.captionMedium, color: colors.textPrimary },
   stockChip: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: radius.sm },
   stockChipOk: { backgroundColor: colors.successSurface },

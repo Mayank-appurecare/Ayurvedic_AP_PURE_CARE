@@ -57,7 +57,10 @@ export function WishlistScreen() {
           contentContainerStyle={styles.list}
           columnWrapperStyle={styles.row}
           renderItem={({ item }) => (
-            <ProductCard product={item} onPress={() => navigation.navigate('ProductDetail', { productId: item.id })} />
+            <ProductCard
+              product={item}
+              onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+            />
           )}
         />
       )}
@@ -65,8 +68,9 @@ export function WishlistScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.md, paddingBottom: spacing.xxl, gap: spacing.md },
-  row: { gap: spacing.md },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    list: { padding: spacing.md, paddingBottom: spacing.xxl, gap: spacing.md },
+    row: { gap: spacing.md },
+  });

@@ -5,3 +5,9 @@ web-build/
 android/
 ios/
 package-lock.json
+
+# Owned by external tooling GUIs — reformatting fights with their own writers.
+.postman/
+postman/collections/
+postman/globals/
+.claude/

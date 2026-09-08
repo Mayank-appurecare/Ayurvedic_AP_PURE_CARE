@@ -13,7 +13,15 @@ interface Props {
   variant?: 'outline' | 'ghost';
 }
 
-export function SecondaryButton({ label, onPress, disabled, icon, style, fullWidth = true, variant = 'outline' }: Props) {
+export function SecondaryButton({
+  label,
+  onPress,
+  disabled,
+  icon,
+  style,
+  fullWidth = true,
+  variant = 'outline',
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -41,41 +49,42 @@ export function SecondaryButton({ label, onPress, disabled, icon, style, fullWid
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  base: {
-    paddingVertical: spacing.sm + 2,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  outline: {
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    backgroundColor: colors.surface,
-  },
-  ghost: {
-    backgroundColor: colors.surfaceMuted,
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  pressed: {
-    backgroundColor: colors.primarySurface,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  label: {
-    color: colors.primary,
-    ...typography.button,
-  },
-  labelDisabled: {
-    color: colors.textMuted,
-  },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    base: {
+      paddingVertical: spacing.sm + 2,
+      paddingHorizontal: spacing.lg,
+      borderRadius: radius.md,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    outline: {
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+      backgroundColor: colors.surface,
+    },
+    ghost: {
+      backgroundColor: colors.surfaceMuted,
+    },
+    fullWidth: {
+      width: '100%',
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    pressed: {
+      backgroundColor: colors.primarySurface,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    },
+    label: {
+      color: colors.primary,
+      ...typography.button,
+    },
+    labelDisabled: {
+      color: colors.textMuted,
+    },
+  });

@@ -18,7 +18,9 @@ export function PriceDisplay({ price, mrp, size = 'md', showDiscountLabel = fals
   const discountPercent = hasDiscount ? Math.round(((mrp! - price) / mrp!) * 100) : 0;
   return (
     <View style={styles.row}>
-      <Text style={[styles.price, size === 'lg' && styles.priceLg, size === 'sm' && styles.priceSm]}>
+      <Text
+        style={[styles.price, size === 'lg' && styles.priceLg, size === 'sm' && styles.priceSm]}
+      >
         {formatPrice(price)}
       </Text>
       {hasDiscount && (
@@ -26,17 +28,20 @@ export function PriceDisplay({ price, mrp, size = 'md', showDiscountLabel = fals
           {formatPrice(mrp!)}
         </Text>
       )}
-      {hasDiscount && showDiscountLabel && <Text style={styles.discount}>{discountPercent}% off</Text>}
+      {hasDiscount && showDiscountLabel && (
+        <Text style={styles.discount}>{discountPercent}% off</Text>
+      )}
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', gap: spacing.xxs },
-  price: { ...typography.bodyMedium, color: colors.textPrimary, fontWeight: '700' },
-  priceLg: { fontSize: 22, lineHeight: 28 },
-  priceSm: { fontSize: 13, lineHeight: 18 },
-  mrp: { ...typography.caption, color: colors.mrpStrike, textDecorationLine: 'line-through' },
-  mrpLg: { fontSize: 14 },
-  discount: { ...typography.captionMedium, color: colors.success },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    row: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', gap: spacing.xxs },
+    price: { ...typography.bodyMedium, color: colors.textPrimary, fontWeight: '700' },
+    priceLg: { fontSize: 22, lineHeight: 28 },
+    priceSm: { fontSize: 13, lineHeight: 18 },
+    mrp: { ...typography.caption, color: colors.mrpStrike, textDecorationLine: 'line-through' },
+    mrpLg: { fontSize: 14 },
+    discount: { ...typography.captionMedium, color: colors.success },
+  });

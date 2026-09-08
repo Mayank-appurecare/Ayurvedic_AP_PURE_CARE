@@ -14,7 +14,16 @@ interface Props {
   size?: 'md' | 'lg';
 }
 
-export function PrimaryButton({ label, onPress, disabled, loading, icon, style, fullWidth = true, size = 'lg' }: Props) {
+export function PrimaryButton({
+  label,
+  onPress,
+  disabled,
+  loading,
+  icon,
+  style,
+  fullWidth = true,
+  size = 'lg',
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const isDisabled = disabled || loading;
@@ -46,35 +55,36 @@ export function PrimaryButton({ label, onPress, disabled, loading, icon, style, 
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  base: {
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.sm + 2,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  mdSize: {
-    paddingVertical: spacing.xs + 2,
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  disabled: {
-    backgroundColor: colors.mrpStrike,
-    opacity: 0.6,
-  },
-  pressed: {
-    backgroundColor: colors.primaryDark,
-  },
-  content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  label: {
-    color: colors.textOnPrimary,
-    ...typography.button,
-  },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    base: {
+      backgroundColor: colors.primary,
+      paddingVertical: spacing.sm + 2,
+      paddingHorizontal: spacing.lg,
+      borderRadius: radius.md,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    mdSize: {
+      paddingVertical: spacing.xs + 2,
+    },
+    fullWidth: {
+      width: '100%',
+    },
+    disabled: {
+      backgroundColor: colors.mrpStrike,
+      opacity: 0.6,
+    },
+    pressed: {
+      backgroundColor: colors.primaryDark,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    },
+    label: {
+      color: colors.textOnPrimary,
+      ...typography.button,
+    },
+  });

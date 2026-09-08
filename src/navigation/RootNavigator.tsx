@@ -61,11 +61,19 @@ export function RootNavigator() {
       <Stack.Screen name="CategoryProducts" component={CategoryProductsScreen} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
       <Stack.Screen name="Reviews" component={ReviewsScreen} />
-      <Stack.Screen name="WriteReview" component={WriteReviewScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen
+        name="WriteReview"
+        component={WriteReviewScreen}
+        options={{ presentation: 'modal' }}
+      />
 
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="CheckoutAddress" component={CheckoutAddressScreen} />
-      <Stack.Screen name="AddEditAddress" component={AddEditAddressScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen
+        name="AddEditAddress"
+        component={AddEditAddressScreen}
+        options={{ presentation: 'modal' }}
+      />
       <Stack.Screen name="CheckoutDelivery" component={CheckoutDeliveryScreen} />
       <Stack.Screen name="CheckoutPayment" component={CheckoutPaymentScreen} />
 

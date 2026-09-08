@@ -7,7 +7,9 @@ import { formatDate, formatPrice } from '../utils/format';
 import { SecondaryButton } from './SecondaryButton';
 import { PrimaryButton } from './PrimaryButton';
 
-const getStatusMeta = (colors: AppColors): Record<string, { label: string; color: string; bg: string }> => ({
+const getStatusMeta = (
+  colors: AppColors
+): Record<string, { label: string; color: string; bg: string }> => ({
   placed: { label: 'Order Placed', color: colors.info, bg: colors.infoSurface },
   confirmed: { label: 'Confirmed', color: colors.info, bg: colors.infoSurface },
   packed: { label: 'Packed', color: colors.warning, bg: colors.warningSurface },
@@ -46,7 +48,11 @@ export function OrderCard({ order, onPress, onReorder, onTrack }: Props) {
           <Text style={styles.itemName} numberOfLines={1}>
             {firstItem.name}
           </Text>
-          {extraCount > 0 && <Text style={styles.moreItems}>+{extraCount} more item{extraCount > 1 ? 's' : ''}</Text>}
+          {extraCount > 0 && (
+            <Text style={styles.moreItems}>
+              +{extraCount} more item{extraCount > 1 ? 's' : ''}
+            </Text>
+          )}
           <Text style={styles.amount}>{formatPrice(order.total)}</Text>
         </View>
       </View>
@@ -62,19 +68,31 @@ export function OrderCard({ order, onPress, onReorder, onTrack }: Props) {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.xs, ...shadow.sm },
-  pressed: { opacity: 0.95 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  orderNumber: { ...typography.bodyMedium, color: colors.textPrimary },
-  statusBadge: { paddingHorizontal: spacing.xs, paddingVertical: 3, borderRadius: radius.sm },
-  statusText: { ...typography.tiny, fontWeight: '700' },
-  date: { ...typography.caption, color: colors.textMuted },
-  itemRow: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center', marginTop: spacing.xxs },
-  image: { width: 56, height: 56, borderRadius: radius.sm, backgroundColor: colors.surfaceMuted },
-  itemName: { ...typography.bodyMedium, color: colors.textPrimary },
-  moreItems: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
-  amount: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: 2 },
-  actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xs },
-  actionBtn: { flex: 1 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      gap: spacing.xs,
+      ...shadow.sm,
+    },
+    pressed: { opacity: 0.95 },
+    headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    orderNumber: { ...typography.bodyMedium, color: colors.textPrimary },
+    statusBadge: { paddingHorizontal: spacing.xs, paddingVertical: 3, borderRadius: radius.sm },
+    statusText: { ...typography.tiny, fontWeight: '700' },
+    date: { ...typography.caption, color: colors.textMuted },
+    itemRow: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+      alignItems: 'center',
+      marginTop: spacing.xxs,
+    },
+    image: { width: 56, height: 56, borderRadius: radius.sm, backgroundColor: colors.surfaceMuted },
+    itemName: { ...typography.bodyMedium, color: colors.textPrimary },
+    moreItems: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
+    amount: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: 2 },
+    actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xs },
+    actionBtn: { flex: 1 },
+  });

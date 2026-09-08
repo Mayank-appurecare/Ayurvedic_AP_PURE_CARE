@@ -25,7 +25,12 @@ interface AuthContextValue {
 
   // --- Legacy mock flows, kept for the (currently unrouted) register screen ---
   login: (identifier: string, password: string) => Promise<void>;
-  register: (params: { fullName: string; mobile: string; email: string; password: string }) => Promise<void>;
+  register: (params: {
+    fullName: string;
+    mobile: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
 
   continueAsGuest: () => Promise<void>;
   logout: () => Promise<void>;

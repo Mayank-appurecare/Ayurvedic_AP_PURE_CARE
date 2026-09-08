@@ -14,17 +14,18 @@ export function DiscountBadge({ percent, style }: { percent: number; style?: Vie
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  badge: {
-    backgroundColor: colors.dangerSurface,
-    paddingHorizontal: spacing.xxs + 2,
-    paddingVertical: 2,
-    borderRadius: radius.sm,
-    alignSelf: 'flex-start',
-  },
-  text: {
-    ...typography.tiny,
-    color: colors.discount,
-    fontWeight: '700',
-  },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    badge: {
+      backgroundColor: colors.dangerSurface,
+      paddingHorizontal: spacing.xxs + 2,
+      paddingVertical: 2,
+      borderRadius: radius.sm,
+      alignSelf: 'flex-start',
+    },
+    text: {
+      ...typography.tiny,
+      color: colors.discount,
+      fontWeight: '700',
+    },
+  });

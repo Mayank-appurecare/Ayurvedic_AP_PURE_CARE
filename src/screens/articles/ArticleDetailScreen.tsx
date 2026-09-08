@@ -85,7 +85,10 @@ export function ArticleDetailScreen() {
         showBack
         onBackPress={() => navigation.goBack()}
         rightIcons={[
-          { name: bookmarked ? 'bookmark' : 'bookmark-outline', onPress: () => setBookmarked((b) => !b) },
+          {
+            name: bookmarked ? 'bookmark' : 'bookmark-outline',
+            onPress: () => setBookmarked((b) => !b),
+          },
           { name: 'share-outline', onPress: handleShare },
         ]}
       />
@@ -110,7 +113,8 @@ export function ArticleDetailScreen() {
           ))}
 
           <Text style={styles.disclaimer}>
-            This content is for educational purposes only and is not a substitute for professional medical advice.
+            This content is for educational purposes only and is not a substitute for professional
+            medical advice.
           </Text>
 
           {related.length > 0 && (
@@ -124,7 +128,10 @@ export function ArticleDetailScreen() {
                 contentContainerStyle={styles.relatedList}
                 renderItem={({ item }) => (
                   <View style={styles.relatedCard}>
-                    <ArticleCard article={item} onPress={() => navigation.push('ArticleDetail', { articleId: item.id })} />
+                    <ArticleCard
+                      article={item}
+                      onPress={() => navigation.push('ArticleDetail', { articleId: item.id })}
+                    />
                   </View>
                 )}
               />
@@ -136,27 +143,39 @@ export function ArticleDetailScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  hero: { width: '100%', height: 220, backgroundColor: colors.surfaceMuted },
-  content: { padding: spacing.md, paddingBottom: spacing.xxl },
-  category: { ...typography.captionMedium, color: colors.primary, textTransform: 'uppercase' },
-  title: { ...typography.h2, color: colors.textPrimary, marginTop: spacing.xxs },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs, marginTop: spacing.sm, flexWrap: 'wrap' },
-  meta: { ...typography.caption, color: colors.textMuted },
-  metaDot: { color: colors.textMuted },
-  paragraph: { ...typography.bodyLg, color: colors.textSecondary, marginTop: spacing.md, lineHeight: 24 },
-  disclaimer: {
-    ...typography.caption,
-    color: colors.textMuted,
-    fontStyle: 'italic',
-    marginTop: spacing.lg,
-    padding: spacing.sm,
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.md,
-  },
-  relatedSection: { marginTop: spacing.xl },
-  relatedTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
-  relatedList: { gap: spacing.sm },
-  relatedCard: { width: 240 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    hero: { width: '100%', height: 220, backgroundColor: colors.surfaceMuted },
+    content: { padding: spacing.md, paddingBottom: spacing.xxl },
+    category: { ...typography.captionMedium, color: colors.primary, textTransform: 'uppercase' },
+    title: { ...typography.h2, color: colors.textPrimary, marginTop: spacing.xxs },
+    metaRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xxs,
+      marginTop: spacing.sm,
+      flexWrap: 'wrap',
+    },
+    meta: { ...typography.caption, color: colors.textMuted },
+    metaDot: { color: colors.textMuted },
+    paragraph: {
+      ...typography.bodyLg,
+      color: colors.textSecondary,
+      marginTop: spacing.md,
+      lineHeight: 24,
+    },
+    disclaimer: {
+      ...typography.caption,
+      color: colors.textMuted,
+      fontStyle: 'italic',
+      marginTop: spacing.lg,
+      padding: spacing.sm,
+      backgroundColor: colors.surfaceMuted,
+      borderRadius: radius.md,
+    },
+    relatedSection: { marginTop: spacing.xl },
+    relatedTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.sm },
+    relatedList: { gap: spacing.sm },
+    relatedCard: { width: 240 },
+  });

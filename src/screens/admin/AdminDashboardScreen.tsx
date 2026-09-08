@@ -16,7 +16,11 @@ import { AdminSidebarNav } from '../../components/AdminSidebarNav';
 
 type Nav = NativeStackNavigationProp<AdminStackParamList>;
 
-const QUICK_LINKS: { label: string; route: keyof AdminStackParamList; icon: keyof typeof Ionicons.glyphMap }[] = [
+const QUICK_LINKS: {
+  label: string;
+  route: keyof AdminStackParamList;
+  icon: keyof typeof Ionicons.glyphMap;
+}[] = [
   { label: 'Products', route: 'AdminProducts', icon: 'cube-outline' },
   { label: 'Orders', route: 'AdminOrders', icon: 'receipt-outline' },
   { label: 'Customers', route: 'AdminCustomers', icon: 'people-outline' },
@@ -95,8 +99,15 @@ export function AdminDashboardScreen() {
       ) : error || !stats ? (
         <ErrorState onRetry={loadData} />
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickLinksRow}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.quickLinksRow}
+          >
             {QUICK_LINKS.map((link) => (
               <Pressable
                 key={link.route}
@@ -112,12 +123,37 @@ export function AdminDashboardScreen() {
           </ScrollView>
 
           <View style={styles.kpiGrid}>
-            <KpiCard label="Revenue" value={formatPrice(stats.revenue)} changePercent={stats.revenueChangePercent} icon="cash-outline" />
-            <KpiCard label="Orders" value={String(stats.orders)} changePercent={stats.ordersChangePercent} icon="receipt-outline" />
-            <KpiCard label="Customers" value={String(stats.customers)} changePercent={stats.customersChangePercent} icon="people-outline" />
+            <KpiCard
+              label="Revenue"
+              value={formatPrice(stats.revenue)}
+              changePercent={stats.revenueChangePercent}
+              icon="cash-outline"
+            />
+            <KpiCard
+              label="Orders"
+              value={String(stats.orders)}
+              changePercent={stats.ordersChangePercent}
+              icon="receipt-outline"
+            />
+            <KpiCard
+              label="Customers"
+              value={String(stats.customers)}
+              changePercent={stats.customersChangePercent}
+              icon="people-outline"
+            />
             <KpiCard label="Products" value={String(stats.products)} icon="cube-outline" />
-            <KpiCard label="Low Stock" value={String(stats.lowStockCount)} icon="alert-circle-outline" tone="warning" />
-            <KpiCard label="Pending Orders" value={String(stats.pendingOrdersCount)} icon="time-outline" tone="warning" />
+            <KpiCard
+              label="Low Stock"
+              value={String(stats.lowStockCount)}
+              icon="alert-circle-outline"
+              tone="warning"
+            />
+            <KpiCard
+              label="Pending Orders"
+              value={String(stats.pendingOrdersCount)}
+              icon="time-outline"
+              tone="warning"
+            />
           </View>
 
           <SectionCard title="Sales Trend (This Week)">
@@ -219,7 +255,11 @@ function KpiCard({
   return (
     <View style={styles.kpiCard}>
       <View style={[styles.kpiIconWrap, tone === 'warning' && styles.kpiIconWrapWarning]}>
-        <Ionicons name={icon} size={18} color={tone === 'warning' ? colors.warning : colors.adminAccent} />
+        <Ionicons
+          name={icon}
+          size={18}
+          color={tone === 'warning' ? colors.warning : colors.adminAccent}
+        />
       </View>
       <Text style={styles.kpiValue}>{value}</Text>
       <Text style={styles.kpiLabel}>{label}</Text>
@@ -230,7 +270,12 @@ function KpiCard({
             size={12}
             color={changePercent >= 0 ? colors.success : colors.danger}
           />
-          <Text style={[styles.kpiChangeText, { color: changePercent >= 0 ? colors.success : colors.danger }]}>
+          <Text
+            style={[
+              styles.kpiChangeText,
+              { color: changePercent >= 0 ? colors.success : colors.danger },
+            ]}
+          >
             {Math.abs(changePercent)}%
           </Text>
         </View>
@@ -239,13 +284,25 @@ function KpiCard({
   );
 }
 
-function SectionCard({ title, onSeeAll, children }: { title: string; onSeeAll?: () => void; children: React.ReactNode }) {
+function SectionCard({
+  title,
+  onSeeAll,
+  children,
+}: {
+  title: string;
+  onSeeAll?: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <View style={styles.sectionCard}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{title}</Text>
         {onSeeAll && (
-          <Pressable onPress={onSeeAll} accessibilityRole="button" accessibilityLabel={`See all ${title}`}>
+          <Pressable
+            onPress={onSeeAll}
+            accessibilityRole="button"
+            accessibilityLabel={`See all ${title}`}
+          >
             <Text style={styles.sectionSeeAll}>See All</Text>
           </Pressable>
         )}
@@ -305,12 +362,33 @@ const styles = StyleSheet.create({
   kpiLabel: { ...typography.caption, color: colors.textSecondary },
   kpiChangeRow: { flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 },
   kpiChangeText: { ...typography.tiny, fontWeight: '700' },
-  sectionCard: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, ...shadow.sm },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm },
+  sectionCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    ...shadow.sm,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
   sectionTitle: { ...typography.h4, color: colors.textPrimary },
   sectionSeeAll: { ...typography.captionMedium, color: colors.adminAccent },
-  chartRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', height: 140 },
-  chartBarColumn: { flex: 1, alignItems: 'center', gap: 6, height: '100%', justifyContent: 'flex-end' },
+  chartRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    height: 140,
+  },
+  chartBarColumn: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 6,
+    height: '100%',
+    justifyContent: 'flex-end',
+  },
   chartBarTrack: {
     width: 18,
     flex: 1,
@@ -322,7 +400,12 @@ const styles = StyleSheet.create({
   chartBarFill: { width: '100%', backgroundColor: colors.adminAccent, borderRadius: radius.sm },
   chartBarLabel: { ...typography.tiny, color: colors.textMuted },
   bestSellerCard: { width: 110, marginRight: spacing.sm },
-  bestSellerImage: { width: 110, height: 110, borderRadius: radius.md, backgroundColor: colors.surfaceMuted },
+  bestSellerImage: {
+    width: 110,
+    height: 110,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceMuted,
+  },
   bestSellerName: { ...typography.captionMedium, color: colors.textPrimary, marginTop: 4 },
   bestSellerMeta: { ...typography.tiny, color: colors.textMuted },
   listRow: {
@@ -344,7 +427,17 @@ const styles = StyleSheet.create({
   listRowTitle: { ...typography.bodyMedium, color: colors.textPrimary },
   listRowSubtitle: { ...typography.caption, color: colors.textMuted },
   listRowValue: { ...typography.bodyMedium, color: colors.textPrimary },
-  reviewRow: { flexDirection: 'row', paddingVertical: spacing.xs + 2, borderBottomWidth: 1, borderBottomColor: colors.divider },
-  reviewHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 },
+  reviewRow: {
+    flexDirection: 'row',
+    paddingVertical: spacing.xs + 2,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  reviewHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
   reviewSnippet: { ...typography.caption, color: colors.textSecondary },
 });

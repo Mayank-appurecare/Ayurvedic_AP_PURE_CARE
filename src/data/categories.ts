@@ -22,7 +22,12 @@ import { iconForName } from '../services/catalog/categoryAdapter';
 // `productCount` counts the bundled sample products in `products.ts`. Categories
 // with no sample product show 0 — honest, rather than an invented number.
 
-const fallback = (id: string, name: string, productCount: number, description: string): Category => ({
+const fallback = (
+  id: string,
+  name: string,
+  productCount: number,
+  description: string
+): Category => ({
   id,
   name,
   icon: iconForName(name),
@@ -38,7 +43,12 @@ export const categories: Category[] = [
   fallback('59', 'Eye Care', 0, 'Herbal support for healthy vision.'),
   fallback('31', 'Hair Care', 2, 'Nourish your hair the natural way.'),
   fallback('27', 'Heart Health', 0, 'Ayurvedic support for a healthy heart.'),
-  fallback('7', 'Immunity & Wellness', 4, 'Build natural resistance with time-tested formulations.'),
+  fallback(
+    '7',
+    'Immunity & Wellness',
+    4,
+    'Build natural resistance with time-tested formulations.'
+  ),
   fallback('14', 'Joint & Bone Care', 2, 'Ease joint discomfort and support strong bones.'),
   fallback('56', 'Kidney & Urinary', 0, 'Natural support for kidneys and urinary tract.'),
   fallback('42', "Men's Health", 1, 'Vitality and stamina support for men.'),

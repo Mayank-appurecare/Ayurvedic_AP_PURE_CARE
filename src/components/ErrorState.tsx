@@ -11,7 +11,11 @@ interface Props {
   onRetry?: () => void;
 }
 
-export function ErrorState({ title = 'Something went wrong', description = 'Please try again in a moment.', onRetry }: Props) {
+export function ErrorState({
+  title = 'Something went wrong',
+  description = 'Please try again in a moment.',
+  onRetry,
+}: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
@@ -21,23 +25,41 @@ export function ErrorState({ title = 'Something went wrong', description = 'Plea
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
-      {onRetry && <PrimaryButton label="Try Again" onPress={onRetry} fullWidth={false} style={styles.action} />}
+      {onRetry && (
+        <PrimaryButton
+          label="Try Again"
+          onPress={onRetry}
+          fullWidth={false}
+          style={styles.action}
+        />
+      )}
     </View>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, gap: spacing.xs },
-  iconWrap: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.dangerSurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-  },
-  title: { ...typography.h4, color: colors.textPrimary, textAlign: 'center' },
-  description: { ...typography.body, color: colors.textSecondary, textAlign: 'center', maxWidth: 280 },
-  action: { marginTop: spacing.md, paddingHorizontal: spacing.xl },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.xxl,
+      gap: spacing.xs,
+    },
+    iconWrap: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: colors.dangerSurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm,
+    },
+    title: { ...typography.h4, color: colors.textPrimary, textAlign: 'center' },
+    description: {
+      ...typography.body,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      maxWidth: 280,
+    },
+    action: { marginTop: spacing.md, paddingHorizontal: spacing.xl },
+  });

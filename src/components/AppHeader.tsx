@@ -14,15 +14,34 @@ interface Props {
   subtitle?: string;
 }
 
-export function AppHeader({ title, showBack, onBackPress, rightIcons, transparent, subtitle }: Props) {
+export function AppHeader({
+  title,
+  showBack,
+  onBackPress,
+  rightIcons,
+  transparent,
+  subtitle,
+}: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
-    <View style={[styles.container, { paddingTop: insets.top + spacing.xs }, transparent && styles.transparent]}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: insets.top + spacing.xs },
+        transparent && styles.transparent,
+      ]}
+    >
       <View style={styles.row}>
         {showBack ? (
-          <Pressable onPress={onBackPress} hitSlop={10} style={styles.iconBtn} accessibilityRole="button" accessibilityLabel="Go back">
+          <Pressable
+            onPress={onBackPress}
+            hitSlop={10}
+            style={styles.iconBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
             <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
           </Pressable>
         ) : (
@@ -65,39 +84,40 @@ export function AppHeader({ title, showBack, onBackPress, rightIcons, transparen
 
 const radiusPill = 999;
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: {
-    backgroundColor: colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  transparent: {
-    backgroundColor: 'transparent',
-    borderBottomWidth: 0,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.sm,
-    paddingBottom: spacing.sm,
-    minHeight: 44,
-  },
-  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  titleWrap: { flex: 1, alignItems: 'center' },
-  title: { ...typography.h4, color: colors.textPrimary },
-  subtitle: { ...typography.caption, color: colors.textSecondary },
-  rightIcons: { flexDirection: 'row' },
-  badge: {
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    backgroundColor: colors.danger,
-    borderRadius: radiusPill,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  badgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: colors.background,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    transparent: {
+      backgroundColor: 'transparent',
+      borderBottomWidth: 0,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: spacing.sm,
+      paddingBottom: spacing.sm,
+      minHeight: 44,
+    },
+    iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+    titleWrap: { flex: 1, alignItems: 'center' },
+    title: { ...typography.h4, color: colors.textPrimary },
+    subtitle: { ...typography.caption, color: colors.textSecondary },
+    rightIcons: { flexDirection: 'row' },
+    badge: {
+      position: 'absolute',
+      top: 2,
+      right: 2,
+      backgroundColor: colors.danger,
+      borderRadius: radiusPill,
+      minWidth: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 2,
+    },
+    badgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
+  });

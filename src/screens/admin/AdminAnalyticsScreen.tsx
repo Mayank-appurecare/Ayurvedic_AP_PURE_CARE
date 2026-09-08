@@ -36,7 +36,11 @@ export function AdminAnalyticsScreen() {
 
   const load = useCallback(() => {
     setError(false);
-    Promise.all([AdminRepository.getDashboardStats(), CategoryRepository.getAll(), ProductRepository.getAll()])
+    Promise.all([
+      AdminRepository.getDashboardStats(),
+      CategoryRepository.getAll(),
+      ProductRepository.getAll(),
+    ])
       .then(([s, c, p]) => {
         setStats(s);
         setCategories(c);
@@ -53,22 +57,38 @@ export function AdminAnalyticsScreen() {
 
   const loading = stats === null || categories === null || products === null;
   const maxTrendValue = stats ? Math.max(...stats.salesTrend.map((d) => d.value)) : 1;
-  const sortedCategories = categories ? [...categories].sort((a, b) => b.productCount - a.productCount).slice(0, 6) : [];
-  const maxCategoryCount = sortedCategories.length ? Math.max(...sortedCategories.map((c) => c.productCount)) : 1;
+  const sortedCategories = categories
+    ? [...categories].sort((a, b) => b.productCount - a.productCount).slice(0, 6)
+    : [];
+  const maxCategoryCount = sortedCategories.length
+    ? Math.max(...sortedCategories.map((c) => c.productCount))
+    : 1;
   const ratingCounts = RATING_BUCKETS.map((bucket) => ({
     ...bucket,
-    count: products ? products.filter((p) => p.rating >= bucket.min && p.rating < bucket.max).length : 0,
+    count: products
+      ? products.filter((p) => p.rating >= bucket.min && p.rating < bucket.max).length
+      : 0,
   }));
   const maxRatingCount = Math.max(1, ...ratingCounts.map((b) => b.count));
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Analytics</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -87,11 +107,15 @@ export function AdminAnalyticsScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={r}
               >
-                <Text style={[styles.rangeChipLabel, range === r && styles.rangeChipLabelActive]}>{r}</Text>
+                <Text style={[styles.rangeChipLabel, range === r && styles.rangeChipLabelActive]}>
+                  {r}
+                </Text>
               </Pressable>
             ))}
           </View>
-          <Text style={styles.rangeNote}>Showing consistent sample data across all date ranges in this prototype.</Text>
+          <Text style={styles.rangeNote}>
+            Showing consistent sample data across all date ranges in this prototype.
+          </Text>
 
           <View style={styles.statsRow}>
             <StatTile label="Revenue" value={formatPrice(stats.revenue)} icon="cash-outline" />
@@ -122,9 +146,16 @@ export function AdminAnalyticsScreen() {
             <Text style={styles.cardTitle}>Top Categories by Product Count</Text>
             {sortedCategories.map((cat) => (
               <View key={cat.id} style={styles.hBarRow}>
-                <Text style={styles.hBarLabel} numberOfLines={1}>{cat.name}</Text>
+                <Text style={styles.hBarLabel} numberOfLines={1}>
+                  {cat.name}
+                </Text>
                 <View style={styles.hBarTrack}>
-                  <View style={[styles.hBarFill, { width: `${Math.max(6, (cat.productCount / maxCategoryCount) * 100)}%` }]} />
+                  <View
+                    style={[
+                      styles.hBarFill,
+                      { width: `${Math.max(6, (cat.productCount / maxCategoryCount) * 100)}%` },
+                    ]}
+                  />
                 </View>
                 <Text style={styles.hBarValue}>{cat.productCount}</Text>
               </View>
@@ -135,7 +166,9 @@ export function AdminAnalyticsScreen() {
             <Text style={styles.cardTitle}>Product Rating Distribution</Text>
             {ratingCounts.map((bucket) => (
               <View key={bucket.label} style={styles.hBarRow}>
-                <Text style={styles.hBarLabel} numberOfLines={1}>{bucket.label}</Text>
+                <Text style={styles.hBarLabel} numberOfLines={1}>
+                  {bucket.label}
+                </Text>
                 <View style={styles.hBarTrack}>
                   <View
                     style={[
@@ -152,16 +185,31 @@ export function AdminAnalyticsScreen() {
         </ScrollView>
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminAnalytics" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminAnalytics"
+      />
     </SafeAreaView>
   );
 }
 
-function StatTile({ label, value, icon }: { label: string; value: string; icon: keyof typeof Ionicons.glyphMap }) {
+function StatTile({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: keyof typeof Ionicons.glyphMap;
+}) {
   return (
     <View style={styles.statTile}>
       <Ionicons name={icon} size={18} color={colors.adminAccent} />
-      <Text style={styles.statValue} numberOfLines={1}>{value}</Text>
+      <Text style={styles.statValue} numberOfLines={1}>
+        {value}
+      </Text>
       <Text style={styles.statLabel}>{label}</Text>
     </View>
   );
@@ -195,20 +243,57 @@ const styles = StyleSheet.create({
   rangeChipLabelActive: { color: colors.textOnPrimary, fontWeight: '600' },
   rangeNote: { ...typography.tiny, color: colors.textMuted },
   statsRow: { flexDirection: 'row', gap: spacing.sm },
-  statTile: { flex: 1, backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.sm, gap: 2, ...shadow.sm },
+  statTile: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.sm,
+    gap: 2,
+    ...shadow.sm,
+  },
   statValue: { ...typography.h4, color: colors.textPrimary },
   statLabel: { ...typography.caption, color: colors.textMuted },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, gap: spacing.sm, ...shadow.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
+  },
   cardTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  barChartRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', height: 140, gap: spacing.xxs },
+  barChartRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    height: 140,
+    gap: spacing.xxs,
+  },
   barColumn: { flex: 1, alignItems: 'center', height: '100%', justifyContent: 'flex-end' },
-  barTrack: { width: '60%', flex: 1, justifyContent: 'flex-end', backgroundColor: colors.surfaceMuted, borderRadius: radius.sm, overflow: 'hidden' },
+  barTrack: {
+    width: '60%',
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.sm,
+    overflow: 'hidden',
+  },
   barFill: { width: '100%', backgroundColor: colors.adminAccent, borderRadius: radius.sm },
   barLabel: { ...typography.tiny, color: colors.textMuted, marginTop: 4 },
   hBarRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   hBarLabel: { ...typography.caption, color: colors.textSecondary, width: 100 },
-  hBarTrack: { flex: 1, height: 10, backgroundColor: colors.surfaceMuted, borderRadius: radius.pill, overflow: 'hidden' },
+  hBarTrack: {
+    flex: 1,
+    height: 10,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.pill,
+    overflow: 'hidden',
+  },
   hBarFill: { height: '100%', backgroundColor: colors.adminAccent, borderRadius: radius.pill },
   hBarFillGold: { backgroundColor: colors.accentGold },
-  hBarValue: { ...typography.captionMedium, color: colors.textPrimary, width: 28, textAlign: 'right' },
+  hBarValue: {
+    ...typography.captionMedium,
+    color: colors.textPrimary,
+    width: 28,
+    textAlign: 'right',
+  },
 });

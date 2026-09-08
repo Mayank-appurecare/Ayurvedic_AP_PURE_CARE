@@ -78,7 +78,9 @@ export function WriteReviewScreen() {
             <Ionicons name="checkmark" size={36} color={colors.textOnPrimary} />
           </View>
           <Text style={styles.successTitle}>Thank you for your review!</Text>
-          <Text style={styles.successDescription}>Your feedback helps other customers make better choices.</Text>
+          <Text style={styles.successDescription}>
+            Your feedback helps other customers make better choices.
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -139,9 +141,13 @@ export function WriteReviewScreen() {
             numberOfLines={5}
             textAlignVertical="top"
           />
-          {touched && text.trim().length === 0 && <Text style={styles.errorText}>Please write a review.</Text>}
+          {touched && text.trim().length === 0 && (
+            <Text style={styles.errorText}>Please write a review.</Text>
+          )}
           {touched && textTooShort && (
-            <Text style={styles.errorText}>Please write at least {MIN_TEXT_LENGTH} characters.</Text>
+            <Text style={styles.errorText}>
+              Please write at least {MIN_TEXT_LENGTH} characters.
+            </Text>
           )}
 
           <Text style={styles.label}>Add Photos (optional)</Text>
@@ -175,48 +181,60 @@ export function WriteReviewScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, paddingBottom: spacing.xxxl },
-  label: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: spacing.md, marginBottom: spacing.xs },
-  starsRow: { flexDirection: 'row', gap: spacing.xs },
-  starIcon: { marginRight: 2 },
-  errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
-  input: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    ...typography.body,
-    color: colors.textPrimary,
-  },
-  textArea: { minHeight: 120 },
-  photoRow: { flexDirection: 'row', gap: spacing.sm },
-  photoPlaceholder: {
-    width: 72,
-    height: 72,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderStyle: 'dashed',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surfaceMuted,
-  },
-  photoNote: { ...typography.tiny, color: colors.textMuted, marginTop: spacing.xs },
-  submitBtn: { marginTop: spacing.xl },
-  successWrap: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl, gap: spacing.sm },
-  successIcon: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.success,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-  },
-  successTitle: { ...typography.h3, color: colors.textPrimary, textAlign: 'center' },
-  successDescription: { ...typography.body, color: colors.textSecondary, textAlign: 'center' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    flex: { flex: 1, backgroundColor: colors.background },
+    content: { padding: spacing.md, paddingBottom: spacing.xxxl },
+    label: {
+      ...typography.bodyMedium,
+      color: colors.textPrimary,
+      marginTop: spacing.md,
+      marginBottom: spacing.xs,
+    },
+    starsRow: { flexDirection: 'row', gap: spacing.xs },
+    starIcon: { marginRight: 2 },
+    errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
+    input: {
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.sm,
+      ...typography.body,
+      color: colors.textPrimary,
+    },
+    textArea: { minHeight: 120 },
+    photoRow: { flexDirection: 'row', gap: spacing.sm },
+    photoPlaceholder: {
+      width: 72,
+      height: 72,
+      borderRadius: radius.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderStyle: 'dashed',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surfaceMuted,
+    },
+    photoNote: { ...typography.tiny, color: colors.textMuted, marginTop: spacing.xs },
+    submitBtn: { marginTop: spacing.xl },
+    successWrap: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.xl,
+      gap: spacing.sm,
+    },
+    successIcon: {
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      backgroundColor: colors.success,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.sm,
+    },
+    successTitle: { ...typography.h3, color: colors.textPrimary, textAlign: 'center' },
+    successDescription: { ...typography.body, color: colors.textSecondary, textAlign: 'center' },
+  });

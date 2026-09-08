@@ -11,7 +11,12 @@ export function formatDate(iso: string): string {
 export function formatDateTime(iso: string): string {
   if (!iso) return '';
   const date = new Date(iso);
-  return date.toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  return date.toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 }
 
 export function calcDiscountPercent(mrp: number, price: number): number {

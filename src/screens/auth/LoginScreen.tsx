@@ -79,7 +79,10 @@ export function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
@@ -131,7 +134,9 @@ export function LoginScreen() {
             {!!errors.mobile ? (
               <Text style={styles.errorText}>{errors.mobile}</Text>
             ) : (
-              <Text style={styles.helperText}>We&apos;ll send a 6-digit verification code to this number.</Text>
+              <Text style={styles.helperText}>
+                We&apos;ll send a 6-digit verification code to this number.
+              </Text>
             )}
           </View>
 
@@ -145,7 +150,12 @@ export function LoginScreen() {
           {/* Intentionally not disabled while the number is invalid: a dead
               button tells the user nothing. Pressing it surfaces the exact
               validation message instead. */}
-          <PrimaryButton label="Send OTP" onPress={handleSendOtp} loading={loading} style={styles.submitBtn} />
+          <PrimaryButton
+            label="Send OTP"
+            onPress={handleSendOtp}
+            loading={loading}
+            style={styles.submitBtn}
+          />
 
           <Text style={styles.legalText}>
             By continuing you agree to our Terms of Service and Privacy Policy.
@@ -177,62 +187,78 @@ export function LoginScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  scrollContent: { flexGrow: 1, padding: spacing.lg, paddingTop: spacing.xxxl },
-  // Caps the line length on tablets and in a desktop browser window.
-  container: { width: '100%', maxWidth: 480, alignSelf: 'center' },
-  title: { ...typography.h1, color: colors.textPrimary },
-  subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xxs, marginBottom: spacing.xl },
-  field: { marginBottom: spacing.lg },
-  label: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.sm,
-  },
-  inputRowFocused: { borderColor: colors.primary },
-  inputRowError: { borderColor: colors.danger },
-  dialCodeWrap: { paddingVertical: spacing.sm },
-  dialCode: { ...typography.bodyMedium, color: colors.textPrimary },
-  dialDivider: {
-    width: 1,
-    alignSelf: 'stretch',
-    marginVertical: spacing.xs,
-    marginHorizontal: spacing.sm,
-    backgroundColor: colors.divider,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: spacing.sm,
-    color: colors.textPrimary,
-    ...typography.bodyLg,
-    letterSpacing: 0.5,
-    // Removes the focus ring react-native-web adds on top of our own styling.
-    ...webOnly({ outlineStyle: 'none' }),
-  },
-  helperText: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xxs },
-  errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
-  formErrorBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    backgroundColor: colors.dangerSurface,
-    borderRadius: radius.sm,
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  formErrorText: { ...typography.caption, color: colors.danger, flex: 1 },
-  submitBtn: { marginBottom: spacing.sm },
-  legalText: { ...typography.caption, color: colors.textMuted, textAlign: 'center', marginBottom: spacing.xl },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
-  dividerLine: { flex: 1, height: 1, backgroundColor: colors.divider },
-  dividerText: { ...typography.caption, color: colors.textMuted },
-  socialRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xl },
-  socialBtn: { flex: 1 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    flex: { flex: 1, backgroundColor: colors.background },
+    scrollContent: { flexGrow: 1, padding: spacing.lg, paddingTop: spacing.xxxl },
+    // Caps the line length on tablets and in a desktop browser window.
+    container: { width: '100%', maxWidth: 480, alignSelf: 'center' },
+    title: { ...typography.h1, color: colors.textPrimary },
+    subtitle: {
+      ...typography.body,
+      color: colors.textSecondary,
+      marginTop: spacing.xxs,
+      marginBottom: spacing.xl,
+    },
+    field: { marginBottom: spacing.lg },
+    label: { ...typography.captionMedium, color: colors.textSecondary, marginBottom: spacing.xxs },
+    inputRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      backgroundColor: colors.surface,
+      paddingHorizontal: spacing.sm,
+    },
+    inputRowFocused: { borderColor: colors.primary },
+    inputRowError: { borderColor: colors.danger },
+    dialCodeWrap: { paddingVertical: spacing.sm },
+    dialCode: { ...typography.bodyMedium, color: colors.textPrimary },
+    dialDivider: {
+      width: 1,
+      alignSelf: 'stretch',
+      marginVertical: spacing.xs,
+      marginHorizontal: spacing.sm,
+      backgroundColor: colors.divider,
+    },
+    input: {
+      flex: 1,
+      paddingVertical: spacing.sm,
+      color: colors.textPrimary,
+      ...typography.bodyLg,
+      letterSpacing: 0.5,
+      // Removes the focus ring react-native-web adds on top of our own styling.
+      ...webOnly({ outlineStyle: 'none' }),
+    },
+    helperText: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xxs },
+    errorText: { ...typography.caption, color: colors.danger, marginTop: spacing.xxs },
+    formErrorBox: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      backgroundColor: colors.dangerSurface,
+      borderRadius: radius.sm,
+      paddingVertical: spacing.xs,
+      paddingHorizontal: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    formErrorText: { ...typography.caption, color: colors.danger, flex: 1 },
+    submitBtn: { marginBottom: spacing.sm },
+    legalText: {
+      ...typography.caption,
+      color: colors.textMuted,
+      textAlign: 'center',
+      marginBottom: spacing.xl,
+    },
+    dividerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.lg,
+    },
+    dividerLine: { flex: 1, height: 1, backgroundColor: colors.divider },
+    dividerText: { ...typography.caption, color: colors.textMuted },
+    socialRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xl },
+    socialBtn: { flex: 1 },
+  });

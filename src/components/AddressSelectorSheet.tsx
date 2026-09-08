@@ -77,7 +77,8 @@ export function AddressSelectorSheet({ visible, onClose, selectedAddressId, onSe
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  list: { gap: spacing.sm, paddingBottom: spacing.sm },
-  loadingWrap: { paddingVertical: spacing.xxl, alignItems: 'center' },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    list: { gap: spacing.sm, paddingBottom: spacing.sm },
+    loadingWrap: { paddingVertical: spacing.xxl, alignItems: 'center' },
+  });

@@ -23,7 +23,10 @@ export const products: Product[] = [
       'Helps maintain healthy energy levels',
       'Supports overall vitality',
     ],
-    ingredients: ['Ashwagandha Root Extract (KSM-66® style, 5% Withanolides)', 'Vegetable Cellulose Capsule'],
+    ingredients: [
+      'Ashwagandha Root Extract (KSM-66® style, 5% Withanolides)',
+      'Vegetable Cellulose Capsule',
+    ],
     howToUse: [
       'Take 1 capsule twice daily after meals, or as directed by a healthcare practitioner.',
       'Take with warm water or milk for best results.',
@@ -35,8 +38,15 @@ export const products: Product[] = [
       { label: 'Country of Origin', value: 'India' },
     ],
     faqs: [
-      { question: 'Is this suitable for daily use?', answer: 'Yes, it is formulated for regular daily use as part of a wellness routine.' },
-      { question: 'Does it cause drowsiness?', answer: 'It is traditionally used to support calmness; take in the evening if you find it relaxing.' },
+      {
+        question: 'Is this suitable for daily use?',
+        answer: 'Yes, it is formulated for regular daily use as part of a wellness routine.',
+      },
+      {
+        question: 'Does it cause drowsiness?',
+        answer:
+          'It is traditionally used to support calmness; take in the evening if you find it relaxing.',
+      },
     ],
     stock: 142,
     variants: [
@@ -67,7 +77,11 @@ export const products: Product[] = [
       'Rich in natural antioxidants',
       'Supports gut comfort',
     ],
-    ingredients: ['Amla (Emblica officinalis)', 'Bibhitaki (Terminalia bellirica)', 'Haritaki (Terminalia chebula)'],
+    ingredients: [
+      'Amla (Emblica officinalis)',
+      'Bibhitaki (Terminalia bellirica)',
+      'Haritaki (Terminalia chebula)',
+    ],
     howToUse: [
       'Mix 1 teaspoon with warm water before bedtime, or as directed by a healthcare practitioner.',
     ],
@@ -78,7 +92,10 @@ export const products: Product[] = [
       { label: 'Country of Origin', value: 'India' },
     ],
     faqs: [
-      { question: 'Can it be taken with warm milk?', answer: 'Warm water is traditionally preferred, but warm milk can also be used.' },
+      {
+        question: 'Can it be taken with warm milk?',
+        answer: 'Warm water is traditionally preferred, but warm milk can also be used.',
+      },
     ],
     stock: 210,
     variants: [
@@ -121,7 +138,10 @@ export const products: Product[] = [
       { label: 'Country of Origin', value: 'India' },
     ],
     faqs: [
-      { question: 'Is this suitable for colored hair?', answer: 'Yes, it is free from harsh chemicals and safe for colored or treated hair.' },
+      {
+        question: 'Is this suitable for colored hair?',
+        answer: 'Yes, it is free from harsh chemicals and safe for colored or treated hair.',
+      },
     ],
     stock: 188,
     variants: [
@@ -164,7 +184,11 @@ export const products: Product[] = [
       { label: 'Country of Origin', value: 'India' },
     ],
     faqs: [
-      { question: 'Suitable for oily skin?', answer: 'Yes, use a smaller quantity; it is formulated to absorb quickly without a greasy feel.' },
+      {
+        question: 'Suitable for oily skin?',
+        answer:
+          'Yes, use a smaller quantity; it is formulated to absorb quickly without a greasy feel.',
+      },
     ],
     stock: 96,
     variants: [{ id: 'v-kumkumadi-30', label: '30ml', price: 599, mrp: 799, stock: 96 }],
@@ -186,7 +210,11 @@ export const products: Product[] = [
     reviewCount: 289,
     description:
       'Giloy (Tinospora cordifolia) has been used in Ayurveda for generations to support the body’s natural immune defenses.',
-    benefits: ['Supports natural immunity', 'Traditionally used to support general wellness', 'Rich in natural antioxidants'],
+    benefits: [
+      'Supports natural immunity',
+      'Traditionally used to support general wellness',
+      'Rich in natural antioxidants',
+    ],
     ingredients: ['Giloy Stem Extract (Standardized)'],
     howToUse: ['Take 1 tablet twice daily after meals with water.'],
     productInfo: [
@@ -195,7 +223,13 @@ export const products: Product[] = [
       { label: 'Shelf Life', value: '24 Months' },
       { label: 'Country of Origin', value: 'India' },
     ],
-    faqs: [{ question: 'Can this be taken long term?', answer: 'It is commonly used as part of a daily wellness routine; consult a practitioner for personalised advice.' }],
+    faqs: [
+      {
+        question: 'Can this be taken long term?',
+        answer:
+          'It is commonly used as part of a daily wellness routine; consult a practitioner for personalised advice.',
+      },
+    ],
     stock: 175,
     variants: [{ id: 'v-giloy-60', label: '60 Tablets', price: 279, mrp: 349, stock: 175 }],
     isBestSeller: true,
@@ -215,7 +249,11 @@ export const products: Product[] = [
     reviewCount: 610,
     description:
       'A traditional Ayurvedic jam made with Amla and over 40 herbs, Chyawanprash is a household staple for daily immunity and vitality support.',
-    benefits: ['Supports natural immunity', 'Rich source of natural Vitamin C via Amla', 'Supports everyday vitality'],
+    benefits: [
+      'Supports natural immunity',
+      'Rich source of natural Vitamin C via Amla',
+      'Supports everyday vitality',
+    ],
     ingredients: ['Amla', 'Ghee', 'Honey', 'Blend of 40+ Ayurvedic Herbs'],
     howToUse: ['Take 1-2 teaspoons daily, preferably in the morning, with milk or water.'],
     productInfo: [
@@ -224,7 +262,13 @@ export const products: Product[] = [
       { label: 'Shelf Life', value: '24 Months' },
       { label: 'Country of Origin', value: 'India' },
     ],
-    faqs: [{ question: 'Is it suitable for children?', answer: 'Suitable for children above 5 years in smaller quantities; consult a practitioner.' }],
+    faqs: [
+      {
+        question: 'Is it suitable for children?',
+        answer:
+          'Suitable for children above 5 years in smaller quantities; consult a practitioner.',
+      },
+    ],
     stock: 230,
     variants: [
       { id: 'v-chyawan-500', label: '500g', price: 349, mrp: 429, stock: 230 },
@@ -256,7 +300,12 @@ export const products: Product[] = [
       { label: 'Shelf Life', value: '24 Months' },
       { label: 'Country of Origin', value: 'India' },
     ],
-    faqs: [{ question: 'Is it suitable for sensitive skin?', answer: 'It is formulated to be gentle, but we recommend a patch test first.' }],
+    faqs: [
+      {
+        question: 'Is it suitable for sensitive skin?',
+        answer: 'It is formulated to be gentle, but we recommend a patch test first.',
+      },
+    ],
     stock: 260,
     variants: [{ id: 'v-neemface-100', label: '100ml', price: 179, mrp: 229, stock: 260 }],
     tags: ['skin care', 'cleanser'],
@@ -332,7 +381,11 @@ export const products: Product[] = [
     reviewCount: 203,
     description:
       'Shatavari is a revered Ayurvedic herb traditionally used to support women’s hormonal balance and overall vitality.',
-    benefits: ['Supports hormonal balance', 'Traditionally used for overall wellness', 'Rich in natural antioxidants'],
+    benefits: [
+      'Supports hormonal balance',
+      'Traditionally used for overall wellness',
+      'Rich in natural antioxidants',
+    ],
     ingredients: ['Shatavari Root Extract'],
     howToUse: ['Take 1 capsule twice daily after meals with water.'],
     productInfo: [
@@ -360,7 +413,11 @@ export const products: Product[] = [
     reviewCount: 342,
     description:
       'A potent combination of Ashwagandha and purified Shilajit, traditionally used to support stamina, strength and everyday vitality in men.',
-    benefits: ['Supports stamina and strength', 'Supports energy levels', 'Traditionally used for overall vitality'],
+    benefits: [
+      'Supports stamina and strength',
+      'Supports energy levels',
+      'Traditionally used for overall vitality',
+    ],
     ingredients: ['Ashwagandha Root Extract', 'Purified Shilajit Extract'],
     howToUse: ['Take 1 capsule twice daily after meals with water or milk.'],
     productInfo: [
@@ -389,7 +446,11 @@ export const products: Product[] = [
     reviewCount: 264,
     description:
       'A classical Ayurvedic oil blend traditionally massaged into joints and muscles to soothe everyday stiffness and support mobility.',
-    benefits: ['Soothes tired joints and muscles', 'Supports comfortable movement', 'Traditionally used post-exercise'],
+    benefits: [
+      'Soothes tired joints and muscles',
+      'Supports comfortable movement',
+      'Traditionally used post-exercise',
+    ],
     ingredients: ['Sesame Oil Base', 'Nirgundi', 'Mahanarayan Herbal Blend'],
     howToUse: ['Warm slightly and massage into the affected area 1-2 times daily.'],
     productInfo: [
@@ -417,7 +478,11 @@ export const products: Product[] = [
     reviewCount: 487,
     description:
       'High-strength Turmeric extract standardized for Curcuminoids, combined with black pepper extract for enhanced absorption.',
-    benefits: ['Supports joint comfort', 'Rich in natural antioxidants', 'Supports immune wellness'],
+    benefits: [
+      'Supports joint comfort',
+      'Rich in natural antioxidants',
+      'Supports immune wellness',
+    ],
     ingredients: ['Turmeric Root Extract (95% Curcuminoids)', 'Black Pepper Extract (Piperine)'],
     howToUse: ['Take 1 capsule daily with meals, or as directed by a healthcare practitioner.'],
     productInfo: [
@@ -447,7 +512,11 @@ export const products: Product[] = [
     reviewCount: 392,
     description:
       '99% pure Aloe Vera gel, lightweight and quick-absorbing, suitable for daily use on skin and hair.',
-    benefits: ['Soothes and hydrates skin', 'Lightweight, non-sticky formula', 'Can double up as a hair mask base'],
+    benefits: [
+      'Soothes and hydrates skin',
+      'Lightweight, non-sticky formula',
+      'Can double up as a hair mask base',
+    ],
     ingredients: ['Aloe Barbadensis Leaf Extract (99%)'],
     howToUse: ['Apply a thin layer to clean skin or hair as needed.'],
     productInfo: [
@@ -533,8 +602,16 @@ export const products: Product[] = [
     reviewCount: 298,
     description:
       'A comprehensive daily formula combining Ayurvedic herbs with essential vitamins to support everyday wellbeing.',
-    benefits: ['Supports daily energy and vitality', 'Fills common nutritional gaps', 'Supports immune wellness'],
-    ingredients: ['Amla Extract', 'Ashwagandha Extract', 'Multivitamin Blend (A, C, D, E, B-Complex)'],
+    benefits: [
+      'Supports daily energy and vitality',
+      'Fills common nutritional gaps',
+      'Supports immune wellness',
+    ],
+    ingredients: [
+      'Amla Extract',
+      'Ashwagandha Extract',
+      'Multivitamin Blend (A, C, D, E, B-Complex)',
+    ],
     howToUse: ['Take 1 tablet daily after breakfast with water.'],
     productInfo: [
       { label: 'Form', value: 'Tablets' },

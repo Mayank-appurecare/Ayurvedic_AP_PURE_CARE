@@ -60,7 +60,10 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
-    "testPathIgnorePatterns": ["/node_modules/", "/e2e/"]
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/"
+    ]
   },
   "allowScripts": {
     "@sentry/cli@2.58.4": true,

@@ -24,11 +24,13 @@ type RouteType = RouteProp<RootStackParamList, 'CategoryProducts'>;
 
 function applyClientFilters(list: Product[], filters: ProductFilters): Product[] {
   let result = list;
-  if (filters.categoryIds?.length) result = result.filter((p) => filters.categoryIds!.includes(p.categoryId));
+  if (filters.categoryIds?.length)
+    result = result.filter((p) => filters.categoryIds!.includes(p.categoryId));
   if (filters.minPrice !== undefined) result = result.filter((p) => p.price >= filters.minPrice!);
   if (filters.maxPrice !== undefined) result = result.filter((p) => p.price <= filters.maxPrice!);
   if (filters.brands?.length) result = result.filter((p) => filters.brands!.includes(p.brand));
-  if (filters.minRating !== undefined) result = result.filter((p) => p.rating >= filters.minRating!);
+  if (filters.minRating !== undefined)
+    result = result.filter((p) => p.rating >= filters.minRating!);
   if (filters.inStockOnly) result = result.filter((p) => p.stock > 0);
   if (filters.onOfferOnly) result = result.filter((p) => p.discountPercent > 0);
   return result;
@@ -73,7 +75,10 @@ export function CategoryProductsScreen() {
     setLoading(true);
     setError(false);
     try {
-      const [categoriesResult, brandsResult] = await Promise.all([CategoryRepository.getAll(), ProductRepository.getBrands()]);
+      const [categoriesResult, brandsResult] = await Promise.all([
+        CategoryRepository.getAll(),
+        ProductRepository.getBrands(),
+      ]);
       setCategories(categoriesResult);
       setBrands(brandsResult);
 
@@ -117,16 +122,28 @@ export function CategoryProductsScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safe}>
-      <AppHeader title={categoryName ?? 'Products'} showBack onBackPress={() => navigation.goBack()} />
+      <AppHeader
+        title={categoryName ?? 'Products'}
+        showBack
+        onBackPress={() => navigation.goBack()}
+      />
 
       <View style={styles.toolbar}>
         <Text style={styles.count}>{products.length} products</Text>
         <View style={styles.toolbarActions}>
-          <Pressable style={styles.pillBtn} onPress={() => setFilterVisible(true)} accessibilityRole="button">
+          <Pressable
+            style={styles.pillBtn}
+            onPress={() => setFilterVisible(true)}
+            accessibilityRole="button"
+          >
             <Ionicons name="options-outline" size={16} color={colors.primary} />
             <Text style={styles.pillLabel}>Filter{hasActiveFilters ? ' •' : ''}</Text>
           </Pressable>
-          <Pressable style={styles.pillBtn} onPress={() => setSortVisible(true)} accessibilityRole="button">
+          <Pressable
+            style={styles.pillBtn}
+            onPress={() => setSortVisible(true)}
+            accessibilityRole="button"
+          >
             <Ionicons name="swap-vertical-outline" size={16} color={colors.primary} />
             <Text style={styles.pillLabel}>Sort</Text>
           </Pressable>
@@ -155,7 +172,10 @@ export function CategoryProductsScreen() {
           columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
           renderItem={({ item }) => (
             <View style={styles.cardWrap}>
-              <ProductCard product={item} onPress={() => navigation.navigate('ProductDetail', { productId: item.id })} />
+              <ProductCard
+                product={item}
+                onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+              />
             </View>
           )}
         />
@@ -170,36 +190,42 @@ export function CategoryProductsScreen() {
         onApply={setFilters}
         hideCategoryFilter={!!concernId}
       />
-      <SortBottomSheet visible={sortVisible} value={sort} onSelect={setSort} onClose={() => setSortVisible(false)} />
+      <SortBottomSheet
+        visible={sortVisible}
+        value={sort}
+        onSelect={setSort}
+        onClose={() => setSortVisible(false)}
+      />
     </SafeAreaView>
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
-  toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  count: { ...typography.caption, color: colors.textSecondary },
-  toolbarActions: { flexDirection: 'row', gap: spacing.sm },
-  pillBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-  },
-  pillLabel: { ...typography.captionMedium, color: colors.primary },
-  listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
-  row: { gap: spacing.sm },
-  cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
+    toolbar: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    count: { ...typography.caption, color: colors.textSecondary },
+    toolbarActions: { flexDirection: 'row', gap: spacing.sm },
+    pillBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.pill,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 6,
+    },
+    pillLabel: { ...typography.captionMedium, color: colors.primary },
+    listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
+    row: { gap: spacing.sm },
+    cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
+  });

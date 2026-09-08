@@ -61,11 +61,21 @@ export function AdminReviewsScreen() {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} hitSlop={10} accessibilityRole="button" accessibilityLabel="Go back">
+        <Pressable
+          onPress={() => navigation.goBack()}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={styles.headerTitle}>Reviews</Text>
-        <Pressable onPress={() => setSidebarOpen(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Open admin menu">
+        <Pressable
+          onPress={() => setSidebarOpen(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Open admin menu"
+        >
           <Ionicons name="menu" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
@@ -98,7 +108,11 @@ export function AdminReviewsScreen() {
             />
           }
           ListEmptyComponent={
-            <EmptyState icon="star-outline" title="No reviews found" description="Try a different filter." />
+            <EmptyState
+              icon="star-outline"
+              title="No reviews found"
+              description="Try a different filter."
+            />
           }
           renderItem={({ item }) => (
             <View style={styles.card}>
@@ -109,7 +123,12 @@ export function AdminReviewsScreen() {
                     on {item.productName}
                   </Text>
                 </View>
-                <Pressable onPress={() => setRemoveTarget(item)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Remove review">
+                <Pressable
+                  onPress={() => setRemoveTarget(item)}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Remove review"
+                >
                   <Ionicons name="trash-outline" size={18} color={colors.danger} />
                 </Pressable>
               </View>
@@ -131,7 +150,12 @@ export function AdminReviewsScreen() {
         />
       )}
 
-      <AdminSidebarNav visible={sidebarOpen} onClose={() => setSidebarOpen(false)} navigation={navigation} activeRoute="AdminReviews" />
+      <AdminSidebarNav
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        navigation={navigation}
+        activeRoute="AdminReviews"
+      />
 
       <ConfirmationDialog
         visible={!!removeTarget}
@@ -171,7 +195,14 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: colors.adminAccent, borderColor: colors.adminAccent },
   chipLabel: { ...typography.caption, color: colors.textSecondary },
   chipLabelActive: { color: colors.textOnPrimary, fontWeight: '700' },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md, marginBottom: spacing.sm, gap: 4, ...shadow.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+    gap: 4,
+    ...shadow.sm,
+  },
   cardHeader: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   customerName: { ...typography.bodyMedium, color: colors.textPrimary },
   productName: { ...typography.caption, color: colors.textMuted },

@@ -53,7 +53,7 @@ export function OTPVerificationScreen() {
   const [preparing, setPreparing] = useState(!route.params.challenge);
   const [now, setNow] = useState(() => Date.now());
 
-  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
   const shake = useRef(new Animated.Value(0)).current;
   const hasRequestedRef = useRef(false);
   const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -93,7 +93,9 @@ export function OTPVerificationScreen() {
       } catch (err) {
         if (!cancelled) {
           setError(
-            isAuthError(err) ? err.message : 'Could not send a verification code. Please go back and try again.'
+            isAuthError(err)
+              ? err.message
+              : 'Could not send a verification code. Please go back and try again.'
           );
         }
       } finally {
@@ -211,7 +213,10 @@ export function OTPVerificationScreen() {
   const showDevPanel = authService.isMock && !!challenge?.devCode;
 
   return (
-    <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + spacing.lg }]}
         keyboardShouldPersistTaps="handled"
@@ -283,7 +288,9 @@ export function OTPVerificationScreen() {
               {!error && isExpired && !verified && (
                 <View style={styles.errorRow}>
                   <Ionicons name="time-outline" size={16} color={colors.danger} />
-                  <Text style={styles.errorText}>This code has expired. Please request a new one.</Text>
+                  <Text style={styles.errorText}>
+                    This code has expired. Please request a new one.
+                  </Text>
                 </View>
               )}
 
@@ -301,8 +308,8 @@ export function OTPVerificationScreen() {
                     <Text style={styles.devHeader}>Development mode — no SMS was sent</Text>
                   </View>
                   <Text style={styles.devBody}>
-                    No OTP provider is connected yet. This randomly generated code exists only in this
-                    browser/app session so the flow can be tested.
+                    No OTP provider is connected yet. This randomly generated code exists only in
+                    this browser/app session so the flow can be tested.
                   </Text>
                   <Text style={styles.devCode} selectable>
                     {challenge?.devCode}
@@ -358,100 +365,106 @@ export function OTPVerificationScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.background },
-  scrollContent: { flexGrow: 1, paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
-  // Caps the layout width on tablets and in a desktop browser window.
-  container: { width: '100%', maxWidth: 480, alignSelf: 'center', alignItems: 'center' },
-  backBtn: { alignSelf: 'flex-start', padding: spacing.xxs, marginLeft: -spacing.xxs },
-  iconWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.primarySurface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.lg,
-    marginBottom: spacing.md,
-  },
-  title: { ...typography.h3, color: colors.textPrimary, textAlign: 'center' },
-  subtitle: {
-    ...typography.body,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-    marginBottom: spacing.xl,
-  },
-  mobile: { color: colors.textPrimary, fontWeight: '600' },
-  preparingWrap: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xxl },
-  preparingText: { ...typography.body, color: colors.textSecondary },
-  otpRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-    marginBottom: spacing.sm,
-    width: '100%',
-    // Boxes are capped at 56px wide, so centre the leftover space on wide
-    // screens instead of letting them pack to the left.
-    justifyContent: 'center',
-  },
-  otpBox: {
-    flex: 1,
-    maxWidth: 56,
-    height: 56,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    textAlign: 'center',
-    fontSize: 22,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    // Removes the focus ring react-native-web adds on top of our own styling.
-    ...webOnly({ outlineStyle: 'none' }),
-  },
-  otpBoxFilled: { borderColor: colors.primaryLight },
-  otpBoxError: { borderColor: colors.danger, backgroundColor: colors.dangerSurface },
-  otpBoxSuccess: { borderColor: colors.success, backgroundColor: colors.successSurface },
-  errorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xxs,
-    marginBottom: spacing.xs,
-    paddingHorizontal: spacing.xs,
-  },
-  errorText: { ...typography.caption, color: colors.danger, flexShrink: 1 },
-  successRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs, marginBottom: spacing.xs },
-  successText: { ...typography.captionMedium, color: colors.success },
-  devPanel: {
-    width: '100%',
-    backgroundColor: colors.warningSurface,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.accentSand,
-    padding: spacing.sm,
-    marginTop: spacing.xs,
-    marginBottom: spacing.lg,
-  },
-  devHeaderRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
-  devHeader: { ...typography.captionMedium, color: colors.warning, flexShrink: 1 },
-  devBody: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.xxs },
-  devCode: {
-    ...typography.h3,
-    color: colors.textPrimary,
-    letterSpacing: 6,
-    textAlign: 'center',
-    marginTop: spacing.xs,
-  },
-  verifyBtn: { width: '100%', marginBottom: spacing.md },
-  resendRow: { alignItems: 'center', minHeight: 24, justifyContent: 'center' },
-  resendMuted: { ...typography.body, color: colors.textMuted },
-  resendActive: { ...typography.bodyMedium, color: colors.primary },
-  changeNumberBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xxs,
-    marginTop: spacing.md,
-    paddingVertical: spacing.xs,
-  },
-  changeNumberText: { ...typography.bodyMedium, color: colors.textSecondary },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    flex: { flex: 1, backgroundColor: colors.background },
+    scrollContent: { flexGrow: 1, paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
+    // Caps the layout width on tablets and in a desktop browser window.
+    container: { width: '100%', maxWidth: 480, alignSelf: 'center', alignItems: 'center' },
+    backBtn: { alignSelf: 'flex-start', padding: spacing.xxs, marginLeft: -spacing.xxs },
+    iconWrap: {
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      backgroundColor: colors.primarySurface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.lg,
+      marginBottom: spacing.md,
+    },
+    title: { ...typography.h3, color: colors.textPrimary, textAlign: 'center' },
+    subtitle: {
+      ...typography.body,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginTop: spacing.xs,
+      marginBottom: spacing.xl,
+    },
+    mobile: { color: colors.textPrimary, fontWeight: '600' },
+    preparingWrap: { alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xxl },
+    preparingText: { ...typography.body, color: colors.textSecondary },
+    otpRow: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+      marginBottom: spacing.sm,
+      width: '100%',
+      // Boxes are capped at 56px wide, so centre the leftover space on wide
+      // screens instead of letting them pack to the left.
+      justifyContent: 'center',
+    },
+    otpBox: {
+      flex: 1,
+      maxWidth: 56,
+      height: 56,
+      borderRadius: radius.md,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+      textAlign: 'center',
+      fontSize: 22,
+      fontWeight: '700',
+      color: colors.textPrimary,
+      // Removes the focus ring react-native-web adds on top of our own styling.
+      ...webOnly({ outlineStyle: 'none' }),
+    },
+    otpBoxFilled: { borderColor: colors.primaryLight },
+    otpBoxError: { borderColor: colors.danger, backgroundColor: colors.dangerSurface },
+    otpBoxSuccess: { borderColor: colors.success, backgroundColor: colors.successSurface },
+    errorRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xxs,
+      marginBottom: spacing.xs,
+      paddingHorizontal: spacing.xs,
+    },
+    errorText: { ...typography.caption, color: colors.danger, flexShrink: 1 },
+    successRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xxs,
+      marginBottom: spacing.xs,
+    },
+    successText: { ...typography.captionMedium, color: colors.success },
+    devPanel: {
+      width: '100%',
+      backgroundColor: colors.warningSurface,
+      borderRadius: radius.md,
+      borderWidth: 1,
+      borderColor: colors.accentSand,
+      padding: spacing.sm,
+      marginTop: spacing.xs,
+      marginBottom: spacing.lg,
+    },
+    devHeaderRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
+    devHeader: { ...typography.captionMedium, color: colors.warning, flexShrink: 1 },
+    devBody: { ...typography.caption, color: colors.textSecondary, marginTop: spacing.xxs },
+    devCode: {
+      ...typography.h3,
+      color: colors.textPrimary,
+      letterSpacing: 6,
+      textAlign: 'center',
+      marginTop: spacing.xs,
+    },
+    verifyBtn: { width: '100%', marginBottom: spacing.md },
+    resendRow: { alignItems: 'center', minHeight: 24, justifyContent: 'center' },
+    resendMuted: { ...typography.body, color: colors.textMuted },
+    resendActive: { ...typography.bodyMedium, color: colors.primary },
+    changeNumberBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xxs,
+      marginTop: spacing.md,
+      paddingVertical: spacing.xs,
+    },
+    changeNumberText: { ...typography.bodyMedium, color: colors.textSecondary },
+  });

@@ -1,7 +1,8 @@
 import { banners as mockBanners } from '../data/banners';
 import { Banner } from '../types';
 
-const delay = <T,>(value: T, ms = 250): Promise<T> => new Promise((r) => setTimeout(() => r(value), ms));
+const delay = <T>(value: T, ms = 250): Promise<T> =>
+  new Promise((r) => setTimeout(() => r(value), ms));
 
 // In-memory store seeded from mock data so admin create/update/delete
 // operations persist for the session without a real backend.

@@ -77,8 +77,9 @@ export function MyReviewsScreen() {
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  list: { padding: spacing.md, paddingBottom: spacing.xxl },
-  productName: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background },
+    list: { padding: spacing.md, paddingBottom: spacing.xxl },
+    productName: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
+  });

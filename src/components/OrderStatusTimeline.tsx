@@ -36,8 +36,12 @@ export function OrderStatusTimeline({ timeline }: { timeline: OrderTimelineEvent
               {!isLast && <View style={[styles.line, event.completed && styles.lineCompleted]} />}
             </View>
             <View style={styles.textColumn}>
-              <Text style={[styles.label, event.completed && styles.labelCompleted]}>{event.label}</Text>
-              {!!event.timestamp && <Text style={styles.timestamp}>{formatDateTime(event.timestamp)}</Text>}
+              <Text style={[styles.label, event.completed && styles.labelCompleted]}>
+                {event.label}
+              </Text>
+              {!!event.timestamp && (
+                <Text style={styles.timestamp}>{formatDateTime(event.timestamp)}</Text>
+              )}
             </View>
           </View>
         );
@@ -46,22 +50,23 @@ export function OrderStatusTimeline({ timeline }: { timeline: OrderTimelineEvent
   );
 }
 
-const createStyles = (colors: AppColors) => StyleSheet.create({
-  row: { flexDirection: 'row' },
-  iconColumn: { alignItems: 'center', width: 40 },
-  iconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surfaceMuted,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconWrapCompleted: { backgroundColor: colors.primary },
-  line: { width: 2, flex: 1, minHeight: 24, backgroundColor: colors.border },
-  lineCompleted: { backgroundColor: colors.primary },
-  textColumn: { flex: 1, paddingBottom: spacing.lg, paddingTop: 4 },
-  label: { ...typography.bodyMedium, color: colors.textMuted },
-  labelCompleted: { color: colors.textPrimary },
-  timestamp: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
-});
+const createStyles = (colors: AppColors) =>
+  StyleSheet.create({
+    row: { flexDirection: 'row' },
+    iconColumn: { alignItems: 'center', width: 40 },
+    iconWrap: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colors.surfaceMuted,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconWrapCompleted: { backgroundColor: colors.primary },
+    line: { width: 2, flex: 1, minHeight: 24, backgroundColor: colors.border },
+    lineCompleted: { backgroundColor: colors.primary },
+    textColumn: { flex: 1, paddingBottom: spacing.lg, paddingTop: 4 },
+    label: { ...typography.bodyMedium, color: colors.textMuted },
+    labelCompleted: { color: colors.textPrimary },
+    timestamp: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
+  });

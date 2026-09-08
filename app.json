@@ -29,7 +29,8 @@
       "expo-image",
       "expo-splash-screen",
       "expo-font",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      "./plugins/withDetoxAndroid"
     ]
   }
 }
