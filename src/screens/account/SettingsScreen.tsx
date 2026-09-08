@@ -103,6 +103,7 @@ function ToggleRow({
         disabled={disabled}
         trackColor={{ false: colors.border, true: colors.primaryLight }}
         thumbColor={colors.surface}
+        accessibilityLabel={label}
       />
     </View>
   );
