@@ -7,7 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-unit:
+  # Everything that can be decided from the source alone, without a device or a
+  # network. Ordered cheapest-first so an obvious break reports in seconds.
+  static-analysis:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,9 +18,43 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run format:check
-      - run: npm run lint
+      - name: Formatting
+        run: npm run format:check
+      - name: Types
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      # Gates on the dependencies that actually ship in the app bundle. Dev-only
+      # advisories (currently all of them, via newman) are reported separately
+      # below so they cannot block a release that is not affected by them.
+      - name: Dependency audit (production deps)
+        run: npm run audit
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
       - run: npm run test -- --ci
+
+  # Informational: surfaces dev-dependency advisories without failing the build.
+  # Read it, do not ignore it — a dev tool with an RCE still runs on developer
+  # machines and in CI.
+  dev-dependency-audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high
 
   api-tests:
     runs-on: ubuntu-latest
