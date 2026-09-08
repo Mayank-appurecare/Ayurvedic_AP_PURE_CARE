@@ -32,7 +32,9 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'Pixel_7_API_35',
+        // Must match an AVD listed by 'emulator -list-avds'. CI creates its own
+        // (see .github/workflows/e2e.yml), so this value is for local runs.
+        avdName: 'Pixel_8_API_36',
       },
     },
   },

@@ -12,6 +12,7 @@
 // WHAT IT DOES NOT SEND: image, rating, reviewCount, brand, MRP, variants.
 
 import { ApiProduct, AuthCatalog } from '../auth/types';
+import { isCustomerFacingCategory } from './categoryAdapter';
 import { Product, ProductVariant } from '../../types';
 
 /**
@@ -104,9 +105,33 @@ export function toUiProduct(api: ApiProduct): Product {
   };
 }
 
-/** The whole `productList`, in the order the API returned it. */
+/**
+ * Every id that belongs to a seed/demo category — the category's own id plus
+ * its sub-services'.
+ *
+ * `toUiCategories` already drops demo categories, but products reference a
+ * category id directly, so a product parked under one would still surface in
+ * the Home rail, the all-products grid and search. Collecting the ids here
+ * keeps that decision in the same filtering layer instead of adding a name
+ * check to any screen.
+ */
+function hiddenCategoryIds(catalog: AuthCatalog): Set<number> {
+  const hidden = new Set<number>();
+  for (const category of catalog.categories) {
+    if (isCustomerFacingCategory(category)) continue;
+    hidden.add(category.id);
+    for (const child of category.subService ?? []) hidden.add(child.id);
+  }
+  return hidden;
+}
+
+/**
+ * The `productList`, in the order the API returned it, minus anything filed
+ * under a seed/demo category (e.g. "Triphala Churna Demo").
+ */
 export function toUiProducts(catalog: AuthCatalog): Product[] {
-  return catalog.products.map(toUiProduct);
+  const hidden = hiddenCategoryIds(catalog);
+  return catalog.products.filter((product) => !hidden.has(product.categoryId)).map(toUiProduct);
 }
 
 /**
