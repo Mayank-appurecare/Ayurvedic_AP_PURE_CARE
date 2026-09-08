@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { FlatList, StyleSheet, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { Product } from '../../types';
-import { spacing, typography } from '../../theme';
+import { spacing } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { ProductRepository } from '../../repositories/ProductRepository';
 import { useWishlist } from '../../context/WishlistContext';
