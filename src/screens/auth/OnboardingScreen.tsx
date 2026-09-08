@@ -92,6 +92,7 @@ export function OnboardingScreen() {
       </Pressable>
 
       <FlatList
+        testID="onboarding-carousel"
         ref={listRef}
         data={SLIDES}
         keyExtractor={(item) => item.id}
