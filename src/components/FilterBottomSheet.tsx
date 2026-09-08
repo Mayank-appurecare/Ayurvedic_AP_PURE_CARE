@@ -149,6 +149,9 @@ export function FilterBottomSheet({
         <Pressable
           style={styles.checkboxRow}
           onPress={() => setDraft({ ...draft, inStockOnly: !draft.inStockOnly })}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: !!draft.inStockOnly }}
+          accessibilityLabel="In Stock Only"
         >
           <Ionicons
             name={draft.inStockOnly ? 'checkbox' : 'square-outline'}
@@ -160,6 +163,9 @@ export function FilterBottomSheet({
         <Pressable
           style={styles.checkboxRow}
           onPress={() => setDraft({ ...draft, onOfferOnly: !draft.onOfferOnly })}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: !!draft.onOfferOnly }}
+          accessibilityLabel="On Offer"
         >
           <Ionicons
             name={draft.onOfferOnly ? 'checkbox' : 'square-outline'}
