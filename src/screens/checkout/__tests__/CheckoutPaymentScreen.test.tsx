@@ -79,14 +79,14 @@ beforeEach(() => {
 describe('CheckoutPaymentScreen', () => {
   it('disables Place Order until a payment method is selected', async () => {
     await renderScreen(<CheckoutPaymentScreen />);
-    const button = await screen.findByText(/Place Order/);
-    expect(button.props.accessibilityState?.disabled ?? true).toBeTruthy();
+    const button = await screen.findByRole('button', { name: /Place Order/ });
+    expect(button.props.accessibilityState?.disabled).toBeTruthy();
   });
 
   it('enables Place Order once a payment method is chosen', async () => {
     mockCheckout({ selectedPaymentMethodId: 'pay-upi' });
     await renderScreen(<CheckoutPaymentScreen />);
-    const button = await screen.findByText(/Place Order/);
+    const button = await screen.findByRole('button', { name: /Place Order/ });
     expect(button.props.accessibilityState?.disabled).toBeFalsy();
   });
 
@@ -109,7 +109,7 @@ describe('CheckoutPaymentScreen', () => {
     (OrderRepository.placeOrder as jest.Mock).mockResolvedValue({ id: 'ord-123' });
 
     await renderScreen(<CheckoutPaymentScreen />);
-    const button = await screen.findByText(/Place Order/);
+    const button = await screen.findByRole('button', { name: /Place Order/ });
     fireEvent.press(button);
 
     await waitFor(() => expect(OrderRepository.placeOrder).toHaveBeenCalledTimes(1));
@@ -136,7 +136,7 @@ describe('CheckoutPaymentScreen', () => {
   it('does not place an order if no address is selected, even if the button is tapped', async () => {
     mockCheckout({ selectedPaymentMethodId: 'pay-upi', selectedAddress: null });
     await renderScreen(<CheckoutPaymentScreen />);
-    const button = await screen.findByText(/Place Order/);
+    const button = await screen.findByRole('button', { name: /Place Order/ });
     fireEvent.press(button);
 
     await waitFor(() => expect(OrderRepository.placeOrder).not.toHaveBeenCalled());
