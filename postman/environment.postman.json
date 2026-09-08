@@ -1,0 +1,10 @@
+{
+  "name": "APPURECARE local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "https://bartender-sloppy-sandstone.ngrok-free.dev",
+      "enabled": true
+    }
+  ]
+}

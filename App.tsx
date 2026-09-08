@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import * as Sentry from '@sentry/react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -7,6 +8,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from './src/theme/ThemeContext';
 import { AppProviders } from './src/context/AppProviders';
 import { RootNavigator } from './src/navigation/RootNavigator';
+
+const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    tracesSampleRate: 1.0,
+    enabled: !__DEV__,
+  });
+}
 
 function AppContent() {
   const { colors, isDark } = useTheme();
@@ -31,7 +41,7 @@ function AppContent() {
   );
 }
 
-export default function App() {
+function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -44,3 +54,5 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+
+export default Sentry.wrap(App);

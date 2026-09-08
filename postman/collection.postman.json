@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "APPURECARE API",
+    "description": "Newman-runnable export of postman/collections/APPURECARE (the .request.yaml files are the source of truth for Postman's Local View; keep this file in sync when you add/change requests there).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "otp/request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "ngrok-skip-browser-warning", "value": "true" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"phoneNumber\": \"+919999999991\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/otp/request"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('does not 5xx', function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "pm.test('responds within 5s', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "otp/verify",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "ngrok-skip-browser-warning", "value": "true" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"phoneNumber\": \"+919999999991\",\n    \"otp\": \"123456\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/otp/verify"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('does not 5xx', function () {",
+              "    pm.expect(pm.response.code).to.be.below(500);",
+              "});",
+              "pm.test('responds within 5s', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

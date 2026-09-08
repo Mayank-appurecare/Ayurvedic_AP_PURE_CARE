@@ -1,0 +1,32 @@
+name: E2E (Detox)
+
+# Runs on demand only — an Android emulator job is slow (~15-20 min) and
+# would otherwise queue up on every push. Trigger it manually from the
+# Actions tab, or wire it to `on: push` later once it's proven stable.
+on:
+  workflow_dispatch:
+
+jobs:
+  android-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm ci
+      - name: Build Detox app + test APKs
+        run: npm run test:e2e:build
+      - name: Run Detox tests on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          script: npm run test:e2e -- --headless

@@ -28,7 +28,8 @@
       "expo-status-bar",
       "expo-image",
       "expo-splash-screen",
-      "expo-font"
+      "expo-font",
+      "@sentry/react-native"
     ]
   }
 }
