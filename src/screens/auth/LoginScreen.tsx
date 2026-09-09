@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/types';
 import { radius, spacing, typography } from '../../theme';
@@ -28,6 +30,7 @@ import { webOnly } from '../../utils/webStyle';
 
 export function LoginScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const { requestOtp } = useAuth();
@@ -84,11 +87,24 @@ export function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + spacing.lg }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
+          {/* This screen is pushed from Welcome, Account and Register, so it
+              needs a way out. Android's hardware back covers it; iOS and web
+              have nothing without this. */}
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            hitSlop={10}
+          >
+            <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
+          </Pressable>
+
           <Text style={styles.title}>Welcome Back</Text>
           <Text style={styles.subtitle}>
             Enter your mobile number to continue your wellness journey.
@@ -190,7 +206,15 @@ export function LoginScreen() {
 const createStyles = (colors: AppColors) =>
   StyleSheet.create({
     flex: { flex: 1, backgroundColor: colors.background },
-    scrollContent: { flexGrow: 1, padding: spacing.lg, paddingTop: spacing.xxxl },
+    // paddingTop is applied inline from the safe-area inset; a fixed value sat
+    // under the notch on some devices and left too much room on others.
+    scrollContent: { flexGrow: 1, padding: spacing.lg },
+    backBtn: {
+      alignSelf: 'flex-start',
+      padding: spacing.xxs,
+      marginLeft: -spacing.xxs,
+      marginBottom: spacing.sm,
+    },
     // Caps the line length on tablets and in a desktop browser window.
     container: { width: '100%', maxWidth: 480, alignSelf: 'center' },
     title: { ...typography.h1, color: colors.textPrimary },
