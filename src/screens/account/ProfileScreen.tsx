@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as ImagePicker from 'expo-image-picker';
@@ -70,12 +71,17 @@ export function ProfileScreen() {
           accessibilityRole="button"
           accessibilityLabel="Change profile photo"
         >
-          <View style={styles.avatar}>
-            {avatarUri ? (
-              <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
-            ) : (
-              <Text style={styles.avatarText}>{initials}</Text>
-            )}
+          <View style={styles.avatarBox}>
+            <View style={styles.avatar}>
+              {avatarUri ? (
+                <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
+              ) : (
+                <Text style={styles.avatarText}>{initials}</Text>
+              )}
+            </View>
+            <View style={styles.cameraBadge}>
+              <Ionicons name="camera" size={14} color={colors.textOnPrimary} />
+            </View>
           </View>
           <Text style={styles.changePhoto}>Change Photo</Text>
         </Pressable>
@@ -147,6 +153,7 @@ const createStyles = (colors: AppColors) =>
     container: { flex: 1, backgroundColor: colors.background },
     content: { padding: spacing.md, paddingBottom: spacing.xxl },
     avatarWrap: { alignItems: 'center', marginBottom: spacing.lg },
+    avatarBox: { width: 84, height: 84 },
     avatar: {
       width: 84,
       height: 84,
@@ -158,6 +165,22 @@ const createStyles = (colors: AppColors) =>
     },
     avatarImage: { width: '100%', height: '100%' },
     avatarText: { ...typography.h1, color: colors.primary },
+    // Sits right on the circle's edge (circumference), the universal
+    // "tap to change photo" affordance (Instagram/WhatsApp-style badge) —
+    // so it reads as editable at a glance, not just from the text below.
+    cameraBadge: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 2,
+      borderColor: colors.background,
+    },
     changePhoto: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
     field: { marginBottom: spacing.md },
     fieldLabel: {
