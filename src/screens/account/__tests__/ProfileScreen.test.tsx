@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import { screen, fireEvent, waitFor } from '@testing-library/react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { ProfileScreen } from '../ProfileScreen';
 import { renderScreen } from '../../../test-utils/renderScreen';
 import { useAuth } from '../../../context/AuthContext';
@@ -8,6 +9,10 @@ import { User } from '../../../types';
 
 jest.mock('../../../context/AuthContext', () => ({
   useAuth: jest.fn(),
+}));
+jest.mock('expo-image-picker', () => ({
+  requestMediaLibraryPermissionsAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
 }));
 
 const mockGoBack = jest.fn();
@@ -36,6 +41,10 @@ function mockAuth(overrides: Partial<ReturnType<typeof useAuth>> = {}) {
 beforeEach(() => {
   jest.clearAllMocks();
   mockAuth();
+  (ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock).mockResolvedValue({
+    granted: true,
+  });
+  jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 });
 
 describe('ProfileScreen', () => {
@@ -56,6 +65,45 @@ describe('ProfileScreen', () => {
     expect((await screen.findByPlaceholderText('Enter your full name')).props.value).toBe('');
     expect((await screen.findByPlaceholderText('Enter your email')).props.value).toBe('');
     expect((await screen.findByPlaceholderText('Enter your mobile number')).props.value).toBe('');
+  });
+
+  it('picking a photo shows it in place of the initials', async () => {
+    (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValueOnce({
+      canceled: false,
+      assets: [{ uri: 'file://avatar.jpg' }],
+    });
+    await renderScreen(<ProfileScreen />);
+    expect(await screen.findByText('J')).toBeTruthy();
+
+    fireEvent.press(await screen.findByLabelText('Change profile photo'));
+
+    await waitFor(() => expect(screen.queryByText('J')).toBeNull());
+  });
+
+  it('shows a permission alert and keeps the initials when photo access is denied', async () => {
+    (ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock).mockResolvedValue({
+      granted: false,
+    });
+    await renderScreen(<ProfileScreen />);
+
+    fireEvent.press(await screen.findByLabelText('Change profile photo'));
+
+    await waitFor(() => expect(Alert.alert).toHaveBeenCalled());
+    expect(ImagePicker.launchImageLibraryAsync).not.toHaveBeenCalled();
+    expect(await screen.findByText('J')).toBeTruthy();
+  });
+
+  it('keeps the initials when the user cancels the picker', async () => {
+    (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValueOnce({
+      canceled: true,
+      assets: null,
+    });
+    await renderScreen(<ProfileScreen />);
+
+    fireEvent.press(await screen.findByLabelText('Change profile photo'));
+
+    await waitFor(() => expect(ImagePicker.launchImageLibraryAsync).toHaveBeenCalled());
+    expect(await screen.findByText('J')).toBeTruthy();
   });
 
   it('lets the user edit each field', async () => {

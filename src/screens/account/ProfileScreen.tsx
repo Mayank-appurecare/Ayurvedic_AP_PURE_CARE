@@ -1,8 +1,18 @@
 import React, { useMemo, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import * as ImagePicker from 'expo-image-picker';
 import { RootStackParamList } from '../../navigation/types';
 import { radius, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
@@ -19,9 +29,26 @@ export function ProfileScreen() {
   const [name, setName] = useState(user?.name ?? '');
   const [email, setEmail] = useState(user?.email ?? '');
   const [phone, setPhone] = useState(user?.phone ?? '');
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   const initials = (name || 'G').trim().charAt(0).toUpperCase();
+
+  const pickAvatar = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert('Permission needed', 'Please allow photo library access to set a profile photo.');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (result.canceled || !result.assets?.length) return;
+    setAvatarUri(result.assets[0].uri);
+  };
 
   const handleSave = () => {
     setSaving(true);
@@ -37,12 +64,21 @@ export function ProfileScreen() {
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <AppHeader title="My Profile" showBack onBackPress={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.avatarWrap}>
+        <Pressable
+          onPress={pickAvatar}
+          style={styles.avatarWrap}
+          accessibilityRole="button"
+          accessibilityLabel="Change profile photo"
+        >
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initials}</Text>
+            {avatarUri ? (
+              <Image source={{ uri: avatarUri }} style={styles.avatarImage} />
+            ) : (
+              <Text style={styles.avatarText}>{initials}</Text>
+            )}
           </View>
           <Text style={styles.changePhoto}>Change Photo</Text>
-        </View>
+        </Pressable>
 
         <Field
           label="Full Name"
@@ -118,7 +154,9 @@ const createStyles = (colors: AppColors) =>
       backgroundColor: colors.primarySurface,
       alignItems: 'center',
       justifyContent: 'center',
+      overflow: 'hidden',
     },
+    avatarImage: { width: '100%', height: '100%' },
     avatarText: { ...typography.h1, color: colors.primary },
     changePhoto: { ...typography.captionMedium, color: colors.primary, marginTop: spacing.xs },
     field: { marginBottom: spacing.md },
