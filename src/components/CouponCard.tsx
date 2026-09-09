@@ -6,14 +6,19 @@ import { Coupon } from '../types';
 import { radius, shadow, spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
 import { formatDate } from '../utils/format';
+import { ConfettiBurst } from './ConfettiBurst';
 
 interface Props {
   coupon: Coupon;
   onApply?: () => void;
   showApply?: boolean;
+  /** This coupon is the one currently applied to the cart. */
+  applied?: boolean;
+  /** Plays the confetti burst once, right after this coupon was applied. */
+  justApplied?: boolean;
 }
 
-export function CouponCard({ coupon, onApply, showApply }: Props) {
+export function CouponCard({ coupon, onApply, showApply, applied, justApplied }: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const handleCopy = async () => {
@@ -61,18 +66,27 @@ export function CouponCard({ coupon, onApply, showApply }: Props) {
             : 'Not applicable to current cart'}
         </Text>
       </View>
-      {showApply && (
-        <Pressable
-          onPress={onApply}
-          disabled={!coupon.isApplicable}
-          style={[styles.applyBtn, !coupon.isApplicable && styles.applyBtnDisabled]}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.applyText, !coupon.isApplicable && styles.applyTextDisabled]}>
-            Apply
-          </Text>
-        </Pressable>
-      )}
+      {showApply &&
+        (applied ? (
+          <View style={styles.appliedWrap}>
+            <View style={styles.appliedBtn}>
+              <Ionicons name="checkmark-circle" size={14} color={colors.success} />
+              <Text style={styles.appliedText}>Applied</Text>
+            </View>
+            {justApplied && <ConfettiBurst />}
+          </View>
+        ) : (
+          <Pressable
+            onPress={onApply}
+            disabled={!coupon.isApplicable}
+            style={[styles.applyBtn, !coupon.isApplicable && styles.applyBtnDisabled]}
+            accessibilityRole="button"
+          >
+            <Text style={[styles.applyText, !coupon.isApplicable && styles.applyTextDisabled]}>
+              Apply
+            </Text>
+          </Pressable>
+        ))}
     </View>
   );
 }
@@ -116,4 +130,15 @@ const createStyles = (colors: AppColors) =>
     applyBtnDisabled: { backgroundColor: colors.surfaceMuted },
     applyText: { ...typography.captionMedium, color: colors.textOnPrimary },
     applyTextDisabled: { color: colors.textMuted },
+    appliedWrap: { alignSelf: 'center' },
+    appliedBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      backgroundColor: colors.successSurface,
+      borderRadius: radius.sm,
+    },
+    appliedText: { ...typography.captionMedium, color: colors.success },
   });

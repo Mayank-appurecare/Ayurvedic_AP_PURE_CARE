@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useNavigation } from '@react-navigation/native';
@@ -20,12 +20,13 @@ export function OffersScreen() {
   const styles = useMemo(() => createStyles(colors), [colors]);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { subtotal } = useCart();
-  const { setAppliedCoupon } = useCheckout();
+  const { appliedCoupon, setAppliedCoupon } = useCheckout();
 
   const [offers, setOffers] = useState<Offer[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorByCoupon, setErrorByCoupon] = useState<Record<string, string>>({});
+  const [justAppliedId, setJustAppliedId] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([OfferRepository.getOffers(), OfferRepository.getCoupons()]).then(
@@ -42,10 +43,14 @@ export function OffersScreen() {
     if (result.valid && result.coupon) {
       setAppliedCoupon(result.coupon);
       setErrorByCoupon((prev) => ({ ...prev, [coupon.id]: '' }));
-      Alert.alert('Coupon Applied', result.message);
+      // One-shot confetti trigger — cleared after the burst finishes playing,
+      // so it never replays on an unrelated re-render.
+      setJustAppliedId(coupon.id);
+      setTimeout(() => {
+        setJustAppliedId((current) => (current === coupon.id ? null : current));
+      }, 900);
     } else {
       setErrorByCoupon((prev) => ({ ...prev, [coupon.id]: result.message }));
-      Alert.alert('Coupon Not Applied', result.message);
     }
   };
 
@@ -96,7 +101,13 @@ export function OffersScreen() {
           contentContainerStyle={[styles.content, styles.couponsList]}
           renderItem={({ item: coupon }) => (
             <View>
-              <CouponCard coupon={coupon} showApply onApply={() => handleApply(coupon)} />
+              <CouponCard
+                coupon={coupon}
+                showApply
+                onApply={() => handleApply(coupon)}
+                applied={appliedCoupon?.id === coupon.id}
+                justApplied={justAppliedId === coupon.id}
+              />
               {!!errorByCoupon[coupon.id] && (
                 <Text style={styles.errorText}>{errorByCoupon[coupon.id]}</Text>
               )}
