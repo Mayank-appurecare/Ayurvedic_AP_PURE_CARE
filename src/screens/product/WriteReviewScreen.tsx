@@ -172,9 +172,11 @@ export function WriteReviewScreen() {
           {touched && text.trim().length === 0 && (
             <Text style={styles.errorText}>Please write a review.</Text>
           )}
-          {touched && textTooShort && (
+          {textTooShort && (
             <Text style={styles.errorText}>
-              Please write at least {MIN_TEXT_LENGTH} characters.
+              {MIN_TEXT_LENGTH - text.trim().length} more character
+              {MIN_TEXT_LENGTH - text.trim().length === 1 ? '' : 's'} needed (minimum{' '}
+              {MIN_TEXT_LENGTH}).
             </Text>
           )}
 
@@ -212,7 +214,6 @@ export function WriteReviewScreen() {
           <PrimaryButton
             label="Submit Review"
             onPress={handleSubmit}
-            disabled={!canSubmit}
             loading={submitting}
             style={styles.submitBtn}
           />

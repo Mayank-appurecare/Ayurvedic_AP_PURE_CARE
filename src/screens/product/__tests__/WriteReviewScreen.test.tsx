@@ -98,15 +98,30 @@ describe('WriteReviewScreen', () => {
     expect(ReviewRepository.addReview).not.toHaveBeenCalled();
   });
 
-  it('shows "Please write at least 10 characters." when the text is too short', async () => {
+  it('shows a live character-count hint as soon as the text is too short, before any submit attempt', async () => {
+    await renderScreen(<WriteReviewScreen />);
+    await typeReviewText('too short'); // 9 chars, needs 10 -> singular "character"
+
+    expect(await screen.findByText('1 more character needed (minimum 10).')).toBeTruthy();
+    expect(ReviewRepository.addReview).not.toHaveBeenCalled();
+  });
+
+  it('keeps the character-count hint blocking submission even after a submit attempt', async () => {
     await renderScreen(<WriteReviewScreen />);
     fireEvent.press(await screen.findByLabelText('Rate 4 stars'));
-    await typeReviewText('too short');
+    await typeReviewText('Good'); // 4 chars, needs 10 -> plural "characters"
 
     fireEvent.press(await screen.findByRole('button', { name: 'Submit Review' }));
 
-    expect(await screen.findByText('Please write at least 10 characters.')).toBeTruthy();
+    expect(await screen.findByText('6 more characters needed (minimum 10).')).toBeTruthy();
     expect(ReviewRepository.addReview).not.toHaveBeenCalled();
+  });
+
+  it('the Submit button stays pressable even when the form is invalid, so the reason it blocks is always reachable', async () => {
+    await renderScreen(<WriteReviewScreen />);
+
+    const button = await screen.findByRole('button', { name: 'Submit Review' });
+    expect(button.props.accessibilityState?.disabled).toBeFalsy();
   });
 
   it('submits a trimmed review, then shows a thank-you view and navigates back', async () => {
