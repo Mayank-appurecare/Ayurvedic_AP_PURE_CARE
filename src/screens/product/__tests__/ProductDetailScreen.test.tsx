@@ -247,6 +247,13 @@ describe('ProductDetailScreen', () => {
     expect(mockNavigate).toHaveBeenCalledWith('Reviews', { productId: 'p1' });
   });
 
+  it('shows "No ratings yet" instead of a star row when the product has no reviews', async () => {
+    mockRepos({ product: makeProduct({ reviewCount: 0 }) });
+    await renderScreen(<ProductDetailScreen />);
+
+    expect(await screen.findByText('No ratings yet')).toBeTruthy();
+  });
+
   it('pressing "See all N reviews" navigates to Reviews', async () => {
     mockRepos({ summary: { total: 12, average: 4.3, distribution: EMPTY_SUMMARY.distribution } });
     await renderScreen(<ProductDetailScreen />);

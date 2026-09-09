@@ -189,7 +189,7 @@ export function ProductDetailScreen() {
       >
         <ProductImageGallery images={product.images} />
 
-        <View style={styles.section}>
+        <View style={styles.heroSection}>
           <Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.name}>{product.name}</Text>
           <Pressable
@@ -198,7 +198,11 @@ export function ProductDetailScreen() {
             accessibilityRole="button"
             accessibilityLabel="View all reviews"
           >
-            <RatingStars rating={product.rating} reviewCount={product.reviewCount} showValue />
+            {product.reviewCount > 0 ? (
+              <RatingStars rating={product.rating} reviewCount={product.reviewCount} showValue />
+            ) : (
+              <Text style={styles.noRatingsText}>No ratings yet</Text>
+            )}
             <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
           </Pressable>
 
@@ -276,13 +280,9 @@ export function ProductDetailScreen() {
           </View>
         </View>
 
-        <Divider />
-
         <InfoSection title="Description">
           <Text style={styles.paragraph}>{product.description}</Text>
         </InfoSection>
-
-        <Divider />
 
         <InfoSection title="Benefits">
           {product.benefits.map((benefit, index) => (
@@ -292,8 +292,6 @@ export function ProductDetailScreen() {
             </View>
           ))}
         </InfoSection>
-
-        <Divider />
 
         <InfoSection title="Ingredients">
           {product.ingredients.map((ingredient, index) => (
@@ -309,8 +307,6 @@ export function ProductDetailScreen() {
           ))}
         </InfoSection>
 
-        <Divider />
-
         <InfoSection title="How to Use">
           {product.howToUse.map((step, index) => (
             <View key={index} style={styles.bulletRow}>
@@ -319,8 +315,6 @@ export function ProductDetailScreen() {
             </View>
           ))}
         </InfoSection>
-
-        <Divider />
 
         <InfoSection title="Product Information">
           {product.productInfo.map((row, index) => (
@@ -332,17 +326,12 @@ export function ProductDetailScreen() {
         </InfoSection>
 
         {product.faqs.length > 0 && (
-          <>
-            <Divider />
-            <InfoSection title="Frequently Asked Questions">
-              {product.faqs.map((faq, index) => (
-                <FaqRow key={index} question={faq.question} answer={faq.answer} />
-              ))}
-            </InfoSection>
-          </>
+          <InfoSection title="Frequently Asked Questions">
+            {product.faqs.map((faq, index) => (
+              <FaqRow key={index} question={faq.question} answer={faq.answer} />
+            ))}
+          </InfoSection>
         )}
-
-        <Divider />
 
         <InfoSection title="Ratings & Reviews">
           {reviewSummary && (
@@ -387,51 +376,45 @@ export function ProductDetailScreen() {
         </InfoSection>
 
         {relatedProducts.length > 0 && (
-          <>
-            <Divider />
-            <InfoSection title="Related Products">
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.railContent}
-              >
-                {relatedProducts.map((related) => (
-                  <ProductCard
-                    key={related.id}
-                    product={related}
-                    onPress={() => navigation.push('ProductDetail', { productId: related.id })}
-                    style={styles.railCard}
-                  />
-                ))}
-              </ScrollView>
-            </InfoSection>
-          </>
+          <InfoSection title="Related Products">
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.railContent}
+            >
+              {relatedProducts.map((related) => (
+                <ProductCard
+                  key={related.id}
+                  product={related}
+                  onPress={() => navigation.push('ProductDetail', { productId: related.id })}
+                  style={styles.railCard}
+                />
+              ))}
+            </ScrollView>
+          </InfoSection>
         )}
 
         {fbtProducts.length > 0 && (
-          <>
-            <Divider />
-            <InfoSection title="Frequently Bought Together">
-              <View style={styles.fbtRow}>
-                <FbtThumb image={product.images[0]} label={product.name} />
-                {fbtProducts.map((p) => (
-                  <React.Fragment key={p.id}>
-                    <Ionicons name="add" size={16} color={colors.textMuted} />
-                    <FbtThumb image={p.images[0]} label={p.name} />
-                  </React.Fragment>
-                ))}
-              </View>
-              <View style={styles.fbtFooter}>
-                <Text style={styles.fbtTotal}>Total: {formatPrice(fbtTotal)}</Text>
-                <PrimaryButton
-                  label="Add All to Cart"
-                  onPress={handleAddAllFbt}
-                  fullWidth={false}
-                  style={styles.fbtBtn}
-                />
-              </View>
-            </InfoSection>
-          </>
+          <InfoSection title="Frequently Bought Together">
+            <View style={styles.fbtRow}>
+              <FbtThumb image={product.images[0]} label={product.name} />
+              {fbtProducts.map((p) => (
+                <React.Fragment key={p.id}>
+                  <Ionicons name="add" size={16} color={colors.textMuted} />
+                  <FbtThumb image={p.images[0]} label={p.name} />
+                </React.Fragment>
+              ))}
+            </View>
+            <View style={styles.fbtFooter}>
+              <Text style={styles.fbtTotal}>Total: {formatPrice(fbtTotal)}</Text>
+              <PrimaryButton
+                label="Add All to Cart"
+                onPress={handleAddAllFbt}
+                fullWidth={false}
+                style={styles.fbtBtn}
+              />
+            </View>
+          </InfoSection>
         )}
 
         <View style={{ height: spacing.xxl }} />
@@ -511,7 +494,7 @@ function InfoSection({ title, children }: { title: string; children: React.React
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   return (
-    <View style={styles.section}>
+    <View style={styles.cardSection}>
       <Text style={styles.sectionTitle}>{title}</Text>
       {children}
     </View>
@@ -548,12 +531,6 @@ function FbtThumb({ image, label }: { image: string; label: string }) {
       </Text>
     </View>
   );
-}
-
-function Divider() {
-  const { colors } = useTheme();
-  const styles = useMemo(() => createStyles(colors), [colors]);
-  return <View style={styles.divider} />;
 }
 
 const createStyles = (colors: AppColors) =>
@@ -594,10 +571,24 @@ const createStyles = (colors: AppColors) =>
       paddingHorizontal: 2,
     },
     topBarBadgeText: { color: colors.textInverse, fontSize: 9, fontWeight: '700' },
-    section: { paddingHorizontal: spacing.md, paddingVertical: spacing.md, gap: spacing.xs },
+    heroSection: {
+      backgroundColor: colors.surface,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.md,
+      gap: spacing.xs,
+    },
+    cardSection: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      marginHorizontal: spacing.md,
+      marginTop: spacing.sm,
+      padding: spacing.md,
+      ...shadow.sm,
+    },
     brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
     name: { ...typography.h3, color: colors.textPrimary },
     ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
+    noRatingsText: { ...typography.captionMedium, color: colors.textMuted },
     stockText: { ...typography.captionMedium, marginTop: 2 },
     stockIn: { color: colors.success },
     stockLow: { color: colors.warning },
@@ -621,7 +612,6 @@ const createStyles = (colors: AppColors) =>
     qtyRow: { marginTop: spacing.md },
     ctaRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },
     ctaBtn: { flex: 1 },
-    divider: { height: 8, backgroundColor: colors.surfaceMuted },
     sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.xs },
     paragraph: { ...typography.body, color: colors.textSecondary, lineHeight: 21 },
     bulletRow: {
