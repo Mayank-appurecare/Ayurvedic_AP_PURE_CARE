@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react-native';
+import { screen, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { HomeScreen } from '../HomeScreen';
 import { renderScreen } from '../../../test-utils/renderScreen';
 import { useCart } from '../../../context/CartContext';
@@ -40,9 +40,15 @@ jest.mock('../../../repositories/UserRepository', () => ({
 }));
 
 const mockNavigate = jest.fn();
+let mockFocusCallback: (() => void) | undefined;
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual('@react-navigation/native'),
   useNavigation: () => ({ navigate: mockNavigate }),
+  useFocusEffect: (callback: () => void) => {
+    mockFocusCallback = callback;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.mock factories can't close over top-level imports
+    require('react').useEffect(callback, []);
+  },
 }));
 
 /** Resolves every repository the screen loads in parallel. */
@@ -120,6 +126,19 @@ describe('HomeScreen data loading', () => {
     fireEvent.press(retry);
 
     expect(await screen.findByText('Shop by Category')).toBeTruthy();
+  });
+
+  it('refetches the whole feed when the screen regains focus, not just on first mount', async () => {
+    mockRepositories();
+    await renderScreen(<HomeScreen />);
+    await screen.findByText('Shop by Category');
+    expect(CategoryRepository.getAll).toHaveBeenCalledTimes(1);
+    expect(ReviewRepository.getRecent).toHaveBeenCalledTimes(1);
+
+    await act(() => mockFocusCallback?.());
+
+    await waitFor(() => expect(CategoryRepository.getAll).toHaveBeenCalledTimes(2));
+    expect(ReviewRepository.getRecent).toHaveBeenCalledTimes(2);
   });
 
   it('renders the API product list, not mock data', async () => {
