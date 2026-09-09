@@ -1,15 +1,19 @@
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react-native';
+import { screen, fireEvent, waitFor } from '@testing-library/react-native';
 import { CartScreen } from '../CartScreen';
 import { renderScreen } from '../../../test-utils/renderScreen';
 import { useCart, EnrichedCartItem } from '../../../context/CartContext';
 import { useCheckout } from '../../../context/CheckoutContext';
+import { OfferRepository } from '../../../repositories/OfferRepository';
 
 jest.mock('../../../context/CartContext', () => ({
   useCart: jest.fn(),
 }));
 jest.mock('../../../context/CheckoutContext', () => ({
   useCheckout: jest.fn(),
+}));
+jest.mock('../../../repositories/OfferRepository', () => ({
+  OfferRepository: { validateCoupon: jest.fn() },
 }));
 
 const mockNavigate = jest.fn();
@@ -228,12 +232,70 @@ describe('CartScreen', () => {
     expect(setAppliedCoupon).toHaveBeenCalledWith(null);
   });
 
-  it('pressing Apply Coupon navigates to the Offers screen', async () => {
+  it('pressing "View all coupons" navigates to the Offers screen', async () => {
     mockCart({ enrichedItems: [makeItem()], subtotal: 500 });
     await renderScreen(<CartScreen />);
 
-    fireEvent.press(await screen.findByText('Apply Coupon'));
+    fireEvent.press(await screen.findByText('View all coupons'));
     expect(mockNavigate).toHaveBeenCalledWith('Offers');
+  });
+
+  describe('entering a coupon code directly', () => {
+    it('disables Apply until something is typed', async () => {
+      mockCart({ enrichedItems: [makeItem()], subtotal: 500 });
+      await renderScreen(<CartScreen />);
+
+      const applyButton = await screen.findByRole('button', { name: 'Apply' });
+      expect(applyButton.props.accessibilityState?.disabled).toBeTruthy();
+
+      fireEvent.changeText(await screen.findByPlaceholderText('Enter coupon code'), 'SAVE10');
+      expect(
+        (await screen.findByRole('button', { name: 'Apply' })).props.accessibilityState?.disabled
+      ).toBeFalsy();
+    });
+
+    it('applies a valid code, showing it as applied and clearing the input', async () => {
+      const setAppliedCoupon = jest.fn();
+      mockCart({ enrichedItems: [makeItem()], subtotal: 500 });
+      mockCheckout({ setAppliedCoupon });
+      const coupon = {
+        id: 'c1',
+        code: 'SAVE10',
+        description: '',
+        discountType: 'flat' as const,
+        discountValue: 10,
+        expiryDate: '2026-12-31',
+      };
+      (OfferRepository.validateCoupon as jest.Mock).mockResolvedValue({
+        valid: true,
+        coupon,
+        message: 'Coupon applied successfully!',
+      });
+      await renderScreen(<CartScreen />);
+
+      fireEvent.changeText(await screen.findByPlaceholderText('Enter coupon code'), 'save10');
+      fireEvent.press(await screen.findByRole('button', { name: 'Apply' }));
+
+      await waitFor(() =>
+        expect(OfferRepository.validateCoupon).toHaveBeenCalledWith('SAVE10', 500)
+      );
+      expect(setAppliedCoupon).toHaveBeenCalledWith(coupon);
+    });
+
+    it('shows an inline error for an invalid code, without applying it', async () => {
+      mockCart({ enrichedItems: [makeItem()], subtotal: 500 });
+      (OfferRepository.validateCoupon as jest.Mock).mockResolvedValue({
+        valid: false,
+        message: 'Invalid coupon code.',
+      });
+      await renderScreen(<CartScreen />);
+
+      fireEvent.changeText(await screen.findByPlaceholderText('Enter coupon code'), 'BADCODE');
+      fireEvent.press(await screen.findByRole('button', { name: 'Apply' }));
+
+      expect(await screen.findByText('Invalid coupon code.')).toBeTruthy();
+      expect(screen.queryByText('BADCODE applied')).toBeNull();
+    });
   });
 
   it('pressing Proceed to Checkout navigates to CheckoutAddress', async () => {

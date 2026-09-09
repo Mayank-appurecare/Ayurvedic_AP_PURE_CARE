@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View, Pressable } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,10 +11,12 @@ import { PriceDisplay } from '../../components/PriceDisplay';
 import { QuantitySelector } from '../../components/QuantitySelector';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { ConfirmationDialog } from '../../components/ConfirmationDialog';
+import { ConfettiBurst } from '../../components/ConfettiBurst';
 import { EmptyState } from '../../components/EmptyState';
 import { LoadingState } from '../../components/LoadingState';
 import { useCart, EnrichedCartItem } from '../../context/CartContext';
 import { useCheckout } from '../../context/CheckoutContext';
+import { OfferRepository } from '../../repositories/OfferRepository';
 import { radius, shadow, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { formatPrice } from '../../utils/format';
@@ -40,6 +42,10 @@ export function CartScreen() {
   } = useCart();
   const { appliedCoupon, setAppliedCoupon } = useCheckout();
   const [removeTarget, setRemoveTarget] = useState<EnrichedCartItem | null>(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const [justApplied, setJustApplied] = useState(false);
 
   const showBack = navigation.canGoBack();
   const deliveryFee =
@@ -54,6 +60,28 @@ export function CartScreen() {
   const total = Math.max(subtotal - couponDiscount + deliveryFee, 0);
 
   const goShopping = () => navigation.navigate('Main', { screen: 'HomeTab' });
+
+  const handleApplyCouponCode = async () => {
+    const code = couponInput.trim();
+    if (!code) return;
+    setApplyingCoupon(true);
+    setCouponError('');
+    try {
+      const result = await OfferRepository.validateCoupon(code, subtotal);
+      if (result.valid && result.coupon) {
+        setAppliedCoupon(result.coupon);
+        setCouponInput('');
+        // One-shot confetti trigger, cleared after the burst finishes so it
+        // never replays on an unrelated re-render.
+        setJustApplied(true);
+        setTimeout(() => setJustApplied(false), 900);
+      } else {
+        setCouponError(result.message);
+      }
+    } finally {
+      setApplyingCoupon(false);
+    }
+  };
 
   if (!isReady) {
     return (
@@ -179,31 +207,65 @@ export function CartScreen() {
                 value={deliveryFee === 0 ? 'FREE' : formatPrice(deliveryFee)}
                 valueColor={deliveryFee === 0 ? colors.success : colors.textPrimary}
               />
-              <View style={styles.couponRow}>
-                {appliedCoupon ? (
-                  <>
-                    <View style={styles.couponAppliedChip}>
-                      <Ionicons name="pricetag" size={13} color={colors.primary} />
-                      <Text style={styles.couponAppliedText}>{appliedCoupon.code} applied</Text>
-                    </View>
+              {appliedCoupon ? (
+                <View style={styles.couponRow}>
+                  <View style={styles.couponAppliedChip}>
+                    <Ionicons name="pricetag" size={13} color={colors.primary} />
+                    <Text style={styles.couponAppliedText}>{appliedCoupon.code} applied</Text>
+                    {justApplied && <ConfettiBurst />}
+                  </View>
+                  <Pressable
+                    onPress={() => setAppliedCoupon(null)}
+                    hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel="Remove coupon"
+                  >
+                    <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+                  </Pressable>
+                </View>
+              ) : (
+                <View style={styles.couponSection}>
+                  <View style={styles.couponInputRow}>
+                    <TextInput
+                      value={couponInput}
+                      onChangeText={(text) => {
+                        setCouponInput(text.toUpperCase());
+                        if (couponError) setCouponError('');
+                      }}
+                      placeholder="Enter coupon code"
+                      placeholderTextColor={colors.textMuted}
+                      autoCapitalize="characters"
+                      style={styles.couponInput}
+                    />
                     <Pressable
-                      onPress={() => setAppliedCoupon(null)}
-                      hitSlop={8}
+                      onPress={handleApplyCouponCode}
+                      disabled={!couponInput.trim() || applyingCoupon}
+                      style={[
+                        styles.couponApplyBtn,
+                        (!couponInput.trim() || applyingCoupon) && styles.couponApplyBtnDisabled,
+                      ]}
                       accessibilityRole="button"
-                      accessibilityLabel="Remove coupon"
                     >
-                      <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+                      <Text
+                        style={[
+                          styles.couponApplyText,
+                          (!couponInput.trim() || applyingCoupon) && styles.couponApplyTextDisabled,
+                        ]}
+                      >
+                        Apply
+                      </Text>
                     </Pressable>
-                  </>
-                ) : (
+                  </View>
+                  {!!couponError && <Text style={styles.couponErrorText}>{couponError}</Text>}
                   <Pressable
                     onPress={() => navigation.navigate('Offers')}
+                    style={styles.browseOffersBtn}
                     accessibilityRole="button"
                   >
-                    <Text style={styles.linkText}>Apply Coupon</Text>
+                    <Text style={styles.linkText}>View all coupons</Text>
                   </Pressable>
-                )}
-              </View>
+                </View>
+              )}
               {couponDiscount > 0 && (
                 <SummaryRow
                   label="Coupon Discount"
@@ -348,6 +410,31 @@ const createStyles = (colors: AppColors) =>
       borderRadius: radius.sm,
     },
     couponAppliedText: { ...typography.captionMedium, color: colors.primary },
+    couponSection: { paddingVertical: spacing.xxs, gap: spacing.xs },
+    couponInputRow: { flexDirection: 'row', gap: spacing.xs },
+    couponInput: {
+      flex: 1,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: radius.sm,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      backgroundColor: colors.surface,
+      ...typography.body,
+      color: colors.textPrimary,
+    },
+    couponApplyBtn: {
+      paddingHorizontal: spacing.md,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.primary,
+      borderRadius: radius.sm,
+    },
+    couponApplyBtnDisabled: { backgroundColor: colors.surfaceMuted },
+    couponApplyText: { ...typography.captionMedium, color: colors.textOnPrimary },
+    couponApplyTextDisabled: { color: colors.textMuted },
+    couponErrorText: { ...typography.caption, color: colors.danger },
+    browseOffersBtn: { alignSelf: 'flex-start' },
     footer: {
       flexDirection: 'row',
       alignItems: 'center',
