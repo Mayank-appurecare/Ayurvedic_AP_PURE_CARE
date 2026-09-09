@@ -277,23 +277,23 @@ export function CartScreen() {
               <SummaryRow label="Total Amount" value={formatPrice(total)} bold />
             </View>
           )}
+
+          {enrichedItems.length > 0 && (
+            <View style={styles.checkoutCard}>
+              <View>
+                <Text style={styles.footerTotalLabel}>Total</Text>
+                <Text style={styles.footerTotalValue}>{formatPrice(total)}</Text>
+              </View>
+              <PrimaryButton
+                label="Proceed to Checkout"
+                onPress={() => navigation.navigate('CheckoutAddress')}
+                fullWidth={false}
+                style={styles.checkoutBtn}
+              />
+            </View>
+          )}
           <View style={{ height: spacing.xxl }} />
         </ScrollView>
-      )}
-
-      {enrichedItems.length > 0 && (
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.footerTotalLabel}>Total</Text>
-            <Text style={styles.footerTotalValue}>{formatPrice(total)}</Text>
-          </View>
-          <PrimaryButton
-            label="Proceed to Checkout"
-            onPress={() => navigation.navigate('CheckoutAddress')}
-            fullWidth={false}
-            style={styles.checkoutBtn}
-          />
-        </View>
       )}
 
       <ConfirmationDialog
@@ -435,15 +435,14 @@ const createStyles = (colors: AppColors) =>
     couponApplyTextDisabled: { color: colors.textMuted },
     couponErrorText: { ...typography.caption, color: colors.danger },
     browseOffersBtn: { alignSelf: 'flex-start' },
-    footer: {
+    checkoutCard: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: spacing.md,
       backgroundColor: colors.surface,
-      borderTopWidth: 1,
-      borderTopColor: colors.divider,
-      ...shadow.md,
+      borderRadius: radius.lg,
+      ...shadow.sm,
     },
     footerTotalLabel: { ...typography.caption, color: colors.textMuted },
     footerTotalValue: { ...typography.h3, color: colors.textPrimary },
