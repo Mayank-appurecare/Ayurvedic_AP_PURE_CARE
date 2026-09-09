@@ -43,8 +43,11 @@ export function WishlistScreen() {
     });
   }, [wishlistIds]);
 
+  // No 'top' edge: AppHeader already adds its own top safe-area padding
+  // internally, so including it here too doubled up on the WishlistTab and
+  // pushed the header noticeably lower than Cart/Categories' equivalent one.
   return (
-    <SafeAreaView edges={isTabScreen ? ['top'] : ['bottom']} style={styles.container}>
+    <SafeAreaView edges={isTabScreen ? [] : ['bottom']} style={styles.container}>
       <AppHeader title="Wishlist" showBack={showBack} onBackPress={() => navigation.goBack()} />
 
       {loading ? (
