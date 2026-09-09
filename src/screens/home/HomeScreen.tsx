@@ -125,7 +125,7 @@ export function HomeScreen() {
 
   if (loading && !data) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
+      <SafeAreaView edges={['top']} style={styles.safe}>
         <LoadingState label="Loading AP Pure Care..." />
       </SafeAreaView>
     );
@@ -133,14 +133,19 @@ export function HomeScreen() {
 
   if (error || !data) {
     return (
-      <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
+      <SafeAreaView edges={['top']} style={styles.safe}>
         <ErrorState description="We couldn't load the home feed." onRetry={load} />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safe}>
+    // No 'bottom' edge: this screen only ever renders inside the bottom tab
+    // navigator, whose own tab bar already reserves the device's bottom
+    // safe-area inset. Adding it again here left a redundant blank strip
+    // between the content and the tab bar (invisible on web, where that
+    // inset is 0, but visible on a real device).
+    <SafeAreaView edges={['top']} style={styles.safe}>
       <View style={styles.header}>
         <View style={styles.headerTopRow}>
           <View style={styles.brandRow}>

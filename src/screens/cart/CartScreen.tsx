@@ -83,9 +83,15 @@ export function CartScreen() {
     }
   };
 
+  // Reached both as the CartTab (no back button, tab bar visible - its own
+  // tab bar already reserves the bottom safe-area inset) and as a pushed
+  // "Cart" route from elsewhere (back button, no tab bar - needs its own
+  // bottom inset so content isn't hidden behind the system nav bar).
+  const safeAreaEdges = showBack ? (['bottom'] as const) : ([] as const);
+
   if (!isReady) {
     return (
-      <SafeAreaView edges={['bottom']} style={styles.screen}>
+      <SafeAreaView edges={safeAreaEdges} style={styles.screen}>
         <AppHeader title="My Cart" showBack={showBack} onBackPress={() => navigation.goBack()} />
         <LoadingState label="Loading your cart..." />
       </SafeAreaView>
@@ -93,7 +99,7 @@ export function CartScreen() {
   }
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.screen}>
+    <SafeAreaView edges={safeAreaEdges} style={styles.screen}>
       <AppHeader title="My Cart" showBack={showBack} onBackPress={() => navigation.goBack()} />
 
       {enrichedItems.length === 0 && savedForLaterItems.length === 0 ? (
@@ -292,7 +298,6 @@ export function CartScreen() {
               />
             </View>
           )}
-          <View style={{ height: spacing.xxl }} />
         </ScrollView>
       )}
 

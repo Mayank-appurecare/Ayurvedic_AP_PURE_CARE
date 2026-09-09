@@ -75,7 +75,11 @@ export function AccountScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
+    // No 'bottom' edge: this screen only ever renders inside the bottom tab
+    // navigator, whose own tab bar already reserves the device's bottom
+    // safe-area inset — adding it again here left a redundant blank strip
+    // between the content and the tab bar.
+    <SafeAreaView edges={['top']} style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Text style={styles.screenTitle}>My Account</Text>
 

@@ -34,8 +34,12 @@ export function WishlistScreen() {
     });
   }, [wishlistIds]);
 
+  // Reached both as the WishlistTab (no back button, tab bar visible - its
+  // own tab bar already reserves the bottom safe-area inset) and as a pushed
+  // "Wishlist" route from elsewhere (back button, no tab bar - needs its own
+  // bottom inset so content isn't hidden behind the system nav bar).
   return (
-    <SafeAreaView edges={showBack ? ['bottom'] : ['top', 'bottom']} style={styles.container}>
+    <SafeAreaView edges={showBack ? ['bottom'] : ['top']} style={styles.container}>
       <AppHeader title="Wishlist" showBack={showBack} onBackPress={() => navigation.goBack()} />
 
       {loading ? (

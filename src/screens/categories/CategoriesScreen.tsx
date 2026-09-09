@@ -60,7 +60,11 @@ export function CategoriesScreen() {
   const listPadding = width < 380 ? spacing.sm : spacing.md;
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safe}>
+    // No 'bottom' edge: this screen only ever renders inside the bottom tab
+    // navigator, whose own tab bar already reserves the device's bottom
+    // safe-area inset — adding it again here left a redundant blank strip
+    // between the content and the tab bar.
+    <SafeAreaView edges={[]} style={styles.safe}>
       <AppHeader title="Categories" showBack onBackPress={() => navigation.navigate('HomeTab')} />
       {loading ? (
         <LoadingState label="Loading categories..." />
