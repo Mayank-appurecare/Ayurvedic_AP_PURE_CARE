@@ -83,11 +83,16 @@ export function CartScreen() {
     }
   };
 
-  // Reached both as the CartTab (no back button, tab bar visible - its own
-  // tab bar already reserves the bottom safe-area inset) and as a pushed
-  // "Cart" route from elsewhere (back button, no tab bar - needs its own
-  // bottom inset so content isn't hidden behind the system nav bar).
-  const safeAreaEdges = showBack ? (['bottom'] as const) : ([] as const);
+  // Reached both as the CartTab (tab bar visible below - its own tab bar
+  // already reserves the bottom safe-area inset) and as a pushed "Cart"
+  // route from elsewhere (no tab bar - needs its own bottom inset so content
+  // isn't hidden behind the system nav bar). canGoBack() can't tell these
+  // apart: the tab bar's default backBehavior keeps tab-switch history, so
+  // it's still true on the CartTab once another tab has been visited.
+  // getState().type is the reliable signal - 'tab' only for the nested
+  // Tab.Screen instance, never for the standalone stack route.
+  const isTabScreen = (navigation.getState() as { type?: string } | undefined)?.type === 'tab';
+  const safeAreaEdges = isTabScreen ? ([] as const) : (['bottom'] as const);
 
   if (!isReady) {
     return (

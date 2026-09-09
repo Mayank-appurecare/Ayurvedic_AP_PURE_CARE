@@ -17,8 +17,14 @@ jest.mock('../../../repositories/OfferRepository', () => ({
 }));
 
 const mockNavigate = jest.fn();
+let mockNavigatorType = 'tab';
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({ navigate: mockNavigate, goBack: jest.fn(), canGoBack: () => false }),
+  useNavigation: () => ({
+    navigate: mockNavigate,
+    goBack: jest.fn(),
+    canGoBack: () => false,
+    getState: () => ({ type: mockNavigatorType }),
+  }),
 }));
 
 function makeItem(overrides: Partial<EnrichedCartItem> = {}): EnrichedCartItem {
@@ -60,6 +66,7 @@ function mockCheckout(overrides: Partial<ReturnType<typeof useCheckout>> = {}) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockNavigatorType = 'tab';
   mockCart();
   mockCheckout();
 });

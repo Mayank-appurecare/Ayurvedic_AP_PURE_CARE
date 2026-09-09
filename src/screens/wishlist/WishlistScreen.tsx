@@ -24,6 +24,15 @@ export function WishlistScreen() {
   const { width } = useWindowDimensions();
 
   const showBack = navigation.canGoBack();
+  // Reached both as the WishlistTab (tab bar visible below - its own tab bar
+  // already reserves the bottom safe-area inset) and as a pushed "Wishlist"
+  // route from elsewhere (no tab bar - needs its own bottom inset so content
+  // isn't hidden behind the system nav bar). canGoBack() can't tell these
+  // apart: the tab bar's default backBehavior keeps tab-switch history, so
+  // it's still true on the WishlistTab once another tab has been visited.
+  // getState().type is the reliable signal - 'tab' only for the nested
+  // Tab.Screen instance, never for the standalone stack route.
+  const isTabScreen = (navigation.getState() as { type?: string } | undefined)?.type === 'tab';
   const numColumns = width >= 768 ? 4 : width >= 480 ? 3 : 2;
 
   useEffect(() => {
@@ -34,12 +43,8 @@ export function WishlistScreen() {
     });
   }, [wishlistIds]);
 
-  // Reached both as the WishlistTab (no back button, tab bar visible - its
-  // own tab bar already reserves the bottom safe-area inset) and as a pushed
-  // "Wishlist" route from elsewhere (back button, no tab bar - needs its own
-  // bottom inset so content isn't hidden behind the system nav bar).
   return (
-    <SafeAreaView edges={showBack ? ['bottom'] : ['top']} style={styles.container}>
+    <SafeAreaView edges={isTabScreen ? ['top'] : ['bottom']} style={styles.container}>
       <AppHeader title="Wishlist" showBack={showBack} onBackPress={() => navigation.goBack()} />
 
       {loading ? (

@@ -16,11 +16,13 @@ jest.mock('../../../repositories/ProductRepository', () => ({
 const mockNavigate = jest.fn();
 const mockGoBack = jest.fn();
 let mockCanGoBack = false;
+let mockNavigatorType = 'tab';
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockNavigate,
     goBack: mockGoBack,
     canGoBack: () => mockCanGoBack,
+    getState: () => ({ type: mockNavigatorType }),
   }),
 }));
 
@@ -36,6 +38,7 @@ function mockWishlist(wishlistIds: string[] = []) {
 beforeEach(() => {
   jest.clearAllMocks();
   mockCanGoBack = false;
+  mockNavigatorType = 'tab';
   mockWishlist([]);
   (useCart as jest.Mock).mockReturnValue({
     addToCart: jest.fn(),
