@@ -10,8 +10,9 @@ jest.mock('../../../context/AuthContext', () => ({
 }));
 
 const mockNavigate = jest.fn();
+const mockGoBack = jest.fn();
 jest.mock('@react-navigation/native', () => ({
-  useNavigation: () => ({ navigate: mockNavigate }),
+  useNavigation: () => ({ navigate: mockNavigate, goBack: mockGoBack }),
 }));
 
 function mockAuth(overrides: Partial<ReturnType<typeof useAuth>> = {}) {
@@ -33,6 +34,17 @@ beforeEach(() => {
 });
 
 describe('LoginScreen', () => {
+  // Reached by pushing from Welcome, Account and Register, so a customer who
+  // changes their mind needs a way out. Android's hardware back covers this;
+  // iOS and web have nothing without the button.
+  it('goes back when the header back button is pressed', async () => {
+    await renderScreen(<LoginScreen />);
+
+    fireEvent.press(await screen.findByLabelText('Go back'));
+
+    expect(mockGoBack).toHaveBeenCalled();
+  });
+
   it('strips non-digits and caps input at 10 digits as the user types', async () => {
     await renderScreen(<LoginScreen />);
     const input = await typeMobile('abc98765432109xyz');
