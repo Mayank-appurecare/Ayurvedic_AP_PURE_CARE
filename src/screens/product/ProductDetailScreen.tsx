@@ -552,7 +552,10 @@ const createStyles = (colors: AppColors) =>
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: 'rgba(255,255,255,0.9)',
+      // Was a hardcoded white — invisible in dark mode, where the icon inside
+      // (colors.textPrimary) also turns light. colors.surface is always the
+      // correctly-contrasting pair for it in both themes.
+      backgroundColor: colors.surface,
       alignItems: 'center',
       justifyContent: 'center',
       ...shadow.sm,
