@@ -88,6 +88,15 @@ describe('AuthContext session restore on mount', () => {
     expect(result.current.user).toEqual(USER);
     expect(result.current.accessToken).toBe('stored-token');
   });
+
+  it('still settles to a signed-out state if reading the stored session fails', async () => {
+    (AsyncStorage.getItem as jest.Mock).mockRejectedValue(new Error('storage unavailable'));
+
+    const { result } = await renderReadyAuth();
+
+    expect(result.current.user).toBeNull();
+    expect(result.current.accessToken).toBeNull();
+  });
 });
 
 describe('AuthContext OTP flow', () => {

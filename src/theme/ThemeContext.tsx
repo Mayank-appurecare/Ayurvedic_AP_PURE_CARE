@@ -25,6 +25,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
         if (stored === 'dark') setIsDarkState(true);
+      } catch {
+        // Corrupt or unavailable storage: keep the light-theme default.
       } finally {
         setIsThemeReady(true);
       }

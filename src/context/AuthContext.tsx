@@ -58,6 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ]);
         if (rawUser) setUser(JSON.parse(rawUser));
         if (rawToken) setAccessToken(rawToken);
+      } catch {
+        // Corrupt or unavailable storage: fall back to a signed-out session.
       } finally {
         setIsLoading(false);
       }
