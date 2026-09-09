@@ -1,5 +1,7 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { screen, fireEvent, waitFor } from '@testing-library/react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { WriteReviewScreen } from '../WriteReviewScreen';
 import { renderScreen } from '../../../test-utils/renderScreen';
 import { ReviewRepository } from '../../../repositories/ReviewRepository';
@@ -13,6 +15,10 @@ jest.mock('../../../repositories/ReviewRepository', () => ({
 }));
 jest.mock('../../../context/AuthContext', () => ({
   useAuth: jest.fn(),
+}));
+jest.mock('expo-image-picker', () => ({
+  requestMediaLibraryPermissionsAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
 }));
 
 const mockGoBack = jest.fn();
@@ -32,6 +38,13 @@ async function typeReviewText(text: string) {
   fireEvent.changeText(await screen.findByPlaceholderText(TEXT_PLACEHOLDER), text);
 }
 
+function mockPickedPhoto(uri: string) {
+  (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValueOnce({
+    canceled: false,
+    assets: [{ uri }],
+  });
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
   mockAuth({
@@ -42,6 +55,10 @@ beforeEach(() => {
     isGuest: false,
   });
   (ReviewRepository.addReview as jest.Mock).mockResolvedValue({});
+  (ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock).mockResolvedValue({
+    granted: true,
+  });
+  jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 });
 
 describe('WriteReviewScreen', () => {
@@ -167,4 +184,86 @@ describe('WriteReviewScreen', () => {
     );
     await waitFor(() => expect(mockGoBack).toHaveBeenCalled(), { timeout: 2000 });
   }, 10000);
+
+  describe('attaching photos', () => {
+    it('adds a picked photo as a thumbnail with a remove button', async () => {
+      mockPickedPhoto('file://photo-1.jpg');
+      await renderScreen(<WriteReviewScreen />);
+
+      expect(screen.queryByLabelText('Remove photo 1')).toBeNull();
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+
+      expect(await screen.findByLabelText('Remove photo 1')).toBeTruthy();
+    });
+
+    it('shows a permission alert and adds nothing when photo access is denied', async () => {
+      (ImagePicker.requestMediaLibraryPermissionsAsync as jest.Mock).mockResolvedValue({
+        granted: false,
+      });
+
+      await renderScreen(<WriteReviewScreen />);
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+
+      await waitFor(() => expect(Alert.alert).toHaveBeenCalled());
+      expect(ImagePicker.launchImageLibraryAsync).not.toHaveBeenCalled();
+      expect(screen.queryByLabelText('Remove photo 1')).toBeNull();
+    });
+
+    it('adds nothing when the user cancels the picker', async () => {
+      (ImagePicker.launchImageLibraryAsync as jest.Mock).mockResolvedValueOnce({
+        canceled: true,
+        assets: null,
+      });
+
+      await renderScreen(<WriteReviewScreen />);
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+
+      expect(screen.queryByLabelText('Remove photo 1')).toBeNull();
+      expect(await screen.findByLabelText('Add photo')).toBeTruthy();
+    });
+
+    it('hides the Add photo button once the 3-photo cap is reached', async () => {
+      mockPickedPhoto('file://photo-1.jpg');
+      mockPickedPhoto('file://photo-2.jpg');
+      mockPickedPhoto('file://photo-3.jpg');
+      await renderScreen(<WriteReviewScreen />);
+
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+
+      expect(await screen.findByLabelText('Remove photo 3')).toBeTruthy();
+      expect(screen.queryByLabelText('Add photo')).toBeNull();
+    });
+
+    it('removing a photo brings back the Add photo button', async () => {
+      mockPickedPhoto('file://photo-1.jpg');
+      await renderScreen(<WriteReviewScreen />);
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+      await screen.findByLabelText('Remove photo 1');
+
+      await fireEvent.press(await screen.findByLabelText('Remove photo 1'));
+
+      expect(screen.queryByLabelText('Remove photo 1')).toBeNull();
+      expect(await screen.findByLabelText('Add photo')).toBeTruthy();
+    });
+
+    it('submits the review with the picked photo URIs', async () => {
+      mockPickedPhoto('file://photo-1.jpg');
+      await renderScreen(<WriteReviewScreen />);
+      await fireEvent.press(await screen.findByLabelText('Add photo'));
+      await screen.findByLabelText('Remove photo 1');
+
+      fireEvent.press(await screen.findByLabelText('Rate 5 stars'));
+      await typeReviewText('Loved the packaging and the product both.');
+      fireEvent.press(await screen.findByRole('button', { name: 'Submit Review' }));
+
+      await waitFor(() =>
+        expect(ReviewRepository.addReview).toHaveBeenCalledWith(
+          expect.objectContaining({ images: ['file://photo-1.jpg'] })
+        )
+      );
+      await waitFor(() => expect(mockGoBack).toHaveBeenCalled(), { timeout: 2000 });
+    }, 10000);
+  });
 });

@@ -31,7 +31,13 @@
       "expo-font",
       "@sentry/react-native",
       "./plugins/withDetoxAndroid",
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "AP Pure Care needs access to your photos so you can attach them to a product review."
+        }
+      ]
     ]
   }
 }
