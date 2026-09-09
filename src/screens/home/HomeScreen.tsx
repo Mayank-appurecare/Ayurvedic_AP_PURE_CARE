@@ -170,7 +170,7 @@ export function HomeScreen() {
               accessibilityRole="button"
               accessibilityLabel="Open cart"
             >
-              <Ionicons name="bag-outline" size={24} color={colors.textPrimary} />
+              <Ionicons name="cart-outline" size={24} color={colors.textPrimary} />
               {cartCount > 0 && (
                 <View style={styles.cartBadge}>
                   <Text style={styles.cartBadgeText}>{cartCount > 9 ? '9+' : cartCount}</Text>
