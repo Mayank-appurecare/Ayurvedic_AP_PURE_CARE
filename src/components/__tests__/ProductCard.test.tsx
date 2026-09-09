@@ -106,6 +106,26 @@ describe('ProductCard', () => {
     expect(updateQuantity).toHaveBeenCalledWith('p1', 'v1', 2);
   });
 
+  /**
+   * The card has no separate remove button, so the minus has to stay usable at
+   * a quantity of one — otherwise the only way to take the item out is to open
+   * the cart screen. QuantitySelector's default min of 1 disabled it, and the
+   * decrement test above passes either way because it starts from 3.
+   */
+  it('removes the last unit from the card instead of requiring the cart screen', async () => {
+    const updateQuantity = jest.fn();
+    mockCart({ updateQuantity, quantityOf: jest.fn().mockReturnValue(1) });
+    await renderScreen(<ProductCard product={PRODUCT} onPress={mockOnPress} />);
+
+    const decreaseButton = await screen.findByLabelText('Decrease quantity');
+    expect(decreaseButton.props.accessibilityState?.disabled).not.toBe(true);
+
+    fireEvent.press(decreaseButton);
+
+    // updateQuantity treats 0 as a removal.
+    expect(updateQuantity).toHaveBeenCalledWith('p1', 'v1', 0);
+  });
+
   it('caps the stepper at the product stock', async () => {
     mockCart({ quantityOf: jest.fn().mockReturnValue(50) });
     await renderScreen(<ProductCard product={PRODUCT} onPress={mockOnPress} />);
