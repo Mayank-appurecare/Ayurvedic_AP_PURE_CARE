@@ -19,9 +19,12 @@ export function ReviewCard({
   const [marked, setMarked] = useState(false);
 
   const handleHelpful = () => {
-    if (marked) return;
-    setMarked(true);
-    onHelpful?.(review.id);
+    const next = !marked;
+    setMarked(next);
+    // markHelpful is a one-way increment on the backend (there's no
+    // "unmark" endpoint) — only report the vote forward. Un-marking is a
+    // local undo of this button's own display, not a real vote retraction.
+    if (next) onHelpful?.(review.id);
   };
 
   return (
