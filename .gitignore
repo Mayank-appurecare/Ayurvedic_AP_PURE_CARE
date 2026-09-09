@@ -7,6 +7,9 @@ node_modules/
 .expo/
 dist/
 web-build/
+
+# test coverage output
+coverage/
 expo-env.d.ts
 
 # Native
