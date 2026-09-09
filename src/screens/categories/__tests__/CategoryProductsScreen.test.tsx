@@ -128,7 +128,9 @@ beforeEach(() => {
   mockRouteParams = { categoryId: '1', categoryName: 'Digestive Care' };
   (useCart as jest.Mock).mockReturnValue({
     addToCart: jest.fn(),
+    updateQuantity: jest.fn(),
     isInCart: jest.fn().mockReturnValue(false),
+    quantityOf: jest.fn().mockReturnValue(0),
   });
   (useWishlist as jest.Mock).mockReturnValue({
     isWishlisted: jest.fn().mockReturnValue(false),

@@ -25,6 +25,7 @@ interface CartContextValue {
   moveToCart: (productId: string, variantId: string) => void;
   clearCart: () => void;
   isInCart: (productId: string) => boolean;
+  quantityOf: (productId: string, variantId: string) => number;
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
@@ -125,6 +126,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const isInCart = (productId: string) =>
     items.some((i) => i.productId === productId && !i.savedForLater);
 
+  const quantityOf = (productId: string, variantId: string) =>
+    items.find((i) => i.productId === productId && i.variantId === variantId && !i.savedForLater)
+      ?.quantity ?? 0;
+
   const value: CartContextValue = {
     items,
     enrichedItems,
@@ -141,6 +146,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     moveToCart,
     clearCart,
     isInCart,
+    quantityOf,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

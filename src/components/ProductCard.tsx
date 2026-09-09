@@ -8,6 +8,7 @@ import { useTheme, AppColors } from '../theme/ThemeContext';
 import { RatingStars } from './RatingStars';
 import { PriceDisplay } from './PriceDisplay';
 import { DiscountBadge } from './DiscountBadge';
+import { QuantitySelector } from './QuantitySelector';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 
@@ -21,9 +22,10 @@ export function ProductCard({ product, onPress, style }: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const { isWishlisted, toggleWishlist } = useWishlist();
-  const { addToCart, isInCart } = useCart();
+  const { addToCart, updateQuantity, quantityOf } = useCart();
   const wishlisted = isWishlisted(product.id);
-  const inCart = isInCart(product.id);
+  const variantId = product.variants[0]?.id;
+  const quantity = variantId ? quantityOf(product.id, variantId) : 0;
   const outOfStock = product.stock <= 0;
 
   return (
@@ -80,32 +82,36 @@ export function ProductCard({ product, onPress, style }: Props) {
         <RatingStars rating={product.rating} size={11} reviewCount={product.reviewCount} />
         <PriceDisplay price={product.price} mrp={product.mrp} size="sm" />
       </View>
-      <Pressable
-        onPress={(e) => {
-          e.stopPropagation();
-          // Guard the index: a product with no variants would otherwise throw.
-          const variantId = product.variants[0]?.id;
-          if (variantId) addToCart(product.id, variantId);
-        }}
-        disabled={outOfStock}
-        style={[styles.addBtn, outOfStock && styles.addBtnDisabled, inCart && styles.addBtnActive]}
-        accessibilityRole="button"
-      >
-        <Ionicons
-          name={inCart ? 'checkmark' : 'add'}
-          size={16}
-          color={outOfStock ? colors.textMuted : inCart ? colors.textOnPrimary : colors.primary}
-        />
-        <Text
-          style={[
-            styles.addBtnText,
-            outOfStock && styles.addBtnTextDisabled,
-            inCart && styles.addBtnTextActive,
-          ]}
+      {quantity > 0 ? (
+        // Wrapping Pressable exists only to stop the tap from also
+        // triggering the card's own onPress (navigate to product detail) —
+        // ProductCard already relies on this same stopPropagation idiom for
+        // the wishlist button above.
+        <Pressable onPress={(e) => e.stopPropagation()} style={styles.qtyStepperWrap}>
+          <QuantitySelector
+            quantity={quantity}
+            onIncrease={() => variantId && updateQuantity(product.id, variantId, quantity + 1)}
+            onDecrease={() => variantId && updateQuantity(product.id, variantId, quantity - 1)}
+            max={product.stock}
+            size="sm"
+          />
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            if (variantId) addToCart(product.id, variantId);
+          }}
+          disabled={outOfStock}
+          style={[styles.addBtn, outOfStock && styles.addBtnDisabled]}
+          accessibilityRole="button"
         >
-          {outOfStock ? 'Notify Me' : inCart ? 'Added' : 'Add'}
-        </Text>
-      </Pressable>
+          <Ionicons name="add" size={16} color={outOfStock ? colors.textMuted : colors.primary} />
+          <Text style={[styles.addBtnText, outOfStock && styles.addBtnTextDisabled]}>
+            {outOfStock ? 'Notify Me' : 'Add'}
+          </Text>
+        </Pressable>
+      )}
     </Pressable>
   );
 }
@@ -161,8 +167,11 @@ const createStyles = (colors: AppColors) =>
       borderColor: colors.primary,
     },
     addBtnDisabled: { borderColor: colors.border },
-    addBtnActive: { backgroundColor: colors.primary },
     addBtnText: { ...typography.captionMedium, color: colors.primary },
     addBtnTextDisabled: { color: colors.textMuted },
-    addBtnTextActive: { color: colors.textOnPrimary },
+    qtyStepperWrap: {
+      margin: spacing.sm,
+      marginTop: 0,
+      alignItems: 'center',
+    },
   });

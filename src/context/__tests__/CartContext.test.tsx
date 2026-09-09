@@ -148,4 +148,25 @@ describe('CartContext money math', () => {
     await act(() => result.current.saveForLater('p1', 'v1'));
     expect(result.current.isInCart('p1')).toBe(false);
   });
+
+  it('quantityOf reports the live quantity for a productId+variantId pair, 0 when absent', async () => {
+    const { result } = await renderReadyCart();
+
+    expect(result.current.quantityOf('p1', 'v1')).toBe(0);
+
+    await act(() => result.current.addToCart('p1', 'v1', 2));
+    expect(result.current.quantityOf('p1', 'v1')).toBe(2);
+
+    await act(() => result.current.updateQuantity('p1', 'v1', 5));
+    expect(result.current.quantityOf('p1', 'v1')).toBe(5);
+  });
+
+  it('quantityOf ignores a saved-for-later line for that product+variant', async () => {
+    const { result } = await renderReadyCart();
+
+    await act(() => result.current.addToCart('p1', 'v1', 3));
+    await act(() => result.current.saveForLater('p1', 'v1'));
+
+    expect(result.current.quantityOf('p1', 'v1')).toBe(0);
+  });
 });

@@ -71,7 +71,9 @@ beforeEach(() => {
   (useCart as jest.Mock).mockReturnValue({
     cartCount: 0,
     addToCart: jest.fn(),
+    updateQuantity: jest.fn(),
     isInCart: jest.fn().mockReturnValue(false),
+    quantityOf: jest.fn().mockReturnValue(0),
   });
   (useWishlist as jest.Mock).mockReturnValue({
     isWishlisted: jest.fn().mockReturnValue(false),
