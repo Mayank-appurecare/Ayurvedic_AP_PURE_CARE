@@ -29,6 +29,7 @@ export function CheckoutPaymentScreen() {
   } = useCheckout();
   const { enrichedItems, subtotal, clearCart } = useCart();
   const [placing, setPlacing] = useState(false);
+  const [placeOrderError, setPlaceOrderError] = useState<string | null>(null);
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
@@ -81,6 +82,7 @@ export function CheckoutPaymentScreen() {
     if (!selectedMethod || !selectedAddress) return;
     if (selectedMethod.type === 'card' && !validateCard()) return;
     setPlacing(true);
+    setPlaceOrderError(null);
     try {
       const orderItems: OrderItem[] = enrichedItems.map((item) => ({
         productId: item.productId,
@@ -105,6 +107,8 @@ export function CheckoutPaymentScreen() {
         index: 0,
         routes: [{ name: 'OrderConfirmation', params: { orderId: newOrder.id } }],
       });
+    } catch {
+      setPlaceOrderError('Payment could not be processed. Please try again.');
     } finally {
       setPlacing(false);
     }
@@ -112,7 +116,7 @@ export function CheckoutPaymentScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.screen}>
-      <AppHeader title="Payment" showBack onBackPress={() => navigation.goBack()} />
+      <AppHeader title="Payment" showBack={!placing} onBackPress={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.sectionTitle}>Choose Payment Method</Text>
         <View style={styles.list}>
@@ -230,6 +234,7 @@ export function CheckoutPaymentScreen() {
         <View style={{ height: spacing.xxl }} />
       </ScrollView>
       <View style={styles.footer}>
+        {!!placeOrderError && <Text style={styles.placeOrderErrorText}>{placeOrderError}</Text>}
         <PrimaryButton
           label={`Place Order · ${formatPrice(total)}`}
           disabled={!selectedMethod}
@@ -332,5 +337,11 @@ const createStyles = (colors: AppColors) =>
       backgroundColor: colors.surface,
       borderTopWidth: 1,
       borderTopColor: colors.divider,
+    },
+    placeOrderErrorText: {
+      ...typography.caption,
+      color: colors.danger,
+      textAlign: 'center',
+      marginBottom: spacing.xs,
     },
   });

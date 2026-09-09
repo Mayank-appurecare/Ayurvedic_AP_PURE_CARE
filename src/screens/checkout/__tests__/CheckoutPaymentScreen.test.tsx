@@ -142,6 +142,64 @@ describe('CheckoutPaymentScreen', () => {
     await waitFor(() => expect(OrderRepository.placeOrder).not.toHaveBeenCalled());
   });
 
+  describe('order placement failure and cancellation', () => {
+    it('hides the back button while the order is being placed, so it cannot be cancelled mid-flight', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-upi' });
+      let resolvePlaceOrder: (order: { id: string }) => void = () => {};
+      (OrderRepository.placeOrder as jest.Mock).mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolvePlaceOrder = resolve;
+          })
+      );
+
+      await renderScreen(<CheckoutPaymentScreen />);
+      expect(await screen.findByLabelText('Go back')).toBeTruthy();
+
+      const button = await screen.findByRole('button', { name: /Place Order/ });
+      fireEvent.press(button); // placeOrder never resolves yet, so don't await this press
+
+      await waitFor(() => expect(screen.queryByLabelText('Go back')).toBeNull());
+
+      resolvePlaceOrder({ id: 'ord-123' });
+      await waitFor(() => expect(mockReset).toHaveBeenCalled());
+    });
+
+    it('shows an error and does not navigate or clear the cart when placing the order fails', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-upi' });
+      const clearCart = jest.fn();
+      mockCart({ clearCart });
+      (OrderRepository.placeOrder as jest.Mock).mockRejectedValueOnce(new Error('network down'));
+
+      await renderScreen(<CheckoutPaymentScreen />);
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+
+      expect(
+        await screen.findByText('Payment could not be processed. Please try again.')
+      ).toBeTruthy();
+      expect(clearCart).not.toHaveBeenCalled();
+      expect(mockReset).not.toHaveBeenCalled();
+      expect(await screen.findByLabelText('Go back')).toBeTruthy();
+    });
+
+    it('clears the error and succeeds on a retry after a failed attempt', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-upi' });
+      (OrderRepository.placeOrder as jest.Mock)
+        .mockRejectedValueOnce(new Error('network down'))
+        .mockResolvedValueOnce({ id: 'ord-123' });
+
+      await renderScreen(<CheckoutPaymentScreen />);
+      const button = await screen.findByRole('button', { name: /Place Order/ });
+      await fireEvent.press(button);
+      await screen.findByText('Payment could not be processed. Please try again.');
+
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+
+      await waitFor(() => expect(mockReset).toHaveBeenCalled());
+      expect(screen.queryByText('Payment could not be processed. Please try again.')).toBeNull();
+    });
+  });
+
   describe('card payment validation', () => {
     it('blocks the order and shows errors when the card fields are left empty', async () => {
       mockCheckout({ selectedPaymentMethodId: 'pay-card' });
