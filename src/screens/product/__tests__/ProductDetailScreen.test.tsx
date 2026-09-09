@@ -330,4 +330,19 @@ describe('ProductDetailScreen', () => {
     expect(screen.queryByText('A calming daily tonic.')).toBeNull();
     expect(await screen.findByText('Supports digestion')).toBeTruthy();
   });
+
+  it('hides Description/Benefits/Ingredients/How to Use/Product Information entirely when the catalog sent none of it', async () => {
+    // The default makeProduct() fixture carries none of this — matches what
+    // real catalog products look like today (no benefits/howToUse/faqs field
+    // exists on the API at all, and this one has no description/ingredients
+    // /productInfo either).
+    await renderScreen(<ProductDetailScreen />);
+    await screen.findByText('Ashwagandha Churna');
+
+    expect(screen.queryByRole('button', { name: 'Description' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Benefits' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Ingredients' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'How to Use' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Product Information' })).toBeNull();
+  });
 });

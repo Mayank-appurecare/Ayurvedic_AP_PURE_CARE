@@ -290,50 +290,60 @@ export function ProductDetailScreen() {
           </View>
         </View>
 
-        <InfoSection title="Description" collapsible>
-          <Text style={styles.paragraph}>{product.description}</Text>
-        </InfoSection>
+        {!!product.description && (
+          <InfoSection title="Description" collapsible>
+            <Text style={styles.paragraph}>{product.description}</Text>
+          </InfoSection>
+        )}
 
-        <InfoSection title="Benefits" collapsible>
-          {product.benefits.map((benefit, index) => (
-            <View key={index} style={styles.bulletRow}>
-              <Ionicons name="leaf" size={14} color={colors.primary} style={styles.bulletIcon} />
-              <Text style={styles.bulletText}>{benefit}</Text>
-            </View>
-          ))}
-        </InfoSection>
+        {product.benefits.length > 0 && (
+          <InfoSection title="Benefits" collapsible>
+            {product.benefits.map((benefit, index) => (
+              <View key={index} style={styles.bulletRow}>
+                <Ionicons name="leaf" size={14} color={colors.primary} style={styles.bulletIcon} />
+                <Text style={styles.bulletText}>{benefit}</Text>
+              </View>
+            ))}
+          </InfoSection>
+        )}
 
-        <InfoSection title="Ingredients" collapsible>
-          {product.ingredients.map((ingredient, index) => (
-            <View key={index} style={styles.bulletRow}>
-              <Ionicons
-                name="flask-outline"
-                size={14}
-                color={colors.primary}
-                style={styles.bulletIcon}
-              />
-              <Text style={styles.bulletText}>{ingredient}</Text>
-            </View>
-          ))}
-        </InfoSection>
+        {product.ingredients.length > 0 && (
+          <InfoSection title="Ingredients" collapsible>
+            {product.ingredients.map((ingredient, index) => (
+              <View key={index} style={styles.bulletRow}>
+                <Ionicons
+                  name="flask-outline"
+                  size={14}
+                  color={colors.primary}
+                  style={styles.bulletIcon}
+                />
+                <Text style={styles.bulletText}>{ingredient}</Text>
+              </View>
+            ))}
+          </InfoSection>
+        )}
 
-        <InfoSection title="How to Use" collapsible>
-          {product.howToUse.map((step, index) => (
-            <View key={index} style={styles.bulletRow}>
-              <Text style={styles.stepNumber}>{index + 1}.</Text>
-              <Text style={styles.bulletText}>{step}</Text>
-            </View>
-          ))}
-        </InfoSection>
+        {product.howToUse.length > 0 && (
+          <InfoSection title="How to Use" collapsible>
+            {product.howToUse.map((step, index) => (
+              <View key={index} style={styles.bulletRow}>
+                <Text style={styles.stepNumber}>{index + 1}.</Text>
+                <Text style={styles.bulletText}>{step}</Text>
+              </View>
+            ))}
+          </InfoSection>
+        )}
 
-        <InfoSection title="Product Information" collapsible>
-          {product.productInfo.map((row, index) => (
-            <View key={index} style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{row.label}</Text>
-              <Text style={styles.infoValue}>{row.value}</Text>
-            </View>
-          ))}
-        </InfoSection>
+        {product.productInfo.length > 0 && (
+          <InfoSection title="Product Information" collapsible>
+            {product.productInfo.map((row, index) => (
+              <View key={index} style={styles.infoRow}>
+                <Text style={styles.infoLabel}>{row.label}</Text>
+                <Text style={styles.infoValue}>{row.value}</Text>
+              </View>
+            ))}
+          </InfoSection>
+        )}
 
         {product.faqs.length > 0 && (
           <InfoSection title="Frequently Asked Questions">
