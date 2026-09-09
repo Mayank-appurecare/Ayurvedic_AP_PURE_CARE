@@ -88,10 +88,16 @@ export function ProductCard({ product, onPress, style }: Props) {
         // ProductCard already relies on this same stopPropagation idiom for
         // the wishlist button above.
         <Pressable onPress={(e) => e.stopPropagation()} style={styles.qtyStepperWrap}>
+          {/* min={0} keeps the minus enabled at a quantity of one, so the last
+              unit can be taken out of the cart from here. The default min of 1
+              disabled it, and this card has no separate remove button — unlike
+              the cart screen — so the item could only be removed by opening the
+              cart. updateQuantity treats 0 as a removal. */}
           <QuantitySelector
             quantity={quantity}
             onIncrease={() => variantId && updateQuantity(product.id, variantId, quantity + 1)}
             onDecrease={() => variantId && updateQuantity(product.id, variantId, quantity - 1)}
+            min={0}
             max={product.stock}
             size="sm"
           />
