@@ -302,4 +302,32 @@ describe('ProductDetailScreen', () => {
     expect(mockAddToCart).toHaveBeenNthCalledWith(3, 'fbt2', 'fbt2-v1', 1);
     expect(mockAddToCart).toHaveBeenCalledTimes(3);
   });
+
+  it('Description starts expanded, and its header collapses/re-expands it', async () => {
+    mockRepos({ product: makeProduct({ description: 'A calming daily tonic.' }) });
+    await renderScreen(<ProductDetailScreen />);
+    expect(await screen.findByText('A calming daily tonic.')).toBeTruthy();
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Description' }));
+    expect(screen.queryByText('A calming daily tonic.')).toBeNull();
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Description' }));
+    expect(await screen.findByText('A calming daily tonic.')).toBeTruthy();
+  });
+
+  it('collapsing one section leaves a sibling section unaffected', async () => {
+    mockRepos({
+      product: makeProduct({
+        description: 'A calming daily tonic.',
+        benefits: ['Supports digestion'],
+      }),
+    });
+    await renderScreen(<ProductDetailScreen />);
+    await screen.findByText('A calming daily tonic.');
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Description' }));
+
+    expect(screen.queryByText('A calming daily tonic.')).toBeNull();
+    expect(await screen.findByText('Supports digestion')).toBeTruthy();
+  });
 });

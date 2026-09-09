@@ -290,11 +290,11 @@ export function ProductDetailScreen() {
           </View>
         </View>
 
-        <InfoSection title="Description">
+        <InfoSection title="Description" collapsible>
           <Text style={styles.paragraph}>{product.description}</Text>
         </InfoSection>
 
-        <InfoSection title="Benefits">
+        <InfoSection title="Benefits" collapsible>
           {product.benefits.map((benefit, index) => (
             <View key={index} style={styles.bulletRow}>
               <Ionicons name="leaf" size={14} color={colors.primary} style={styles.bulletIcon} />
@@ -303,7 +303,7 @@ export function ProductDetailScreen() {
           ))}
         </InfoSection>
 
-        <InfoSection title="Ingredients">
+        <InfoSection title="Ingredients" collapsible>
           {product.ingredients.map((ingredient, index) => (
             <View key={index} style={styles.bulletRow}>
               <Ionicons
@@ -317,7 +317,7 @@ export function ProductDetailScreen() {
           ))}
         </InfoSection>
 
-        <InfoSection title="How to Use">
+        <InfoSection title="How to Use" collapsible>
           {product.howToUse.map((step, index) => (
             <View key={index} style={styles.bulletRow}>
               <Text style={styles.stepNumber}>{index + 1}.</Text>
@@ -326,7 +326,7 @@ export function ProductDetailScreen() {
           ))}
         </InfoSection>
 
-        <InfoSection title="Product Information">
+        <InfoSection title="Product Information" collapsible>
           {product.productInfo.map((row, index) => (
             <View key={index} style={styles.infoRow}>
               <Text style={styles.infoLabel}>{row.label}</Text>
@@ -500,13 +500,45 @@ function TopBar({
   );
 }
 
-function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
+function InfoSection({
+  title,
+  collapsible,
+  children,
+}: {
+  title: string;
+  collapsible?: boolean;
+  children: React.ReactNode;
+}) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const [expanded, setExpanded] = useState(true);
+
+  if (!collapsible) {
+    return (
+      <View style={styles.cardSection}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {children}
+      </View>
+    );
+  }
+
   return (
     <View style={styles.cardSection}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {children}
+      <Pressable
+        onPress={() => setExpanded((e) => !e)}
+        style={styles.sectionHeader}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ expanded }}
+      >
+        <Text style={styles.sectionTitle}>{title}</Text>
+        <Ionicons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={18}
+          color={colors.textSecondary}
+        />
+      </Pressable>
+      {expanded && <View style={styles.sectionBody}>{children}</View>}
     </View>
   );
 }
@@ -638,6 +670,12 @@ const createStyles = (colors: AppColors) =>
     ctaRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },
     ctaBtn: { flex: 1 },
     sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.xs },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    sectionBody: { marginTop: spacing.xs },
     paragraph: { ...typography.body, color: colors.textSecondary, lineHeight: 21 },
     bulletRow: {
       flexDirection: 'row',
