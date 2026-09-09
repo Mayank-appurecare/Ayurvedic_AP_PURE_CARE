@@ -19,7 +19,7 @@ import { useCheckout } from '../../context/CheckoutContext';
 import { OfferRepository } from '../../repositories/OfferRepository';
 import { radius, shadow, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
-import { formatPrice } from '../../utils/format';
+import { formatPrice, roundCurrency } from '../../utils/format';
 import { FREE_DELIVERY_THRESHOLD } from '../../data/checkoutOptions';
 
 const MOCK_DELIVERY_FEE = 49;
@@ -54,10 +54,10 @@ export function CartScreen() {
     ? appliedCoupon.discountType === 'flat'
       ? appliedCoupon.discountValue
       : appliedCoupon.discountType === 'percent'
-        ? Math.round((subtotal * appliedCoupon.discountValue) / 100)
+        ? roundCurrency((subtotal * appliedCoupon.discountValue) / 100)
         : 0
     : 0;
-  const total = Math.max(subtotal - couponDiscount + deliveryFee, 0);
+  const total = roundCurrency(Math.max(subtotal - couponDiscount + deliveryFee, 0));
 
   const goShopping = () => navigation.navigate('Main', { screen: 'HomeTab' });
 

@@ -1,4 +1,10 @@
-import { calcDiscountPercent, formatDate, formatDateTime, formatPrice } from '../format';
+import {
+  calcDiscountPercent,
+  formatDate,
+  formatDateTime,
+  formatPrice,
+  roundCurrency,
+} from '../format';
 
 describe('formatPrice', () => {
   it('prefixes the rupee sign', () => {
@@ -16,6 +22,32 @@ describe('formatPrice', () => {
   it('formats small and zero values plainly', () => {
     expect(formatPrice(0)).toBe('₹0');
     expect(formatPrice(999)).toBe('₹999');
+  });
+
+  it('shows the real fractional value instead of rounding to a whole rupee', () => {
+    expect(formatPrice(66.6)).toBe('₹66.6');
+    expect(formatPrice(53.02)).toBe('₹53.02');
+  });
+});
+
+describe('roundCurrency', () => {
+  it('leaves a clean whole number or 2-decimal value untouched', () => {
+    expect(roundCurrency(500)).toBe(500);
+    expect(roundCurrency(66.6)).toBe(66.6);
+    expect(roundCurrency(53.02)).toBe(53.02);
+  });
+
+  it('cleans up binary floating-point noise from subtotal - discount + delivery math', () => {
+    // subtotal 14, an 18% coupon discount of 2.52, plus a 49 delivery fee:
+    // 14 - 2.52 + 49 in raw JS is 60.480000000000004, a real floating-point
+    // artifact, not a hypothetical one - same for the second case.
+    expect(roundCurrency(14 - 2.52 + 49)).toBe(60.48);
+    expect(roundCurrency(23 - 2.76 + 49)).toBe(69.24);
+  });
+
+  it('rounds to the nearest paisa rather than the nearest rupee', () => {
+    expect(roundCurrency(66.666)).toBe(66.67);
+    expect(roundCurrency(66.664)).toBe(66.66);
   });
 });
 

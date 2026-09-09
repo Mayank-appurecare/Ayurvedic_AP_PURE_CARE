@@ -161,6 +161,24 @@ describe('CartContext money math', () => {
     expect(result.current.quantityOf('p1', 'v1')).toBe(5);
   });
 
+  it('keeps the exact decimal value for products with fractional prices, with no floating-point noise', async () => {
+    (ProductRepository.getAll as jest.Mock).mockResolvedValue([
+      makeProduct({
+        id: 'p3',
+        price: 33.33,
+        mrp: 49.99,
+        variants: [{ id: 'v1', label: '50g', price: 33.33, mrp: 49.99, stock: 10 }],
+      }),
+    ]);
+    const { result } = await renderReadyCart();
+
+    await act(() => result.current.addToCart('p3', 'v1', 3));
+
+    expect(result.current.subtotal).toBe(99.99);
+    expect(result.current.mrpTotal).toBe(149.97);
+    expect(result.current.discountTotal).toBe(49.98);
+  });
+
   it('quantityOf ignores a saved-for-later line for that product+variant', async () => {
     const { result } = await renderReadyCart();
 

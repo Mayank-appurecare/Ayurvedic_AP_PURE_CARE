@@ -14,7 +14,7 @@ import { OrderRepository } from '../../repositories/OrderRepository';
 import { OrderItem } from '../../types';
 import { radius, shadow, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
-import { formatPrice } from '../../utils/format';
+import { formatPrice, roundCurrency } from '../../utils/format';
 
 export function CheckoutPaymentScreen() {
   const { colors } = useTheme();
@@ -43,11 +43,11 @@ export function CheckoutPaymentScreen() {
     ? appliedCoupon.discountType === 'flat'
       ? appliedCoupon.discountValue
       : appliedCoupon.discountType === 'percent'
-        ? Math.round((subtotal * appliedCoupon.discountValue) / 100)
+        ? roundCurrency((subtotal * appliedCoupon.discountValue) / 100)
         : 0
     : 0;
   const deliveryFee = selectedDelivery.price;
-  const total = Math.max(subtotal - couponDiscount + deliveryFee, 0);
+  const total = roundCurrency(Math.max(subtotal - couponDiscount + deliveryFee, 0));
 
   const selectedMethod = paymentMethods.find((m) => m.id === selectedPaymentMethodId);
 

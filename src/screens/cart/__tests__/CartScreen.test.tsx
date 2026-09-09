@@ -212,6 +212,26 @@ describe('CartScreen', () => {
     expect(screen.getAllByText('₹450').length).toBeGreaterThan(0);
   });
 
+  it("shows a percent coupon's exact fractional discount and total, not rounded to a whole rupee", async () => {
+    mockCart({ enrichedItems: [makeItem()], subtotal: 333, mrpTotal: 400, discountTotal: 67 });
+    mockCheckout({
+      appliedCoupon: {
+        id: 'c2',
+        code: 'FLAT20',
+        discountType: 'percent',
+        discountValue: 20,
+        description: '',
+        expiryDate: '',
+      },
+    });
+    await renderScreen(<CartScreen />);
+
+    // 20% of ₹333 is ₹66.6, and ₹333 - ₹66.6 + ₹49 delivery is ₹315.4 -
+    // both must show their real decimal, not round to ₹67/₹315 or ₹66/₹316.
+    expect(await screen.findByText('- ₹66.6')).toBeTruthy();
+    expect(screen.getAllByText('₹315.4').length).toBeGreaterThan(0);
+  });
+
   it('removing the applied coupon clears it', async () => {
     const setAppliedCoupon = jest.fn();
     mockCart({ enrichedItems: [makeItem()], subtotal: 500 });

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { CartItem, Product } from '../types';
 import { ProductRepository } from '../repositories/ProductRepository';
+import { roundCurrency } from '../utils/format';
 
 export interface EnrichedCartItem extends CartItem {
   product: Product;
@@ -69,9 +70,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const cartCount = enrichedItems.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = enrichedItems.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
-  const mrpTotal = enrichedItems.reduce((sum, i) => sum + i.unitMrp * i.quantity, 0);
-  const discountTotal = mrpTotal - subtotal;
+  const subtotal = roundCurrency(
+    enrichedItems.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
+  );
+  const mrpTotal = roundCurrency(enrichedItems.reduce((sum, i) => sum + i.unitMrp * i.quantity, 0));
+  const discountTotal = roundCurrency(mrpTotal - subtotal);
 
   const addToCart: CartContextValue['addToCart'] = (productId, variantId, quantity = 1) => {
     setItems((prev) => {

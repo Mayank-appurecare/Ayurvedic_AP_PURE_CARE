@@ -102,6 +102,20 @@ describe('CheckoutPaymentScreen', () => {
     expect(await screen.findAllByText(/219/)).not.toHaveLength(0);
   });
 
+  it("shows a percent coupon's exact fractional discount and total, not rounded to a whole rupee", async () => {
+    mockCheckout({
+      selectedPaymentMethodId: 'pay-upi',
+      appliedCoupon: { code: 'FLAT20', discountType: 'percent', discountValue: 20 } as never,
+      selectedDelivery: { id: 'd', name: 'Express', description: '', price: 49, etaLabel: '' },
+    });
+    mockCart({ subtotal: 333 });
+    await renderScreen(<CheckoutPaymentScreen />);
+    // 20% of ₹333 is ₹66.6, and ₹333 - ₹66.6 + ₹49 delivery is ₹315.4 -
+    // both must show their real decimal, not round to ₹67/₹315 or ₹66/₹316.
+    expect(await screen.findByText('- ₹66.6')).toBeTruthy();
+    expect(await screen.findAllByText(/315\.4/)).not.toHaveLength(0);
+  });
+
   it('places the order with the correct payload, clears the cart, and resets to OrderConfirmation', async () => {
     mockCheckout({ selectedPaymentMethodId: 'pay-upi' });
     const clearCart = jest.fn();
