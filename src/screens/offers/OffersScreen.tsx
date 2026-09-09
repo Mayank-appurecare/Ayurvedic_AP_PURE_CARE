@@ -148,9 +148,15 @@ const createStyles = (colors: AppColors) =>
       borderRadius: radius.sm,
       marginBottom: spacing.xs,
     },
+    // Unlike the title/subtitle below, this badge's own background
+    // (accentGold) genuinely gets lighter in dark mode, so textInverse's
+    // theme-flip is the right pairing here, not a fixed white.
     offerBadgeText: { ...typography.tiny, color: colors.textInverse, fontWeight: '700' },
-    offerTitle: { ...typography.bodyMedium, color: colors.textInverse },
-    offerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
+    // The scrim behind these is a fixed dark overlay in every theme, so the
+    // text must stay a fixed white — textInverse flips to a dark color in
+    // dark mode instead, which made this unreadable there.
+    offerTitle: { ...typography.bodyMedium, color: colors.textOnPrimary },
+    offerSubtitle: { ...typography.caption, color: colors.textOnPrimary, marginTop: 2 },
     sectionTitle: {
       ...typography.h4,
       color: colors.textPrimary,

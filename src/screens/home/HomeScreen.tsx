@@ -501,8 +501,12 @@ const createStyles = (colors: AppColors) =>
       justifyContent: 'flex-end',
       padding: spacing.md,
     },
-    bannerTitle: { ...typography.h4, color: colors.textInverse },
-    bannerSubtitle: { ...typography.caption, color: colors.textInverse, marginTop: 2 },
+    // The gradient behind this text is a fixed dark scrim in every theme, so
+    // the text must stay a fixed white too — textInverse flips to a dark
+    // color in dark mode (it's meant for a surface that also flips), which
+    // made this unreadable there.
+    bannerTitle: { ...typography.h4, color: colors.textOnPrimary },
+    bannerSubtitle: { ...typography.caption, color: colors.textOnPrimary, marginTop: 2 },
     bannerCta: {
       flexDirection: 'row',
       alignItems: 'center',

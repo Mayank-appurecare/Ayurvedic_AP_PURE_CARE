@@ -150,7 +150,10 @@ const createStyles = (colors: AppColors) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
-    outOfStockText: { color: colors.textInverse, ...typography.captionMedium },
+    // colors.overlay is a fixed dark scrim in every theme, so this text must
+    // stay a fixed white — textInverse flips dark in dark mode instead,
+    // which made it unreadable there.
+    outOfStockText: { color: colors.textOnPrimary, ...typography.captionMedium },
     info: { padding: spacing.sm, gap: 4 },
     brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
     name: { ...typography.body, color: colors.textPrimary, fontWeight: '600', minHeight: 36 },
