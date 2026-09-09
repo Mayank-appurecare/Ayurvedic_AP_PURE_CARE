@@ -141,4 +141,63 @@ describe('CheckoutPaymentScreen', () => {
 
     await waitFor(() => expect(OrderRepository.placeOrder).not.toHaveBeenCalled());
   });
+
+  describe('card payment validation', () => {
+    it('blocks the order and shows errors when the card fields are left empty', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-card' });
+      await renderScreen(<CheckoutPaymentScreen />);
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+
+      expect(await screen.findByText('Enter a valid card number')).toBeTruthy();
+      expect(await screen.findByText('Enter a valid expiry (MM/YY)')).toBeTruthy();
+      expect(await screen.findByText('Enter a valid CVV')).toBeTruthy();
+      expect(OrderRepository.placeOrder).not.toHaveBeenCalled();
+    });
+
+    it('blocks the order and shows a card-expired error for a past expiry date', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-card' });
+      await renderScreen(<CheckoutPaymentScreen />);
+      await fireEvent.changeText(
+        await screen.findByPlaceholderText('Card Number'),
+        '4111111111111111'
+      );
+      await fireEvent.changeText(screen.getByPlaceholderText('MM/YY'), '01/20');
+      await fireEvent.changeText(screen.getByPlaceholderText('CVV'), '123');
+
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+
+      expect(await screen.findByText('This card has expired')).toBeTruthy();
+      expect(OrderRepository.placeOrder).not.toHaveBeenCalled();
+    });
+
+    it('places the order once valid card details are entered', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-card' });
+      (OrderRepository.placeOrder as jest.Mock).mockResolvedValue({ id: 'ord-123' });
+      await renderScreen(<CheckoutPaymentScreen />);
+      await fireEvent.changeText(
+        await screen.findByPlaceholderText('Card Number'),
+        '4111111111111111'
+      );
+      await fireEvent.changeText(screen.getByPlaceholderText('MM/YY'), '12/99');
+      await fireEvent.changeText(screen.getByPlaceholderText('CVV'), '123');
+
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+
+      await waitFor(() => expect(OrderRepository.placeOrder).toHaveBeenCalledTimes(1));
+      expect(OrderRepository.placeOrder).toHaveBeenCalledWith(
+        expect.objectContaining({ paymentMethod: 'Credit / Debit Card' })
+      );
+    });
+
+    it('clears a field error as soon as that field is edited again', async () => {
+      mockCheckout({ selectedPaymentMethodId: 'pay-card' });
+      await renderScreen(<CheckoutPaymentScreen />);
+      await fireEvent.press(await screen.findByRole('button', { name: /Place Order/ }));
+      expect(await screen.findByText('Enter a valid card number')).toBeTruthy();
+
+      await fireEvent.changeText(screen.getByPlaceholderText('Card Number'), '4111111111111111');
+
+      await waitFor(() => expect(screen.queryByText('Enter a valid card number')).toBeNull());
+    });
+  });
 });

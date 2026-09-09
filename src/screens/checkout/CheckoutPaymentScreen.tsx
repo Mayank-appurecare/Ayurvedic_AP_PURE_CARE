@@ -32,6 +32,11 @@ export function CheckoutPaymentScreen() {
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCvv, setCardCvv] = useState('');
+  const [cardErrors, setCardErrors] = useState<{
+    number?: string;
+    expiry?: string;
+    cvv?: string;
+  }>({});
 
   const couponDiscount = appliedCoupon
     ? appliedCoupon.discountType === 'flat'
@@ -45,8 +50,36 @@ export function CheckoutPaymentScreen() {
 
   const selectedMethod = paymentMethods.find((m) => m.id === selectedPaymentMethodId);
 
+  const validateCard = (): boolean => {
+    const digits = cardNumber.replace(/\s/g, '');
+    const errors: typeof cardErrors = {};
+
+    if (!/^\d{13,19}$/.test(digits)) {
+      errors.number = 'Enter a valid card number';
+    }
+
+    const expiryMatch = /^(0[1-9]|1[0-2])\/(\d{2})$/.exec(cardExpiry.trim());
+    if (!expiryMatch) {
+      errors.expiry = 'Enter a valid expiry (MM/YY)';
+    } else {
+      const [, month, year] = expiryMatch;
+      const expiryDate = new Date(2000 + Number(year), Number(month), 1);
+      if (expiryDate <= new Date()) {
+        errors.expiry = 'This card has expired';
+      }
+    }
+
+    if (!/^\d{3}$/.test(cardCvv.trim())) {
+      errors.cvv = 'Enter a valid CVV';
+    }
+
+    setCardErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handlePlaceOrder = async () => {
     if (!selectedMethod || !selectedAddress) return;
+    if (selectedMethod.type === 'card' && !validateCard()) return;
     setPlacing(true);
     try {
       const orderItems: OrderItem[] = enrichedItems.map((item) => ({
@@ -114,32 +147,54 @@ export function CheckoutPaymentScreen() {
                   <View style={styles.cardForm}>
                     <TextInput
                       value={cardNumber}
-                      onChangeText={setCardNumber}
+                      onChangeText={(v) => {
+                        setCardNumber(v);
+                        setCardErrors((prev) => ({ ...prev, number: undefined }));
+                      }}
                       placeholder="Card Number"
                       placeholderTextColor={colors.textMuted}
-                      style={styles.cardInput}
+                      style={[styles.cardInput, cardErrors.number && styles.cardInputError]}
                       keyboardType="number-pad"
                       maxLength={19}
                     />
+                    {!!cardErrors.number && (
+                      <Text style={styles.cardErrorText}>{cardErrors.number}</Text>
+                    )}
                     <View style={styles.cardRow}>
-                      <TextInput
-                        value={cardExpiry}
-                        onChangeText={setCardExpiry}
-                        placeholder="MM/YY"
-                        placeholderTextColor={colors.textMuted}
-                        style={[styles.cardInput, styles.cardInputHalf]}
-                        maxLength={5}
-                      />
-                      <TextInput
-                        value={cardCvv}
-                        onChangeText={setCardCvv}
-                        placeholder="CVV"
-                        placeholderTextColor={colors.textMuted}
-                        style={[styles.cardInput, styles.cardInputHalf]}
-                        keyboardType="number-pad"
-                        secureTextEntry
-                        maxLength={3}
-                      />
+                      <View style={styles.cardInputHalf}>
+                        <TextInput
+                          value={cardExpiry}
+                          onChangeText={(v) => {
+                            setCardExpiry(v);
+                            setCardErrors((prev) => ({ ...prev, expiry: undefined }));
+                          }}
+                          placeholder="MM/YY"
+                          placeholderTextColor={colors.textMuted}
+                          style={[styles.cardInput, cardErrors.expiry && styles.cardInputError]}
+                          maxLength={5}
+                        />
+                        {!!cardErrors.expiry && (
+                          <Text style={styles.cardErrorText}>{cardErrors.expiry}</Text>
+                        )}
+                      </View>
+                      <View style={styles.cardInputHalf}>
+                        <TextInput
+                          value={cardCvv}
+                          onChangeText={(v) => {
+                            setCardCvv(v);
+                            setCardErrors((prev) => ({ ...prev, cvv: undefined }));
+                          }}
+                          placeholder="CVV"
+                          placeholderTextColor={colors.textMuted}
+                          style={[styles.cardInput, cardErrors.cvv && styles.cardInputError]}
+                          keyboardType="number-pad"
+                          secureTextEntry
+                          maxLength={3}
+                        />
+                        {!!cardErrors.cvv && (
+                          <Text style={styles.cardErrorText}>{cardErrors.cvv}</Text>
+                        )}
+                      </View>
                     </View>
                     <Text style={styles.mockNote}>
                       This is a demo checkout — no real payment is processed.
@@ -256,6 +311,8 @@ const createStyles = (colors: AppColors) =>
     },
     cardRow: { flexDirection: 'row', gap: spacing.sm },
     cardInputHalf: { flex: 1 },
+    cardInputError: { borderColor: colors.danger },
+    cardErrorText: { ...typography.caption, color: colors.danger },
     mockNote: { ...typography.tiny, color: colors.textMuted, fontStyle: 'italic' },
     summaryCard: {
       backgroundColor: colors.surface,
