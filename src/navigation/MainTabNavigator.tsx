@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MainTabParamList } from './types';
 import { typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
@@ -37,26 +36,10 @@ function TabBadge({ count }: { count: number }) {
   );
 }
 
-// Comfortable content height (icon + label + breathing room) before the
-// device's own bottom safe-area inset is added on top of it — this is what
-// was previously a hardcoded 62 that clipped labels on many devices.
-const TAB_BAR_CONTENT_HEIGHT = 60;
-
 export function MainTabNavigator() {
   const { cartCount } = useCart();
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(colors), [colors]);
-  const tabBarStyle = useMemo(
-    () => [
-      styles.tabBar,
-      {
-        height: TAB_BAR_CONTENT_HEIGHT + insets.bottom,
-        paddingBottom: Math.max(insets.bottom, 10),
-      },
-    ],
-    [styles, insets.bottom]
-  );
 
   return (
     <Tab.Navigator
@@ -64,9 +47,8 @@ export function MainTabNavigator() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle,
+        tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
-        tabBarItemStyle: styles.tabItem,
         tabBarIcon: ({ focused, color, size }) => {
           const iconSet = ICONS[route.name as keyof MainTabParamList];
           return (
@@ -105,17 +87,18 @@ export function MainTabNavigator() {
 
 const createStyles = (colors: AppColors) =>
   StyleSheet.create({
+    // Appearance only. The navigator computes the bar's height from the icon,
+    // the label and the device's bottom safe-area inset; setting a height or
+    // vertical padding here fought that calculation and collapsed the labels
+    // to zero height, so the tabs rendered as bare icons.
     tabBar: {
       backgroundColor: colors.surface,
       borderTopColor: colors.divider,
-      paddingTop: 8,
     },
-    tabItem: {
-      paddingVertical: 2,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    tabLabel: { ...typography.tiny, fontWeight: '600', marginTop: 2 },
+    // No marginTop and no lineHeight override: the navigator reserves a fixed
+    // slot for the label, and either one pushed the text out of that slot so it
+    // rendered clipped to a few pixels.
+    tabLabel: { fontSize: typography.tiny.fontSize, fontWeight: '600' },
     badge: {
       position: 'absolute',
       top: -4,
