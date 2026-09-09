@@ -1,8 +1,13 @@
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react-native';
+import { screen, fireEvent, waitFor } from '@testing-library/react-native';
+import * as Clipboard from 'expo-clipboard';
 import { CouponCard } from '../CouponCard';
 import { renderScreen } from '../../test-utils/renderScreen';
 import { Coupon } from '../../types';
+
+jest.mock('expo-clipboard', () => ({
+  setStringAsync: jest.fn(),
+}));
 
 const COUPON: Coupon = {
   id: 'c1',
@@ -46,5 +51,22 @@ describe('CouponCard', () => {
     expect(await screen.findByText('SAVE10')).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Apply' })).toBeNull();
     expect(screen.queryByText('Applied')).toBeNull();
+  });
+
+  describe('copying the coupon code', () => {
+    // Uses real timers and waits out the actual revert delay: this codebase
+    // deliberately avoids jest.useFakeTimers() (see mockAuthService.test.ts),
+    // since it previously caused cross-test interference.
+    it('copies the code to the clipboard and shows a temporary "Copied" confirmation', async () => {
+      await renderScreen(<CouponCard coupon={COUPON} />);
+
+      await fireEvent.press(await screen.findByRole('button', { name: /Copy/ }));
+
+      expect(Clipboard.setStringAsync).toHaveBeenCalledWith('SAVE10');
+      expect(await screen.findByText('Copied')).toBeTruthy();
+
+      await waitFor(() => expect(screen.getByText('Copy')).toBeTruthy(), { timeout: 3000 });
+      expect(screen.queryByText('Copied')).toBeNull();
+    });
   });
 });

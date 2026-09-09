@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
@@ -21,8 +21,13 @@ interface Props {
 export function CouponCard({ coupon, onApply, showApply, applied, justApplied }: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
     await Clipboard.setStringAsync(coupon.code);
+    // Momentary "Copied" confirmation, since the OS clipboard write itself
+    // is silent and gave no indication anything happened.
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   const discountLabel =
@@ -56,8 +61,14 @@ export function CouponCard({ coupon, onApply, showApply, applied, justApplied }:
             style={styles.copyBtn}
             accessibilityRole="button"
           >
-            <Ionicons name="copy-outline" size={14} color={colors.primary} />
-            <Text style={styles.copyText}>Copy</Text>
+            <Ionicons
+              name={copied ? 'checkmark' : 'copy-outline'}
+              size={14}
+              color={copied ? colors.success : colors.primary}
+            />
+            <Text style={[styles.copyText, copied && styles.copiedText]}>
+              {copied ? 'Copied' : 'Copy'}
+            </Text>
           </Pressable>
         </View>
         <Text style={styles.expiry}>
@@ -119,6 +130,7 @@ const createStyles = (colors: AppColors) =>
     codeText: { ...typography.captionMedium, color: colors.primary, letterSpacing: 0.5 },
     copyBtn: { flexDirection: 'row', alignItems: 'center', gap: 3 },
     copyText: { ...typography.tiny, color: colors.primary },
+    copiedText: { color: colors.success },
     expiry: { ...typography.tiny, color: colors.textMuted, marginTop: 2 },
     applyBtn: {
       alignSelf: 'center',
