@@ -34,10 +34,14 @@ export function ProductImageGallery({ images }: { images: string[] }) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => `${item}-${index}`}
-        onMomentumScrollEnd={(e) => {
+        onScroll={(e) => {
+          // onMomentumScrollEnd alone never fires for a mouse/trackpad drag on
+          // web, so the dots would stay stuck on the first one there — track
+          // the offset continuously instead, which works on both platforms.
           const index = Math.round(e.nativeEvent.contentOffset.x / width);
-          setActiveIndex(index);
+          setActiveIndex(Math.max(0, Math.min(images.length - 1, index)));
         }}
+        scrollEventThrottle={16}
         renderItem={({ item }) => (
           <View style={[styles.imageWrap, { width }]}>
             <Image
@@ -51,7 +55,11 @@ export function ProductImageGallery({ images }: { images: string[] }) {
       />
       <View style={styles.dots}>
         {images.map((_, index) => (
-          <View key={index} style={[styles.dot, index === activeIndex && styles.dotActive]} />
+          <View
+            key={index}
+            testID={`gallery-dot-${index}`}
+            style={[styles.dot, index === activeIndex && styles.dotActive]}
+          />
         ))}
       </View>
     </View>
