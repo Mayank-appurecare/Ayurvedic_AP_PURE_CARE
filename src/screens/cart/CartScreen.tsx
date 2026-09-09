@@ -70,7 +70,7 @@ export function CartScreen() {
 
       {enrichedItems.length === 0 && savedForLaterItems.length === 0 ? (
         <EmptyState
-          icon="bag-outline"
+          icon="cart-outline"
           title="Your cart is empty"
           description="Looks like you haven't added anything to your cart yet."
           actionLabel="Shop Now"
@@ -80,7 +80,7 @@ export function CartScreen() {
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           {enrichedItems.length === 0 ? (
             <EmptyState
-              icon="bag-outline"
+              icon="cart-outline"
               title="Your cart is empty"
               description="Move items back from Saved for Later, or continue shopping."
             />

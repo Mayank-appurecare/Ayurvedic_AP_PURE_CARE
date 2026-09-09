@@ -21,7 +21,7 @@ const ICONS: Record<
   HomeTab: { active: 'home', inactive: 'home-outline' },
   CategoriesTab: { active: 'grid', inactive: 'grid-outline' },
   WishlistTab: { active: 'heart', inactive: 'heart-outline' },
-  CartTab: { active: 'bag', inactive: 'bag-outline' },
+  CartTab: { active: 'cart', inactive: 'cart-outline' },
   AccountTab: { active: 'person', inactive: 'person-outline' },
 };
 
@@ -79,7 +79,7 @@ export function MainTabNavigator() {
       <Tab.Screen
         name="AccountTab"
         component={AccountScreen}
-        options={{ tabBarLabel: 'Account' }}
+        options={{ tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
   );
