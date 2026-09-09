@@ -358,8 +358,6 @@ export function HomeScreen() {
             </View>
           ))}
         </View>
-
-        <View style={{ height: spacing.xl }} />
       </ScrollView>
 
       <AddressSelectorSheet
@@ -533,14 +531,18 @@ const createStyles = (colors: AppColors) =>
       ...shadow.sm,
     },
     articleCardWrap: { width: 220 },
+    // Four equal columns, never wrapping. With a fixed 76px per badge the four
+    // of them needed 340px of the 328px a 360px-wide phone has, so "Ethically
+    // Sourced" dropped onto a second row on its own.
     trustSection: {
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
+      alignItems: 'flex-start',
       paddingHorizontal: spacing.md,
-      marginTop: spacing.xl,
-      gap: spacing.sm,
+      marginTop: spacing.lg,
+      gap: spacing.xs,
     },
-    trustBadge: { alignItems: 'center', gap: 4, width: 76 },
+    // flex: 1 shares the row evenly at any width; a long label wraps inside its
+    // own column rather than pushing the badge out of the row.
+    trustBadge: { flex: 1, alignItems: 'center', gap: 4 },
     trustLabel: { ...typography.tiny, color: colors.textSecondary, textAlign: 'center' },
   });
