@@ -38,16 +38,25 @@ beforeEach(() => {
 });
 
 describe('RegisterScreen', () => {
-  it('disables Register until the terms checkbox is accepted', async () => {
+  it('keeps Register pressable even before the terms checkbox is accepted, so the reason it blocks is reachable', async () => {
     await renderScreen(<RegisterScreen />);
-    expect(
-      (await screen.findByRole('button', { name: 'Register' })).props.accessibilityState?.disabled
-    ).toBeTruthy();
 
-    await acceptTerms();
+    const button = await screen.findByRole('button', { name: 'Register' });
+    expect(button.props.accessibilityState?.disabled).toBeFalsy();
+  });
+
+  it('pressing Register without accepting the terms shows why, and does not call register', async () => {
+    const register = jest.fn();
+    mockAuth({ register });
+    await renderScreen(<RegisterScreen />);
+    await fillValidForm();
+
+    fireEvent.press(await screen.findByRole('button', { name: 'Register' }));
+
     expect(
-      (await screen.findByRole('button', { name: 'Register' })).props.accessibilityState?.disabled
-    ).toBeFalsy();
+      await screen.findByText('Please accept the Terms & Conditions to continue.')
+    ).toBeTruthy();
+    expect(register).not.toHaveBeenCalled();
   });
 
   it('shows field validation errors and does not call register for an empty form', async () => {

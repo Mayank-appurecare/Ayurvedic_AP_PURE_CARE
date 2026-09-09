@@ -87,8 +87,6 @@ export function RegisterScreen() {
     }
   };
 
-  const canSubmit = acceptedTerms;
-
   return (
     <KeyboardAvoidingView
       style={styles.flex}
@@ -167,7 +165,6 @@ export function RegisterScreen() {
           label="Register"
           onPress={handleRegister}
           loading={loading}
-          disabled={!canSubmit}
           style={styles.registerBtn}
         />
 
