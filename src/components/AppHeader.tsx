@@ -34,19 +34,19 @@ export function AppHeader({
       ]}
     >
       <View style={styles.row}>
-        {showBack ? (
-          <Pressable
-            onPress={onBackPress}
-            hitSlop={10}
-            style={styles.iconBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
-          </Pressable>
-        ) : (
-          <View style={styles.iconBtn} />
-        )}
+        <View style={styles.sideSlot}>
+          {showBack && (
+            <Pressable
+              onPress={onBackPress}
+              hitSlop={10}
+              style={styles.iconBtn}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+            >
+              <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
+            </Pressable>
+          )}
+        </View>
         <View style={styles.titleWrap}>
           {title && (
             <Text style={styles.title} numberOfLines={1}>
@@ -59,7 +59,7 @@ export function AppHeader({
             </Text>
           )}
         </View>
-        <View style={styles.rightIcons}>
+        <View style={[styles.sideSlot, styles.rightSlot]}>
           {rightIcons?.map((icon) => (
             <Pressable
               key={icon.name}
@@ -103,10 +103,16 @@ const createStyles = (colors: AppColors) =>
       minHeight: 44,
     },
     iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+    // All three sections are flex: 1, so the title's column always sits
+    // exactly between them - a back button on the left with no rightIcons
+    // (or vice versa) previously left the title centered in whatever space
+    // remained, which visibly skewed it off-center rather than off the
+    // screen's actual midpoint.
+    sideSlot: { flex: 1, flexDirection: 'row' },
+    rightSlot: { justifyContent: 'flex-end' },
     titleWrap: { flex: 1, alignItems: 'center' },
     title: { ...typography.h4, color: colors.textPrimary },
     subtitle: { ...typography.caption, color: colors.textSecondary },
-    rightIcons: { flexDirection: 'row' },
     badge: {
       position: 'absolute',
       top: 2,
