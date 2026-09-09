@@ -446,7 +446,16 @@ function ProductRail({
 const createStyles = (colors: AppColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.background },
-    header: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm, gap: spacing.xs },
+    // paddingTop matches paddingBottom so the row sits centred in its own
+    // strip. SafeAreaView supplies the notch inset on top of this, but that
+    // inset is 0 on web and on Android browsers, which left the bell and the
+    // cart touching the very top edge of the screen.
+    header: {
+      paddingHorizontal: spacing.md,
+      paddingTop: spacing.sm,
+      paddingBottom: spacing.sm,
+      gap: spacing.xs,
+    },
     headerTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     brandRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
     brandMark: { width: 28, height: 28 },
