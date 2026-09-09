@@ -211,6 +211,23 @@ describe('getById', () => {
   it('resolves undefined for an unknown id', async () => {
     await expect(ProductRepository.getById('unknown')).resolves.toBeUndefined();
   });
+
+  it('attaches 3 deterministic placeholder photos when the catalog carries none for that product', async () => {
+    const result = await ProductRepository.getById('103');
+
+    expect(result?.images).toEqual([
+      'https://picsum.photos/seed/103-1/900/900',
+      'https://picsum.photos/seed/103-2/900/900',
+      'https://picsum.photos/seed/103-3/900/900',
+    ]);
+  });
+
+  it('gives the same product the same placeholder photos on every call', async () => {
+    const first = await ProductRepository.getById('103');
+    const second = await ProductRepository.getById('103');
+
+    expect(first?.images).toEqual(second?.images);
+  });
 });
 
 describe('getByCategory', () => {

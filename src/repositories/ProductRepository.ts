@@ -27,6 +27,23 @@ async function catalogProducts(): Promise<Product[]> {
   return toUiProducts(await getCatalog());
 }
 
+/**
+ * TEMPORARY placeholder photos for the product detail page.
+ *
+ * The API sends no image URLs at all today, so toUiProduct() correctly
+ * leaves `images` empty rather than inventing one — that adapter contract is
+ * right and stays as-is. But with nothing to show, the detail page's gallery
+ * can only ever render its single leaf-icon fallback, which makes swiping
+ * through multiple photos untestable in the meantime.
+ *
+ * Seeded by the product's own id, so the same product always shows the same
+ * three placeholder photos rather than a different random set on every load.
+ * Delete this the moment the backend starts sending real image URLs.
+ */
+function demoImagesFor(productId: string): string[] {
+  return [1, 2, 3].map((n) => `https://picsum.photos/seed/${productId}-${n}/900/900`);
+}
+
 function applyFilters(list: Product[], filters?: ProductFilters): Product[] {
   if (!filters) return list;
   let result = list;
@@ -91,7 +108,11 @@ export const ProductRepository = {
 
   async getById(id: string): Promise<Product | undefined> {
     const list = await catalogProducts();
-    return delay(list.find((p) => p.id === id));
+    const product = list.find((p) => p.id === id);
+    if (!product) return delay(undefined);
+    return delay(
+      product.images.length ? product : { ...product, images: demoImagesFor(product.id) }
+    );
   },
 
   async getByCategory(
