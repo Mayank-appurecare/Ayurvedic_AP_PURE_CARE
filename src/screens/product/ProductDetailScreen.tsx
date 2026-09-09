@@ -191,20 +191,30 @@ export function ProductDetailScreen() {
 
         <View style={styles.heroSection}>
           <Text style={styles.brand}>{product.brand}</Text>
-          <Text style={styles.name}>{product.name}</Text>
-          <Pressable
-            onPress={() => navigation.navigate('Reviews', { productId })}
-            style={styles.ratingRow}
-            accessibilityRole="button"
-            accessibilityLabel="View all reviews"
-          >
-            {product.reviewCount > 0 ? (
-              <RatingStars rating={product.rating} reviewCount={product.reviewCount} showValue />
-            ) : (
-              <Text style={styles.noRatingsText}>No ratings yet</Text>
-            )}
-            <Ionicons name="chevron-forward" size={14} color={colors.textMuted} />
-          </Pressable>
+          <View style={styles.nameRow}>
+            <Text style={styles.name}>{product.name}</Text>
+            <Pressable
+              onPress={() =>
+                product.reviewCount > 0
+                  ? navigation.navigate('Reviews', { productId })
+                  : navigation.navigate('WriteReview', { productId })
+              }
+              style={styles.ratingBadge}
+              accessibilityRole="button"
+              accessibilityLabel={product.reviewCount > 0 ? 'View all reviews' : 'Write a review'}
+            >
+              <Ionicons
+                name={product.reviewCount > 0 ? 'star' : 'create-outline'}
+                size={13}
+                color={colors.primary}
+              />
+              <Text style={styles.ratingBadgeText} numberOfLines={1}>
+                {product.reviewCount > 0
+                  ? `${product.rating.toFixed(1)} (${product.reviewCount})`
+                  : 'Write a Review'}
+              </Text>
+            </Pressable>
+          </View>
 
           <PriceDisplay
             price={selectedVariant.price}
@@ -589,9 +599,21 @@ const createStyles = (colors: AppColors) =>
       ...shadow.sm,
     },
     brand: { ...typography.tiny, color: colors.textMuted, textTransform: 'uppercase' },
-    name: { ...typography.h3, color: colors.textPrimary },
-    ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
-    noRatingsText: { ...typography.captionMedium, color: colors.textMuted },
+    nameRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.xs },
+    name: { ...typography.h3, color: colors.textPrimary, flex: 1 },
+    ratingBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      backgroundColor: colors.primarySurface,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 5,
+      borderRadius: radius.pill,
+      marginTop: 2,
+      flexShrink: 0,
+      maxWidth: 140,
+    },
+    ratingBadgeText: { ...typography.captionMedium, color: colors.primary },
     stockText: { ...typography.captionMedium, marginTop: 2 },
     stockIn: { color: colors.success },
     stockLow: { color: colors.warning },

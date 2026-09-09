@@ -247,11 +247,20 @@ describe('ProductDetailScreen', () => {
     expect(mockNavigate).toHaveBeenCalledWith('Reviews', { productId: 'p1' });
   });
 
-  it('shows "No ratings yet" instead of a star row when the product has no reviews', async () => {
+  it('shows a "Write a Review" badge next to the name, and it opens WriteReview directly, when the product has no reviews', async () => {
     mockRepos({ product: makeProduct({ reviewCount: 0 }) });
     await renderScreen(<ProductDetailScreen />);
 
-    expect(await screen.findByText('No ratings yet')).toBeTruthy();
+    await fireEvent.press(await screen.findByLabelText('Write a review'));
+
+    expect(await screen.findByText('Write a Review')).toBeTruthy();
+    expect(mockNavigate).toHaveBeenCalledWith('WriteReview', { productId: 'p1' });
+  });
+
+  it('shows a rating badge next to the name that opens Reviews when the product has ratings', async () => {
+    await renderScreen(<ProductDetailScreen />);
+
+    expect(await screen.findByText('4.2 (120)')).toBeTruthy();
   });
 
   it('pressing "See all N reviews" navigates to Reviews', async () => {
