@@ -241,6 +241,7 @@ describe('ProductDetailScreen', () => {
   });
 
   it('pressing the rating row navigates to Reviews', async () => {
+    mockRepos({ summary: { total: 120, average: 4.2, distribution: EMPTY_SUMMARY.distribution } });
     await renderScreen(<ProductDetailScreen />);
     await fireEvent.press(await screen.findByLabelText('View all reviews'));
 
@@ -258,9 +259,23 @@ describe('ProductDetailScreen', () => {
   });
 
   it('shows a rating badge next to the name that opens Reviews when the product has ratings', async () => {
+    mockRepos({ summary: { total: 120, average: 4.2, distribution: EMPTY_SUMMARY.distribution } });
     await renderScreen(<ProductDetailScreen />);
 
     expect(await screen.findByText('4.2 (120)')).toBeTruthy();
+  });
+
+  it("keeps the rating badge honest even when the product catalog's own rating/reviewCount disagree with actual review data", async () => {
+    // The badge must reflect real submitted reviews, not the product's own
+    // (possibly stale, e.g. demo/seed) rating and reviewCount fields.
+    mockRepos({
+      product: makeProduct({ rating: 4.5, reviewCount: 328 }),
+      summary: { total: 7, average: 3.4, distribution: EMPTY_SUMMARY.distribution },
+    });
+    await renderScreen(<ProductDetailScreen />);
+
+    expect(await screen.findByText('3.4 (7)')).toBeTruthy();
+    expect(screen.queryByText('4.5 (328)')).toBeNull();
   });
 
   it('pressing "See all N reviews" navigates to Reviews', async () => {

@@ -195,22 +195,24 @@ export function ProductDetailScreen() {
             <Text style={styles.name}>{product.name}</Text>
             <Pressable
               onPress={() =>
-                product.reviewCount > 0
+                reviewSummary && reviewSummary.total > 0
                   ? navigation.navigate('Reviews', { productId })
                   : navigation.navigate('WriteReview', { productId })
               }
               style={styles.ratingBadge}
               accessibilityRole="button"
-              accessibilityLabel={product.reviewCount > 0 ? 'View all reviews' : 'Write a review'}
+              accessibilityLabel={
+                reviewSummary && reviewSummary.total > 0 ? 'View all reviews' : 'Write a review'
+              }
             >
               <Ionicons
-                name={product.reviewCount > 0 ? 'star' : 'create-outline'}
+                name={reviewSummary && reviewSummary.total > 0 ? 'star' : 'create-outline'}
                 size={13}
                 color={colors.primary}
               />
               <Text style={styles.ratingBadgeText} numberOfLines={1}>
-                {product.reviewCount > 0
-                  ? `${product.rating.toFixed(1)} (${product.reviewCount})`
+                {reviewSummary && reviewSummary.total > 0
+                  ? `${reviewSummary.average.toFixed(1)} (${reviewSummary.total})`
                   : 'Write a Review'}
               </Text>
             </Pressable>
