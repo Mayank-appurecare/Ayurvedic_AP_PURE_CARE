@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
+  FlatList,
   Platform,
   Pressable,
   ScrollView,
@@ -121,10 +122,13 @@ export function MyOrdersScreen() {
           onAction={() => navigation.navigate('Main', { screen: 'HomeTab' })}
         />
       ) : (
-        <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
-          {orders.map((order) => (
+        <FlatList
+          data={orders}
+          keyExtractor={(order) => order.id}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item: order }) => (
             <OrderCard
-              key={order.id}
               order={order}
               onPress={() => navigation.navigate('OrderDetails', { orderId: order.id })}
               onTrack={
@@ -134,9 +138,9 @@ export function MyOrdersScreen() {
               }
               onReorder={() => handleReorder(order.id)}
             />
-          ))}
-          <View style={{ height: spacing.xxl }} />
-        </ScrollView>
+          )}
+          ListFooterComponent={<View style={{ height: spacing.xxl }} />}
+        />
       )}
     </SafeAreaView>
   );
