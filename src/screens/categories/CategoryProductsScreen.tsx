@@ -225,7 +225,9 @@ const createStyles = (colors: AppColors) =>
       paddingVertical: 6,
     },
     pillLabel: { ...typography.captionMedium, color: colors.primary },
-    listContent: { padding: spacing.md, paddingBottom: spacing.xxl },
+    // See CategoriesScreen: cardWrap’s marginBottom already spaces the last
+    // row off the tab bar, so this only needs a little on top.
+    listContent: { padding: spacing.md, paddingBottom: spacing.xs },
     row: { gap: spacing.sm },
     cardWrap: { flex: 1, marginBottom: spacing.sm, marginHorizontal: spacing.xxs },
   });

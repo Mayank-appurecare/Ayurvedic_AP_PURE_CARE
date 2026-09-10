@@ -132,7 +132,10 @@ const createStyles = (colors: AppColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.background },
     // paddingHorizontal is applied inline so it can tighten on narrow phones.
-    listContent: { paddingVertical: spacing.md, paddingBottom: spacing.xxl },
+    // Every card already carries a marginBottom, so the last row brings its own
+    // gap. A further 32 on top of that left a visible dead strip above the tab
+    // bar once the grid was scrolled to the end.
+    listContent: { paddingVertical: spacing.md, paddingBottom: spacing.xs },
     // Column spacing comes from `gap` alone; per-card horizontal margins used to
     // stack on top of it and stole ~24px of usable width at phone sizes.
     row: { gap: spacing.sm },
