@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { citiesForState } from '../data/indianCities';
 import { radius, spacing, typography } from '../theme';
@@ -38,11 +38,28 @@ export function CitySelectorSheet({ visible, value, state, onSelect, onClose }: 
     onClose();
   };
 
-  const handleSelect = (city: string) => {
-    onSelect(city);
-    setQuery('');
-    onClose();
-  };
+  const handleSelect = useCallback(
+    (city: string) => {
+      onSelect(city);
+      setQuery('');
+      onClose();
+    },
+    [onSelect, onClose]
+  );
+
+  const renderItem = useCallback(
+    ({ item: city }: { item: string }) => (
+      <Pressable onPress={() => handleSelect(city)} style={styles.row}>
+        <Text style={[styles.label, value === city && styles.labelActive]}>{city}</Text>
+        <Ionicons
+          name={value === city ? 'radio-button-on' : 'radio-button-off'}
+          size={20}
+          color={value === city ? colors.primary : colors.border}
+        />
+      </Pressable>
+    ),
+    [colors, handleSelect, styles, value]
+  );
 
   return (
     <BottomSheet
@@ -50,31 +67,37 @@ export function CitySelectorSheet({ visible, value, state, onSelect, onClose }: 
       onClose={handleClose}
       title={state ? `Select City in ${state}` : 'Select City'}
       maxHeightPercent={80}
+      scrollable={false}
     >
-      <View style={styles.searchWrap}>
-        <Ionicons name="search" size={18} color={colors.textMuted} />
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Search city"
-          placeholderTextColor={colors.textMuted}
-          style={styles.searchInput}
-          accessibilityLabel="Search city"
-        />
-      </View>
-
-      {results.length === 0 && <Text style={styles.emptyText}>No matching city found.</Text>}
-
-      {results.map((city) => (
-        <Pressable key={city} onPress={() => handleSelect(city)} style={styles.row}>
-          <Text style={[styles.label, value === city && styles.labelActive]}>{city}</Text>
-          <Ionicons
-            name={value === city ? 'radio-button-on' : 'radio-button-off'}
-            size={20}
-            color={value === city ? colors.primary : colors.border}
-          />
-        </Pressable>
-      ))}
+      {/* FlatList instead of a mapped ScrollView: the unscoped list runs to
+          500+ cities, and mounting every row up front is what made this
+          picker feel laggy to scroll and slow to respond to taps on a real
+          device. FlatList only mounts the rows actually on (or near) screen. */}
+      <FlatList
+        data={results}
+        keyExtractor={(city) => city}
+        renderItem={renderItem}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={20}
+        maxToRenderPerBatch={20}
+        windowSize={5}
+        removeClippedSubviews
+        ListHeaderComponent={
+          <View style={styles.searchWrap}>
+            <Ionicons name="search" size={18} color={colors.textMuted} />
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search city"
+              placeholderTextColor={colors.textMuted}
+              style={styles.searchInput}
+              accessibilityLabel="Search city"
+            />
+          </View>
+        }
+        ListEmptyComponent={<Text style={styles.emptyText}>No matching city found.</Text>}
+      />
     </BottomSheet>
   );
 }

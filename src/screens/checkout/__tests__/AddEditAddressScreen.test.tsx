@@ -5,6 +5,45 @@ import { renderScreen } from '../../../test-utils/renderScreen';
 import { UserRepository } from '../../../repositories/UserRepository';
 import { Address } from '../../../types';
 
+// The State/City pickers use FlatList so a real device only ever mounts the
+// rows on screen (the point of the fix - the city list runs to 500+ rows).
+// The test renderer has no real layout, so FlatList's own virtualization
+// would otherwise only ever mount the first handful of rows regardless of
+// what's queried for - swap in a plain, fully-mounted list for tests, since
+// what's being tested here is selection behavior, not virtualization.
+jest.mock('react-native/Libraries/Lists/FlatList', () => {
+  const RN = jest.requireActual('react-native');
+  const React = jest.requireActual('react');
+  function MockFlatList({
+    data,
+    renderItem,
+    keyExtractor,
+    ListHeaderComponent,
+    ListEmptyComponent,
+  }: {
+    data: unknown[];
+    renderItem: (info: { item: unknown; index: number }) => React.ReactNode;
+    keyExtractor?: (item: unknown, index: number) => string;
+    ListHeaderComponent?: React.ReactElement;
+    ListEmptyComponent?: React.ReactElement;
+  }) {
+    return React.createElement(
+      RN.View,
+      null,
+      ListHeaderComponent,
+      data.length === 0 ? ListEmptyComponent : null,
+      data.map((item, index) =>
+        React.createElement(
+          RN.View,
+          { key: keyExtractor ? keyExtractor(item, index) : index },
+          renderItem({ item, index })
+        )
+      )
+    );
+  }
+  return { __esModule: true, default: MockFlatList };
+});
+
 jest.mock('../../../repositories/UserRepository', () => ({
   UserRepository: {
     getAddresses: jest.fn(),

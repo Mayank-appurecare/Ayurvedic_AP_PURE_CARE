@@ -12,6 +12,14 @@ interface Props {
   children: React.ReactNode;
   footer?: React.ReactNode;
   maxHeightPercent?: number;
+  /**
+   * Set to false when `children` is a virtualized list (e.g. FlatList) that
+   * scrolls itself - a long, plain-mapped list inside this sheet's own
+   * ScrollView renders every row up front, which is what made long pickers
+   * (500+ cities) feel laggy on a real device. Defaults to true so short,
+   * non-virtualized content (a handful of rows) keeps working as before.
+   */
+  scrollable?: boolean;
 }
 
 export function BottomSheet({
@@ -21,6 +29,7 @@ export function BottomSheet({
   children,
   footer,
   maxHeightPercent = 80,
+  scrollable = true,
 }: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
@@ -47,9 +56,13 @@ export function BottomSheet({
               <Ionicons name="close" size={22} color={colors.textPrimary} />
             </Pressable>
           </View>
-          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-            {children}
-          </ScrollView>
+          {scrollable ? (
+            <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+              {children}
+            </ScrollView>
+          ) : (
+            <View style={styles.body}>{children}</View>
+          )}
           {footer && <View style={styles.footer}>{footer}</View>}
         </Pressable>
       </Pressable>
@@ -84,7 +97,7 @@ const createStyles = (colors: AppColors) =>
       borderBottomColor: colors.divider,
     },
     title: { ...typography.h4, color: colors.textPrimary },
-    body: { paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
+    body: { flexShrink: 1, paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
     footer: {
       paddingHorizontal: spacing.lg,
       paddingTop: spacing.sm,

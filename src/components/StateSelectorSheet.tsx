@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { INDIAN_STATES } from '../data/indianStates';
 import { radius, spacing, typography } from '../theme';
@@ -24,49 +24,68 @@ export function StateSelectorSheet({ visible, value, onSelect, onClose }: Props)
     [query]
   );
 
+  const handleClose = () => {
+    setQuery('');
+    onClose();
+  };
+
+  const handleSelect = useCallback(
+    (state: string) => {
+      onSelect(state);
+      setQuery('');
+      onClose();
+    },
+    [onSelect, onClose]
+  );
+
+  const renderItem = useCallback(
+    ({ item: state }: { item: string }) => (
+      <Pressable onPress={() => handleSelect(state)} style={styles.row}>
+        <Text style={[styles.label, value === state && styles.labelActive]}>{state}</Text>
+        <Ionicons
+          name={value === state ? 'radio-button-on' : 'radio-button-off'}
+          size={20}
+          color={value === state ? colors.primary : colors.border}
+        />
+      </Pressable>
+    ),
+    [colors, handleSelect, styles, value]
+  );
+
   return (
     <BottomSheet
       visible={visible}
-      onClose={() => {
-        setQuery('');
-        onClose();
-      }}
+      onClose={handleClose}
       title="Select State"
       maxHeightPercent={80}
+      scrollable={false}
     >
-      <View style={styles.searchWrap}>
-        <Ionicons name="search" size={18} color={colors.textMuted} />
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Search state"
-          placeholderTextColor={colors.textMuted}
-          style={styles.searchInput}
-          accessibilityLabel="Search state"
-        />
-      </View>
-      {results.length === 0 ? (
-        <Text style={styles.emptyText}>No matching state found.</Text>
-      ) : (
-        results.map((state) => (
-          <Pressable
-            key={state}
-            onPress={() => {
-              onSelect(state);
-              setQuery('');
-              onClose();
-            }}
-            style={styles.row}
-          >
-            <Text style={[styles.label, value === state && styles.labelActive]}>{state}</Text>
-            <Ionicons
-              name={value === state ? 'radio-button-on' : 'radio-button-off'}
-              size={20}
-              color={value === state ? colors.primary : colors.border}
+      {/* Rendered as a FlatList rather than a mapped ScrollView so only the
+          rows on screen mount at once - with 36 states this barely matters,
+          but it keeps the same pattern as the much longer city list. */}
+      <FlatList
+        data={results}
+        keyExtractor={(state) => state}
+        renderItem={renderItem}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={20}
+        windowSize={5}
+        ListHeaderComponent={
+          <View style={styles.searchWrap}>
+            <Ionicons name="search" size={18} color={colors.textMuted} />
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search state"
+              placeholderTextColor={colors.textMuted}
+              style={styles.searchInput}
+              accessibilityLabel="Search state"
             />
-          </Pressable>
-        ))
-      )}
+          </View>
+        }
+        ListEmptyComponent={<Text style={styles.emptyText}>No matching state found.</Text>}
+      />
     </BottomSheet>
   );
 }
