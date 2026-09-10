@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { INDIAN_STATES } from '../data/indianStates';
 import { radius, spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
+import { webOnly } from '../utils/webStyle';
 import { BottomSheet } from './BottomSheet';
 
 interface Props {
@@ -88,6 +89,7 @@ const createStyles = (colors: AppColors) =>
       paddingVertical: spacing.sm,
       ...typography.body,
       color: colors.textPrimary,
+      ...webOnly({ outlineStyle: 'none' }),
     },
     row: {
       flexDirection: 'row',
