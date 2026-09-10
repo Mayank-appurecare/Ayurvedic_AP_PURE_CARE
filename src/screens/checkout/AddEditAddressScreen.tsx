@@ -17,6 +17,7 @@ import { RootStackParamList } from '../../navigation/types';
 import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { LoadingState } from '../../components/LoadingState';
+import { CitySelectorSheet } from '../../components/CitySelectorSheet';
 import { StateSelectorSheet } from '../../components/StateSelectorSheet';
 import { UserRepository } from '../../repositories/UserRepository';
 import { Address } from '../../types';
@@ -63,6 +64,7 @@ export function AddEditAddressScreen() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [existingIsDefault, setExistingIsDefault] = useState(false);
   const [stateSheetVisible, setStateSheetVisible] = useState(false);
+  const [citySheetVisible, setCitySheetVisible] = useState(false);
 
   useEffect(() => {
     if (!addressId) return;
@@ -201,21 +203,30 @@ export function AddEditAddressScreen() {
             value={form.line2}
             onChangeText={(v) => setField('line2', v)}
           />
-          <FormField
-            label="City"
-            value={form.city}
-            onChangeText={(v) => setField('city', v)}
-            error={errors.city}
-          />
+          <View style={styles.fieldWrap}>
+            <Text style={styles.fieldLabel}>City</Text>
+            <Pressable
+              onPress={() => setCitySheetVisible(true)}
+              style={[styles.input, styles.pickerRow, errors.city && styles.inputError]}
+              accessibilityRole="button"
+              accessibilityLabel="City"
+            >
+              <Text style={form.city ? styles.pickerValue : styles.pickerPlaceholder}>
+                {form.city || 'Select City'}
+              </Text>
+              <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
+            </Pressable>
+            {!!errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
+          </View>
           <View style={styles.fieldWrap}>
             <Text style={styles.fieldLabel}>State</Text>
             <Pressable
               onPress={() => setStateSheetVisible(true)}
-              style={[styles.input, styles.stateInput, errors.state && styles.inputError]}
+              style={[styles.input, styles.pickerRow, errors.state && styles.inputError]}
               accessibilityRole="button"
               accessibilityLabel="State"
             >
-              <Text style={form.state ? styles.stateValue : styles.statePlaceholder}>
+              <Text style={form.state ? styles.pickerValue : styles.pickerPlaceholder}>
                 {form.state || 'Select State'}
               </Text>
               <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
@@ -241,6 +252,12 @@ export function AddEditAddressScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
+      <CitySelectorSheet
+        visible={citySheetVisible}
+        value={form.city}
+        onSelect={(v) => setField('city', v)}
+        onClose={() => setCitySheetVisible(false)}
+      />
       <StateSelectorSheet
         visible={stateSheetVisible}
         value={form.state}
@@ -320,9 +337,9 @@ const createStyles = (colors: AppColors) =>
       backgroundColor: colors.surface,
     },
     inputError: { borderColor: colors.danger },
-    stateInput: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    stateValue: { ...typography.body, color: colors.textPrimary },
-    statePlaceholder: { ...typography.body, color: colors.textMuted },
+    pickerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    pickerValue: { ...typography.body, color: colors.textPrimary },
+    pickerPlaceholder: { ...typography.body, color: colors.textMuted },
     errorText: { ...typography.caption, color: colors.danger },
     saveBtn: { marginTop: spacing.md },
   });

@@ -37,9 +37,14 @@ async function fillValidForm() {
   fireEvent.changeText(await screen.findByLabelText('Full Name'), '  Jane Doe  ');
   fireEvent.changeText(await screen.findByLabelText('Phone Number'), '9123456780');
   fireEvent.changeText(await screen.findByLabelText('Address Line 1'), '  221B Baker Street  ');
-  fireEvent.changeText(await screen.findByLabelText('City'), '  Mumbai  ');
+  await selectCity('Mumbai');
   await selectState('Maharashtra');
   fireEvent.changeText(await screen.findByLabelText('Pincode'), '400001');
+}
+
+async function selectCity(city: string) {
+  fireEvent.press(await screen.findByLabelText('City'));
+  fireEvent.press(await screen.findByText(city));
 }
 
 async function selectState(state: string) {
@@ -106,6 +111,38 @@ describe('AddEditAddressScreen', () => {
     await renderScreen(<AddEditAddressScreen />);
 
     expect((await screen.findByLabelText('Phone Number')).props.maxLength).toBe(10);
+  });
+
+  describe('City picker', () => {
+    it('shows a placeholder until a city is picked, then displays the chosen city', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      expect(await screen.findByText('Select City')).toBeTruthy();
+
+      await selectCity('Pune');
+
+      expect(await screen.findByText('Pune')).toBeTruthy();
+      expect(screen.queryByText('Select City')).toBeNull();
+    });
+
+    it('offers to use the typed text as-is when it matches no listed city', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      fireEvent.press(await screen.findByLabelText('City'));
+      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Kothrud Annex');
+      fireEvent.press(await screen.findByText('Use "Kothrud Annex"'));
+
+      expect(await screen.findByText('Kothrud Annex')).toBeTruthy();
+    });
+
+    it('does not offer the manual option when the typed text already matches a listed city', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      fireEvent.press(await screen.findByLabelText('City'));
+      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Pune');
+
+      expect(screen.queryByText('Use "Pune"')).toBeNull();
+    });
   });
 
   describe('State picker', () => {
@@ -176,7 +213,7 @@ describe('AddEditAddressScreen', () => {
 
     await renderScreen(<AddEditAddressScreen />);
     await screen.findByText('Edit Address');
-    fireEvent.changeText(await screen.findByLabelText('City'), 'Pune');
+    await selectCity('Pune');
 
     fireEvent.press(await screen.findByRole('button', { name: 'Save Address' }));
 
