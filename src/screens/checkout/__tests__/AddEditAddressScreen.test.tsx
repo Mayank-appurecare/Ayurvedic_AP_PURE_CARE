@@ -38,8 +38,13 @@ async function fillValidForm() {
   fireEvent.changeText(await screen.findByLabelText('Phone Number'), '9123456780');
   fireEvent.changeText(await screen.findByLabelText('Address Line 1'), '  221B Baker Street  ');
   fireEvent.changeText(await screen.findByLabelText('City'), '  Mumbai  ');
-  fireEvent.changeText(await screen.findByLabelText('State'), '  MH  ');
+  await selectState('Maharashtra');
   fireEvent.changeText(await screen.findByLabelText('Pincode'), '400001');
+}
+
+async function selectState(state: string) {
+  fireEvent.press(await screen.findByLabelText('State'));
+  fireEvent.press(await screen.findByText(state));
 }
 
 beforeEach(() => {
@@ -103,6 +108,30 @@ describe('AddEditAddressScreen', () => {
     expect((await screen.findByLabelText('Phone Number')).props.maxLength).toBe(10);
   });
 
+  describe('State picker', () => {
+    it('shows a placeholder until a state is picked, then displays the chosen state', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      expect(await screen.findByText('Select State')).toBeTruthy();
+
+      await selectState('Karnataka');
+
+      expect(await screen.findByText('Karnataka')).toBeTruthy();
+      expect(screen.queryByText('Select State')).toBeNull();
+    });
+
+    it('filters the list down to states matching the search text', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      fireEvent.press(await screen.findByLabelText('State'));
+      fireEvent.changeText(await screen.findByLabelText('Search state'), 'kera');
+
+      expect(await screen.findByText('Kerala')).toBeTruthy();
+      expect(screen.queryByText('Karnataka')).toBeNull();
+      expect(screen.queryByText('Punjab')).toBeNull();
+    });
+  });
+
   it('rejects an invalid pincode without saving', async () => {
     await renderScreen(<AddEditAddressScreen />);
     await fillValidForm();
@@ -130,7 +159,7 @@ describe('AddEditAddressScreen', () => {
         line1: '221B Baker Street',
         line2: undefined,
         city: 'Mumbai',
-        state: 'MH',
+        state: 'Maharashtra',
         pincode: '400001',
         isDefault: false,
       })

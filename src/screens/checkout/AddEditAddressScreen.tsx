@@ -12,10 +12,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../navigation/types';
 import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { LoadingState } from '../../components/LoadingState';
+import { StateSelectorSheet } from '../../components/StateSelectorSheet';
 import { UserRepository } from '../../repositories/UserRepository';
 import { Address } from '../../types';
 import { radius, spacing, typography } from '../../theme';
@@ -60,6 +62,7 @@ export function AddEditAddressScreen() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [existingIsDefault, setExistingIsDefault] = useState(false);
+  const [stateSheetVisible, setStateSheetVisible] = useState(false);
 
   useEffect(() => {
     if (!addressId) return;
@@ -204,12 +207,21 @@ export function AddEditAddressScreen() {
             onChangeText={(v) => setField('city', v)}
             error={errors.city}
           />
-          <FormField
-            label="State"
-            value={form.state}
-            onChangeText={(v) => setField('state', v)}
-            error={errors.state}
-          />
+          <View style={styles.fieldWrap}>
+            <Text style={styles.fieldLabel}>State</Text>
+            <Pressable
+              onPress={() => setStateSheetVisible(true)}
+              style={[styles.input, styles.stateInput, errors.state && styles.inputError]}
+              accessibilityRole="button"
+              accessibilityLabel="State"
+            >
+              <Text style={form.state ? styles.stateValue : styles.statePlaceholder}>
+                {form.state || 'Select State'}
+              </Text>
+              <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
+            </Pressable>
+            {!!errors.state && <Text style={styles.errorText}>{errors.state}</Text>}
+          </View>
           <FormField
             label="Pincode"
             value={form.pincode}
@@ -228,6 +240,13 @@ export function AddEditAddressScreen() {
           <View style={{ height: spacing.xxl }} />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <StateSelectorSheet
+        visible={stateSheetVisible}
+        value={form.state}
+        onSelect={(v) => setField('state', v)}
+        onClose={() => setStateSheetVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -301,6 +320,9 @@ const createStyles = (colors: AppColors) =>
       backgroundColor: colors.surface,
     },
     inputError: { borderColor: colors.danger },
+    stateInput: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    stateValue: { ...typography.body, color: colors.textPrimary },
+    statePlaceholder: { ...typography.body, color: colors.textMuted },
     errorText: { ...typography.caption, color: colors.danger },
     saveBtn: { marginTop: spacing.md },
   });
