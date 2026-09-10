@@ -129,9 +129,7 @@ export function AccountScreen() {
           <Text style={styles.logoutText}>Logout</Text>
         </Pressable>
 
-        <View style={styles.versionWrap}>
-          <Text style={styles.versionText}>AP Pure Care • v1.0.0</Text>
-        </View>
+        <Text style={styles.versionText}>AP Pure Care • v1.0.0</Text>
       </ScrollView>
 
       <ConfirmationDialog
@@ -182,7 +180,7 @@ function Section({ title, rows }: { title: string; rows: Row[] }) {
 const createStyles = (colors: AppColors) =>
   StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
-    scrollContent: { flexGrow: 1, padding: spacing.md, paddingBottom: spacing.xxl },
+    scrollContent: { padding: spacing.md, paddingBottom: spacing.xxl },
     screenTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
     profileCard: {
       flexDirection: 'row',
@@ -248,14 +246,10 @@ const createStyles = (colors: AppColors) =>
       ...shadow.sm,
     },
     logoutText: { ...typography.bodyMedium, color: colors.danger },
-    // flex: 1 lets this soak up whatever space is left below Logout (the
-    // ScrollView's own flexGrow makes that space exist at all when the
-    // content is shorter than the screen), centering the version text in it
-    // instead of leaving it stuck right under Logout with empty space below.
-    versionWrap: { flex: 1, minHeight: spacing.xxl, justifyContent: 'center' },
     versionText: {
       ...typography.tiny,
       color: colors.textMuted,
       textAlign: 'center',
+      marginTop: spacing.xxxl * 2,
     },
   });
