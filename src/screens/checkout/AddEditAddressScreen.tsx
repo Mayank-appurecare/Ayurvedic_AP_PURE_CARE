@@ -88,6 +88,14 @@ export function AddEditAddressScreen() {
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
+  // The leading digit must be 7-9; every digit after it is unrestricted.
+  // Blocks 0-6 as the leading digit rather than validating after the fact,
+  // so an invalid number can't be typed in the first place.
+  const handlePhoneChange = (value: string) => {
+    if (/^[0-6]/.test(value)) return;
+    setField('phone', value);
+  };
+
   const validate = (): boolean => {
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
     if (!form.fullName.trim()) nextErrors.fullName = 'Full name is required';
@@ -174,7 +182,7 @@ export function AddEditAddressScreen() {
           <FormField
             label="Phone Number"
             value={form.phone}
-            onChangeText={(v) => setField('phone', v)}
+            onChangeText={handlePhoneChange}
             error={errors.phone}
             keyboardType="phone-pad"
           />
