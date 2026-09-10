@@ -250,6 +250,6 @@ const createStyles = (colors: AppColors) =>
       ...typography.tiny,
       color: colors.textMuted,
       textAlign: 'center',
-      marginTop: spacing.xxxl * 2,
+      marginTop: spacing.xxl,
     },
   });

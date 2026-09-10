@@ -92,15 +92,15 @@ describe('AddEditAddressScreen', () => {
     expect(UserRepository.addAddress).not.toHaveBeenCalled();
   });
 
-  it('blocks 0-6 as the leading digit of the phone number, but accepts 7-9 with any digits after', async () => {
+  it('blocks 0-5 as the leading digit of the phone number, but accepts 6-9 with any digits after', async () => {
     await renderScreen(<AddEditAddressScreen />);
 
-    for (const digit of ['0', '1', '2', '3', '4', '5', '6']) {
+    for (const digit of ['0', '1', '2', '3', '4', '5']) {
       await fireEvent.changeText(await screen.findByLabelText('Phone Number'), `${digit}234567890`);
       expect((await screen.findByLabelText('Phone Number')).props.value).toBe('');
     }
 
-    for (const digit of ['7', '8', '9']) {
+    for (const digit of ['6', '7', '8', '9']) {
       await fireEvent.changeText(await screen.findByLabelText('Phone Number'), `${digit}234567890`);
       expect((await screen.findByLabelText('Phone Number')).props.value).toBe(`${digit}234567890`);
       await fireEvent.changeText(await screen.findByLabelText('Phone Number'), '');
