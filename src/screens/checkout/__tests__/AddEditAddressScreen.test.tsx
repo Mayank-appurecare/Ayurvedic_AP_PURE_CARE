@@ -97,6 +97,12 @@ describe('AddEditAddressScreen', () => {
     }
   });
 
+  it('caps the phone number field at 10 digits', async () => {
+    await renderScreen(<AddEditAddressScreen />);
+
+    expect((await screen.findByLabelText('Phone Number')).props.maxLength).toBe(10);
+  });
+
   it('rejects an invalid pincode without saving', async () => {
     await renderScreen(<AddEditAddressScreen />);
     await fillValidForm();

@@ -185,6 +185,7 @@ export function AddEditAddressScreen() {
             onChangeText={handlePhoneChange}
             error={errors.phone}
             keyboardType="phone-pad"
+            maxLength={10}
           />
           <FormField
             label="Address Line 1"
