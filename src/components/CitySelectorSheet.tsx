@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { INDIAN_CITIES } from '../data/indianCities';
+import { citiesForState } from '../data/indianCities';
 import { radius, spacing, typography } from '../theme';
 import { useTheme, AppColors } from '../theme/ThemeContext';
 import { webOnly } from '../utils/webStyle';
@@ -10,19 +10,27 @@ import { BottomSheet } from './BottomSheet';
 interface Props {
   visible: boolean;
   value: string;
+  /**
+   * Narrows the list to that state's cities. Left unset (no state chosen yet)
+   * the whole list is offered, so the picker is never empty.
+   */
+  state?: string;
   onSelect: (value: string) => void;
   onClose: () => void;
 }
 
-export function CitySelectorSheet({ visible, value, onSelect, onClose }: Props) {
+export function CitySelectorSheet({ visible, value, state, onSelect, onClose }: Props) {
   const { colors } = useTheme();
   const styles = useMemo(() => createStyles(colors), [colors]);
   const [query, setQuery] = useState('');
   const trimmedQuery = query.trim();
 
   const results = useMemo(
-    () => INDIAN_CITIES.filter((city) => city.toLowerCase().includes(trimmedQuery.toLowerCase())),
-    [trimmedQuery]
+    () =>
+      citiesForState(state).filter((city) =>
+        city.toLowerCase().includes(trimmedQuery.toLowerCase())
+      ),
+    [state, trimmedQuery]
   );
   // Not every Indian city is in the list, so typing one that isn't must
   // still be usable - offered as its own row rather than silently blocked,
@@ -42,7 +50,12 @@ export function CitySelectorSheet({ visible, value, onSelect, onClose }: Props) 
   };
 
   return (
-    <BottomSheet visible={visible} onClose={handleClose} title="Select City" maxHeightPercent={80}>
+    <BottomSheet
+      visible={visible}
+      onClose={handleClose}
+      title={state ? `Select City in ${state}` : 'Select City'}
+      maxHeightPercent={80}
+    >
       <View style={styles.searchWrap}>
         <Ionicons name="search" size={18} color={colors.textMuted} />
         <TextInput

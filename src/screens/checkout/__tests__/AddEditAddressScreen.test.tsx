@@ -113,6 +113,82 @@ describe('AddEditAddressScreen', () => {
     expect((await screen.findByLabelText('Phone Number')).props.maxLength).toBe(10);
   });
 
+  /**
+   * The city list is derived from the chosen state, so the two fields are not
+   * independent: State is asked first, and a city that does not belong to the
+   * selected state must never survive in the form. With one flat list a
+   * customer could save Kerala + Ludhiana, and the address would be
+   * undeliverable.
+   */
+  describe('State scopes the city list', () => {
+    it('offers only the cities of the chosen state', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      await selectState('Kerala');
+      fireEvent.press(await screen.findByLabelText('City'));
+
+      expect(await screen.findByText('Kochi')).toBeTruthy();
+      expect(screen.getByText('Thrissur')).toBeTruthy();
+      // Ludhiana is in Punjab.
+      expect(screen.queryByText('Ludhiana')).toBeNull();
+    });
+
+    it('names the state in the city placeholder and the picker title', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      await selectState('Goa');
+      expect(await screen.findByText('Select City in Goa')).toBeTruthy();
+
+      fireEvent.press(await screen.findByLabelText('City'));
+      expect((await screen.findAllByText('Select City in Goa')).length).toBeGreaterThan(0);
+    });
+
+    // The picker must never be empty just because no state is set yet.
+    it('offers every city while no state has been chosen', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      fireEvent.press(await screen.findByLabelText('City'));
+
+      expect(await screen.findByText('Kochi')).toBeTruthy();
+      expect(screen.getByText('Ludhiana')).toBeTruthy();
+    });
+
+    it('clears a city that does not belong to the newly chosen state', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      await selectState('Punjab');
+      await selectCity('Ludhiana');
+      expect(await screen.findByText('Ludhiana')).toBeTruthy();
+
+      await selectState('Kerala');
+
+      expect(await screen.findByText('Select City in Kerala')).toBeTruthy();
+      expect(screen.queryByText('Ludhiana')).toBeNull();
+    });
+
+    it('keeps a city that still belongs to the chosen state', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      await selectState('Maharashtra');
+      await selectCity('Pune');
+      await selectState('Maharashtra');
+
+      expect(await screen.findByText('Pune')).toBeTruthy();
+    });
+
+    // A hand-typed city is in no list, so nothing can contradict it.
+    it('keeps a hand-typed city when the state changes', async () => {
+      await renderScreen(<AddEditAddressScreen />);
+
+      fireEvent.press(await screen.findByLabelText('City'));
+      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Kothrud Annex');
+      fireEvent.press(await screen.findByText('Use "Kothrud Annex"'));
+
+      await selectState('Maharashtra');
+
+      expect(await screen.findByText('Kothrud Annex')).toBeTruthy();
+    });
+  });
   describe('City picker', () => {
     it('shows a placeholder until a city is picked, then displays the chosen city', async () => {
       await renderScreen(<AddEditAddressScreen />);

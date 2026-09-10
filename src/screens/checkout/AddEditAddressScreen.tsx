@@ -18,6 +18,7 @@ import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { LoadingState } from '../../components/LoadingState';
 import { CitySelectorSheet } from '../../components/CitySelectorSheet';
+import { citiesForState, INDIAN_CITIES } from '../../data/indianCities';
 import { StateSelectorSheet } from '../../components/StateSelectorSheet';
 import { UserRepository } from '../../repositories/UserRepository';
 import { Address } from '../../types';
@@ -87,6 +88,22 @@ export function AddEditAddressScreen() {
       setLoading(false);
     })();
   }, [addressId]);
+
+  /**
+   * Switching state clears a city that does not belong to the new one, so the
+   * form can never be saved with a mismatched pair. A city typed by hand is
+   * kept, since it will not appear in any state's list.
+   */
+  const handleSelectState = (nextState: string) => {
+    setForm((prev) => {
+      const keepCity =
+        !prev.city ||
+        citiesForState(nextState).includes(prev.city) ||
+        !INDIAN_CITIES.includes(prev.city);
+      return { ...prev, state: nextState, city: keepCity ? prev.city : '' };
+    });
+    setErrors((prev) => ({ ...prev, state: undefined, city: undefined }));
+  };
 
   const setField = (key: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -204,21 +221,6 @@ export function AddEditAddressScreen() {
             onChangeText={(v) => setField('line2', v)}
           />
           <View style={styles.fieldWrap}>
-            <Text style={styles.fieldLabel}>City</Text>
-            <Pressable
-              onPress={() => setCitySheetVisible(true)}
-              style={[styles.input, styles.pickerRow, errors.city && styles.inputError]}
-              accessibilityRole="button"
-              accessibilityLabel="City"
-            >
-              <Text style={form.city ? styles.pickerValue : styles.pickerPlaceholder}>
-                {form.city || 'Select City'}
-              </Text>
-              <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
-            </Pressable>
-            {!!errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
-          </View>
-          <View style={styles.fieldWrap}>
             <Text style={styles.fieldLabel}>State</Text>
             <Pressable
               onPress={() => setStateSheetVisible(true)}
@@ -232,6 +234,21 @@ export function AddEditAddressScreen() {
               <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
             </Pressable>
             {!!errors.state && <Text style={styles.errorText}>{errors.state}</Text>}
+          </View>
+          <View style={styles.fieldWrap}>
+            <Text style={styles.fieldLabel}>City</Text>
+            <Pressable
+              onPress={() => setCitySheetVisible(true)}
+              style={[styles.input, styles.pickerRow, errors.city && styles.inputError]}
+              accessibilityRole="button"
+              accessibilityLabel="City"
+            >
+              <Text style={form.city ? styles.pickerValue : styles.pickerPlaceholder}>
+                {form.city || (form.state ? `Select City in ${form.state}` : 'Select City')}
+              </Text>
+              <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
+            </Pressable>
+            {!!errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
           </View>
           <FormField
             label="Pincode"
@@ -255,13 +272,14 @@ export function AddEditAddressScreen() {
       <CitySelectorSheet
         visible={citySheetVisible}
         value={form.city}
+        state={form.state}
         onSelect={(v) => setField('city', v)}
         onClose={() => setCitySheetVisible(false)}
       />
       <StateSelectorSheet
         visible={stateSheetVisible}
         value={form.state}
-        onSelect={(v) => setField('state', v)}
+        onSelect={handleSelectState}
         onClose={() => setStateSheetVisible(false)}
       />
     </SafeAreaView>
