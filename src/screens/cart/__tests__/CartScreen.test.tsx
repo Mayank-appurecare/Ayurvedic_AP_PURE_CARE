@@ -4,6 +4,7 @@ import { CartScreen } from '../CartScreen';
 import { renderScreen } from '../../../test-utils/renderScreen';
 import { useCart, EnrichedCartItem } from '../../../context/CartContext';
 import { useCheckout } from '../../../context/CheckoutContext';
+import { deliveryOptions } from '../../../data/checkoutOptions';
 import { OfferRepository } from '../../../repositories/OfferRepository';
 
 jest.mock('../../../context/CartContext', () => ({
@@ -60,6 +61,7 @@ function mockCheckout(overrides: Partial<ReturnType<typeof useCheckout>> = {}) {
   (useCheckout as jest.Mock).mockReturnValue({
     appliedCoupon: null,
     setAppliedCoupon: jest.fn(),
+    selectedDelivery: deliveryOptions[0],
     ...overrides,
   });
 }

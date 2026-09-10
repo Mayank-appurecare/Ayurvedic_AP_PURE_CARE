@@ -9,7 +9,11 @@ import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useCheckout } from '../../context/CheckoutContext';
 import { useCart } from '../../context/CartContext';
-import { deliveryOptions, FREE_DELIVERY_THRESHOLD } from '../../data/checkoutOptions';
+import {
+  deliveryFeeFor,
+  deliveryOptions,
+  FREE_DELIVERY_THRESHOLD,
+} from '../../data/checkoutOptions';
 import { radius, shadow, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { formatPrice } from '../../utils/format';
@@ -38,7 +42,9 @@ export function CheckoutDeliveryScreen() {
         <View style={styles.list}>
           {deliveryOptions.map((option) => {
             const selected = selectedDelivery.id === option.id;
-            const isFree = option.price === 0 && qualifiesForFreeStandard;
+            const fee = deliveryFeeFor(option, subtotal);
+            // Waived rather than genuinely free: show what it would have cost.
+            const isWaived = fee === 0 && option.price > 0;
             return (
               <Pressable
                 key={option.id}
@@ -59,9 +65,14 @@ export function CheckoutDeliveryScreen() {
                     <Ionicons name="time-outline" size={12} color={colors.textSecondary} />
                     <Text style={styles.etaText}>{option.etaLabel}</Text>
                   </View>
-                  <Text style={styles.priceText}>
-                    {isFree ? 'FREE' : option.price === 0 ? 'FREE' : formatPrice(option.price)}
-                  </Text>
+                  <View style={styles.priceGroup}>
+                    {isWaived ? (
+                      <Text style={styles.strikePrice}>{formatPrice(option.price)}</Text>
+                    ) : null}
+                    <Text style={[styles.priceText, fee === 0 && styles.priceFree]}>
+                      {fee === 0 ? 'FREE' : formatPrice(fee)}
+                    </Text>
+                  </View>
                 </View>
               </Pressable>
             );
@@ -123,7 +134,14 @@ const createStyles = (colors: AppColors) =>
       borderRadius: radius.sm,
     },
     etaText: { ...typography.tiny, color: colors.textSecondary },
+    priceGroup: { flexDirection: 'row', alignItems: 'center', gap: spacing.xxs },
+    strikePrice: {
+      ...typography.caption,
+      color: colors.textSecondary,
+      textDecorationLine: 'line-through',
+    },
     priceText: { ...typography.bodyMedium, color: colors.textPrimary },
+    priceFree: { color: colors.success },
     footer: {
       padding: spacing.md,
       backgroundColor: colors.surface,

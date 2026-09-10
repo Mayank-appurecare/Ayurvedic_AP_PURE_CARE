@@ -1,11 +1,20 @@
 import { DeliveryOption, PaymentMethodOption } from '../types';
 
+/** The one delivery option whose fee is waived on large enough orders. */
+export const STANDARD_DELIVERY_ID = 'delivery-standard';
+
+/** What standard delivery costs below {@link FREE_DELIVERY_THRESHOLD}. */
+export const STANDARD_DELIVERY_FEE = 49;
+
+/** Order subtotal at or above which standard delivery is free. */
+export const FREE_DELIVERY_THRESHOLD = 499;
+
 export const deliveryOptions: DeliveryOption[] = [
   {
-    id: 'delivery-standard',
+    id: STANDARD_DELIVERY_ID,
     name: 'Standard Delivery',
     description: 'Delivered in 4-6 business days',
-    price: 0,
+    price: STANDARD_DELIVERY_FEE,
     etaLabel: '4-6 days',
   },
   {
@@ -62,4 +71,19 @@ export const paymentMethods: PaymentMethodOption[] = [
   },
 ];
 
-export const FREE_DELIVERY_THRESHOLD = 499;
+/**
+ * What the customer is actually charged for delivery.
+ *
+ * This is the only place the fee is decided. The cart, the delivery step and
+ * the payment step all call it, so the number shown in the cart is the number
+ * the customer pays. Previously the cart applied its own hardcoded fee while
+ * payment read `option.price` directly, and the two disagreed by the whole
+ * standard delivery fee on every order under the free threshold.
+ *
+ * A subtotal of zero means an empty cart, which is never charged for delivery.
+ */
+export function deliveryFeeFor(option: DeliveryOption, subtotal: number): number {
+  if (subtotal <= 0) return 0;
+  if (option.id !== STANDARD_DELIVERY_ID) return option.price;
+  return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : option.price;
+}

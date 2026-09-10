@@ -20,9 +20,7 @@ import { OfferRepository } from '../../repositories/OfferRepository';
 import { radius, shadow, spacing, typography } from '../../theme';
 import { useTheme, AppColors } from '../../theme/ThemeContext';
 import { formatPrice, roundCurrency } from '../../utils/format';
-import { FREE_DELIVERY_THRESHOLD } from '../../data/checkoutOptions';
-
-const MOCK_DELIVERY_FEE = 49;
+import { deliveryFeeFor } from '../../data/checkoutOptions';
 
 export function CartScreen() {
   const { colors } = useTheme();
@@ -40,7 +38,7 @@ export function CartScreen() {
     saveForLater,
     moveToCart,
   } = useCart();
-  const { appliedCoupon, setAppliedCoupon } = useCheckout();
+  const { appliedCoupon, setAppliedCoupon, selectedDelivery } = useCheckout();
   const [removeTarget, setRemoveTarget] = useState<EnrichedCartItem | null>(null);
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
@@ -48,8 +46,7 @@ export function CartScreen() {
   const [justApplied, setJustApplied] = useState(false);
 
   const showBack = navigation.canGoBack();
-  const deliveryFee =
-    enrichedItems.length === 0 ? 0 : subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : MOCK_DELIVERY_FEE;
+  const deliveryFee = deliveryFeeFor(selectedDelivery, subtotal);
   const couponDiscount = appliedCoupon
     ? appliedCoupon.discountType === 'flat'
       ? appliedCoupon.discountValue

@@ -69,6 +69,26 @@ describe('CheckoutDeliveryScreen', () => {
     expect(await screen.findByText('₹149')).toBeTruthy();
   });
 
+  it('prices standard delivery instead of labelling it free when the order does not qualify', async () => {
+    // The screen used to say "Add items worth ₹99 more for free standard
+    // delivery" and label that same option FREE two lines below it.
+    mockCart(400);
+    await renderScreen(<CheckoutDeliveryScreen />);
+
+    expect(await screen.findByText(/Add items worth ₹99 more/)).toBeTruthy();
+    expect(await screen.findByText('₹49')).toBeTruthy();
+    expect(screen.queryByText('FREE')).toBeNull();
+  });
+
+  it('labels standard delivery FREE, with its price struck through, once it qualifies', async () => {
+    mockCart(600);
+    await renderScreen(<CheckoutDeliveryScreen />);
+
+    expect(await screen.findByText('FREE')).toBeTruthy();
+    // The waived amount stays visible so the saving is legible.
+    expect(await screen.findByText('₹49')).toBeTruthy();
+  });
+
   it('navigates to CheckoutPayment when Continue to Payment is pressed', async () => {
     mockCart(600);
     await renderScreen(<CheckoutDeliveryScreen />);

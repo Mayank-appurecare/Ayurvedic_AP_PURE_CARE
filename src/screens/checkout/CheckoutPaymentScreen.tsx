@@ -9,7 +9,7 @@ import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { useCheckout } from '../../context/CheckoutContext';
 import { useCart } from '../../context/CartContext';
-import { paymentMethods } from '../../data/checkoutOptions';
+import { deliveryFeeFor, paymentMethods } from '../../data/checkoutOptions';
 import { OrderRepository } from '../../repositories/OrderRepository';
 import { OrderItem } from '../../types';
 import { radius, shadow, spacing, typography } from '../../theme';
@@ -46,7 +46,7 @@ export function CheckoutPaymentScreen() {
         ? roundCurrency((subtotal * appliedCoupon.discountValue) / 100)
         : 0
     : 0;
-  const deliveryFee = selectedDelivery.price;
+  const deliveryFee = deliveryFeeFor(selectedDelivery, subtotal);
   const total = roundCurrency(Math.max(subtotal - couponDiscount + deliveryFee, 0));
 
   const selectedMethod = paymentMethods.find((m) => m.id === selectedPaymentMethodId);

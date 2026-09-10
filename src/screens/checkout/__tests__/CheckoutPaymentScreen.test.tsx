@@ -5,6 +5,7 @@ import { renderScreen } from '../../../test-utils/renderScreen';
 import { useCheckout } from '../../../context/CheckoutContext';
 import { useCart } from '../../../context/CartContext';
 import { OrderRepository } from '../../../repositories/OrderRepository';
+import { deliveryOptions } from '../../../data/checkoutOptions';
 import { Address } from '../../../types';
 
 jest.mock('../../../context/CheckoutContext', () => ({
@@ -47,13 +48,7 @@ const ENRICHED_ITEM = {
 function mockCheckout(overrides: Partial<ReturnType<typeof useCheckout>> = {}) {
   (useCheckout as jest.Mock).mockReturnValue({
     selectedAddress: ADDRESS,
-    selectedDelivery: {
-      id: 'delivery-standard',
-      name: 'Standard',
-      description: '',
-      price: 0,
-      etaLabel: '',
-    },
+    selectedDelivery: deliveryOptions[0],
     appliedCoupon: null,
     selectedPaymentMethodId: null,
     setSelectedPaymentMethodId: jest.fn(),
@@ -131,8 +126,9 @@ describe('CheckoutPaymentScreen', () => {
       expect.objectContaining({
         subtotal: 200,
         discount: 0,
-        deliveryFee: 0,
-        total: 200,
+        // Standard delivery below the free threshold, so the fee is charged.
+        deliveryFee: 49,
+        total: 249,
         address: ADDRESS,
         paymentMethod: 'UPI',
         items: [
