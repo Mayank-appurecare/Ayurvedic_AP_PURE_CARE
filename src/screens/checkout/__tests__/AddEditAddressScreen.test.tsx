@@ -175,19 +175,6 @@ describe('AddEditAddressScreen', () => {
 
       expect(await screen.findByText('Pune')).toBeTruthy();
     });
-
-    // A hand-typed city is in no list, so nothing can contradict it.
-    it('keeps a hand-typed city when the state changes', async () => {
-      await renderScreen(<AddEditAddressScreen />);
-
-      fireEvent.press(await screen.findByLabelText('City'));
-      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Kothrud Annex');
-      fireEvent.press(await screen.findByText('Use "Kothrud Annex"'));
-
-      await selectState('Maharashtra');
-
-      expect(await screen.findByText('Kothrud Annex')).toBeTruthy();
-    });
   });
   describe('City picker', () => {
     it('shows a placeholder until a city is picked, then displays the chosen city', async () => {
@@ -199,25 +186,6 @@ describe('AddEditAddressScreen', () => {
 
       expect(await screen.findByText('Pune')).toBeTruthy();
       expect(screen.queryByText('Select City')).toBeNull();
-    });
-
-    it('offers to use the typed text as-is when it matches no listed city', async () => {
-      await renderScreen(<AddEditAddressScreen />);
-
-      fireEvent.press(await screen.findByLabelText('City'));
-      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Kothrud Annex');
-      fireEvent.press(await screen.findByText('Use "Kothrud Annex"'));
-
-      expect(await screen.findByText('Kothrud Annex')).toBeTruthy();
-    });
-
-    it('does not offer the manual option when the typed text already matches a listed city', async () => {
-      await renderScreen(<AddEditAddressScreen />);
-
-      fireEvent.press(await screen.findByLabelText('City'));
-      fireEvent.changeText(await screen.findByLabelText('Search city'), 'Pune');
-
-      expect(screen.queryByText('Use "Pune"')).toBeNull();
     });
   });
 

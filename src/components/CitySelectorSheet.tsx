@@ -32,11 +32,6 @@ export function CitySelectorSheet({ visible, value, state, onSelect, onClose }: 
       ),
     [state, trimmedQuery]
   );
-  // Not every Indian city is in the list, so typing one that isn't must
-  // still be usable - offered as its own row rather than silently blocked,
-  // unless it's already an exact match sitting in the results below.
-  const showManualOption =
-    !!trimmedQuery && !results.some((city) => city.toLowerCase() === trimmedQuery.toLowerCase());
 
   const handleClose = () => {
     setQuery('');
@@ -61,23 +56,14 @@ export function CitySelectorSheet({ visible, value, state, onSelect, onClose }: 
         <TextInput
           value={query}
           onChangeText={setQuery}
-          placeholder="Search or type your city"
+          placeholder="Search city"
           placeholderTextColor={colors.textMuted}
           style={styles.searchInput}
           accessibilityLabel="Search city"
         />
       </View>
 
-      {showManualOption && (
-        <Pressable onPress={() => handleSelect(trimmedQuery)} style={styles.manualRow}>
-          <Ionicons name="add-circle-outline" size={20} color={colors.primary} />
-          <Text style={styles.manualText}>Use &quot;{trimmedQuery}&quot;</Text>
-        </Pressable>
-      )}
-
-      {results.length === 0 && !showManualOption && (
-        <Text style={styles.emptyText}>No matching city found.</Text>
-      )}
+      {results.length === 0 && <Text style={styles.emptyText}>No matching city found.</Text>}
 
       {results.map((city) => (
         <Pressable key={city} onPress={() => handleSelect(city)} style={styles.row}>
@@ -113,15 +99,6 @@ const createStyles = (colors: AppColors) =>
       color: colors.textPrimary,
       ...webOnly({ outlineStyle: 'none' }),
     },
-    manualRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.xs,
-      paddingVertical: spacing.md,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.divider,
-    },
-    manualText: { ...typography.bodyMedium, color: colors.primary },
     row: {
       flexDirection: 'row',
       justifyContent: 'space-between',

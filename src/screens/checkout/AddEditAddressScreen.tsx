@@ -18,7 +18,7 @@ import { AppHeader } from '../../components/AppHeader';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { LoadingState } from '../../components/LoadingState';
 import { CitySelectorSheet } from '../../components/CitySelectorSheet';
-import { citiesForState, INDIAN_CITIES } from '../../data/indianCities';
+import { citiesForState } from '../../data/indianCities';
 import { StateSelectorSheet } from '../../components/StateSelectorSheet';
 import { UserRepository } from '../../repositories/UserRepository';
 import { Address } from '../../types';
@@ -91,15 +91,11 @@ export function AddEditAddressScreen() {
 
   /**
    * Switching state clears a city that does not belong to the new one, so the
-   * form can never be saved with a mismatched pair. A city typed by hand is
-   * kept, since it will not appear in any state's list.
+   * form can never be saved with a mismatched pair.
    */
   const handleSelectState = (nextState: string) => {
     setForm((prev) => {
-      const keepCity =
-        !prev.city ||
-        citiesForState(nextState).includes(prev.city) ||
-        !INDIAN_CITIES.includes(prev.city);
+      const keepCity = !prev.city || citiesForState(nextState).includes(prev.city);
       return { ...prev, state: nextState, city: keepCity ? prev.city : '' };
     });
     setErrors((prev) => ({ ...prev, state: undefined, city: undefined }));
