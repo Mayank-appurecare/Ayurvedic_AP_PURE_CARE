@@ -1,11 +1,11 @@
 // Major Indian cities, grouped by the state they belong to.
 //
-// Not exhaustive — India has thousands of towns — so this covers state
-// capitals, major metros and most district headquarters per state.
+// Not exhaustive — India has thousands of towns — so the city picker also lets
+// the customer confirm whatever they have typed if their city is not listed.
 //
 // Grouping matters for correctness, not just convenience: with one flat list a
 // customer could pick Kerala and then Ludhiana, and the address would be
-// undeliverable. The picker only offers the cities of the chosen state.
+// undeliverable. The picker offers only the cities of the chosen state.
 //
 // Both the state keys and the cities inside each are sorted alphabetically.
 
@@ -123,8 +123,8 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
   Delhi: ['Delhi', 'Dwarka', 'Karol Bagh', 'Najafgarh', 'Narela', 'New Delhi', 'Rohini'],
   Goa: [
     'Bicholim',
-    'Curchorem',
     'Cuncolim',
+    'Curchorem',
     'Mapusa',
     'Margao',
     'Panaji',
@@ -157,9 +157,9 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Rajkot',
     'Surat',
     'Surendranagar',
+    'Vadodara',
     'Valsad',
     'Vapi',
-    'Vadodara',
     'Veraval',
   ],
   Haryana: [
@@ -258,8 +258,8 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Ernakulam',
     'Guruvayoor',
     'Idukki',
-    'Kannur',
     'Kanhangad',
+    'Kannur',
     'Kasaragod',
     'Kayamkulam',
     'Kochi',
@@ -299,9 +299,9 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Indore',
     'Itarsi',
     'Jabalpur',
+    'Katni',
     'Khandwa',
     'Khargone',
-    'Katni',
     'Mandsaur',
     'Morena',
     'Neemuch',
@@ -328,7 +328,6 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Bhiwandi',
     'Bhusawal',
     'Chandrapur',
-    // Renamed from Aurangabad in 2023.
     'Chhatrapati Sambhajinagar',
     'Dhule',
     'Gondia',
@@ -512,11 +511,11 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Hathras',
     'Jaunpur',
     'Jhansi',
+    'Kanpur',
     'Khurja',
     'Lakhimpur',
     'Loni',
     'Lucknow',
-    'Kanpur',
     'Mathura',
     'Mau',
     'Meerut',
@@ -557,8 +556,8 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
     'Alipurduar',
     'Asansol',
     'Baharampur',
-    'Balurghat',
     'Bally',
+    'Balurghat',
     'Bangaon',
     'Bankura',
     'Barasat',
@@ -594,10 +593,17 @@ export const CITIES_BY_STATE: Record<string, string[]> = {
   ],
 };
 
-/** Every city, alphabetically — used when no state has been chosen yet. */
-export const INDIAN_CITIES: string[] = Object.values(CITIES_BY_STATE)
-  .flat()
-  .sort((a, b) => a.localeCompare(b));
+/**
+ * Every city, alphabetically — used when no state has been chosen yet.
+ *
+ * De-duplicated because a few names are shared across states: Udaipur, for
+ * instance, is a real place in both Rajasthan and Tripura. Keeping both in the
+ * flat list showed the customer two identical rows and gave the picker's
+ * FlatList two children with the same key.
+ */
+export const INDIAN_CITIES: string[] = [...new Set(Object.values(CITIES_BY_STATE).flat())].sort(
+  (a, b) => a.localeCompare(b)
+);
 
 /** Cities of one state, or the whole list when the state is unknown/unset. */
 export function citiesForState(state: string | undefined | null): string[] {
